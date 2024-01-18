@@ -1,16 +1,17 @@
 //
-//  TransactionTableViewCell.swift
+//  SavingsGoalTableViewCell.swift
+//  
 //
-//
-//  Created by Jack Young on 11/01/2024.
+//  Created by Jack Young on 18/01/2024.
 //
 
 import UIKit
-import SharedModel
-import Common
 import Views
+import Common
+import SharedModel
+import SavingsGoalFeature
 
-public class TransactionTableViewCell: UITableViewCell {
+public class SavingsGoalTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -21,32 +22,29 @@ public class TransactionTableViewCell: UITableViewCell {
        super.init(coder: aDecoder)
     }
     
-    let priceLabel = Components.baseLabel()
-    let roundLabel = Components.baseLabel()
-    let merchantLabel = Components.baseLabel()
-    let dateLabel = Components.detailLabel()
+    let nameLabel = Components.titleLabel()
+    var currentAmmountLabel = Components.baseLabel()
+    var targetAmmountLabel = Components.baseLabel()
     
-    let leftStack = Components.createStackView(.vertical, space2)
-    let rightStack = Components.createStackView(.vertical, space2)
-    let metaStack = Components.createStackView(.horizontal, space2)
-    
+    let progressStack = Components.createStackView(.vertical, space2)
+    let metaStack = Components.createStackView(.vertical, space2)
     let divider = Components.createDivider()
+    let progressBar = Components.progressBar()
     
     func setUpView() {
-        
         self.selectionStyle = .none
-        roundLabel.textColor = .green
-        rightStack.addArrangedSubview(priceLabel)
-        rightStack.addArrangedSubview(roundLabel)
+        metaStack.addArrangedSubview(nameLabel)
         
-        rightStack.alignment = .trailing
-        leftStack.addArrangedSubview(merchantLabel)
-        leftStack.addArrangedSubview(dateLabel)
         
-        metaStack.addArrangedSubview(leftStack)
-        metaStack.addArrangedSubview(rightStack)
+        let amountsStack = Components.createStackView(.horizontal)
+        amountsStack.addArrangedSubview(targetAmmountLabel)
+        amountsStack.addArrangedSubview(currentAmmountLabel)
+        
+        progressStack.addArrangedSubview(amountsStack)
+        progressStack.addArrangedSubview(progressBar)
+        
+        metaStack.addArrangedSubview(progressStack)
 
-        
         contentView.addSubview(metaStack)
         contentView.addSubview(divider)
         
@@ -65,15 +63,15 @@ public class TransactionTableViewCell: UITableViewCell {
             divider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
             
         ])
-        
 
     }
     
-    public func bind(_ item: TransactionViewModel, hidesDivider: Bool = false) {
-        roundLabel.text = item.roundedUpDisplay
-//        priceLabel.text = item.transactionDisplay
-//        merchantLabel.text = item.transaction.merchant
-//        dateLabel.text = item.timeDisplay
-        divider.isHidden = hidesDivider
+    public func bind(_ item: SavingsGoalViewModel, hidesDivider: Bool = false) {
+        nameLabel.text = item.name
+        currentAmmountLabel.text = item.displayedCurrentAmount
+        targetAmmountLabel.text = item.displayedTarget
+        
+        progressBar.progress = item.displayedProgress
+        
     }
 }

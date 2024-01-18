@@ -87,10 +87,10 @@ public struct Transaction: Codable {
 }
 
 public struct Amount: Codable {
-    let currency: String
-    let minorUnits: Int
+    public let currency: String
+    public let minorUnits: Decimal
     
-    public init(currency: String, minorUnits: Int) {
+    public init(currency: String, minorUnits: Decimal) {
         self.currency = currency
         self.minorUnits = minorUnits
     }

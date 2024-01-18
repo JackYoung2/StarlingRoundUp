@@ -13,8 +13,14 @@ public extension Components {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = ColorSystem.text
-        label.font = UIFont.systemFont(ofSize: space5)
+        label.font = UIFont.Body.medium
         label.text = text
+        return label
+    }
+    
+    static func titleLabel(_ text: String? = nil) -> UILabel {
+        let label = baseLabel()
+        label.font = UIFont.Title.mediumBold
         return label
     }
     
@@ -22,7 +28,7 @@ public extension Components {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = ColorSystem.secondaryText
-        label.font = UIFont.systemFont(ofSize: space4)
+        label.font = UIFont.Body.small
         label.text = text
         return label
     }

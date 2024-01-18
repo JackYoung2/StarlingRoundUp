@@ -14,6 +14,7 @@ let package = Package(
         .library(name: "Common", targets: ["Common"]),
         .library(name: "SharedModel", targets: ["SharedModel"]),
         .library(name: "RoundUpClient", targets: ["RoundUpClient"]),
+        .library(name: "SavingsGoalListFeature", targets: ["SavingsGoalListFeature"]),
         .library(name: "SavingsGoalFeature", targets: ["SavingsGoalFeature"])
     ],
     dependencies: [
@@ -29,7 +30,7 @@ let package = Package(
                 "SharedModel",
                 "Transaction",
                 "RoundUpClient",
-                "SavingsGoalFeature",
+                "SavingsGoalListFeature",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]
@@ -41,7 +42,25 @@ let package = Package(
             name: "Common",
             resources: [.process("Resources")]
         ),
-        .target(name: "SavingsGoalFeature", dependencies: ["Views", "SharedModel"])
+        .target(
+            name: "SavingsGoalListFeature",
+            dependencies: [
+                "Views", 
+                "SharedModel",
+                "SavingsGoalFeature",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift")
+            ]
+        ),
+        .target(
+            name: "SavingsGoalFeature",
+            dependencies: [
+                "Views",
+                "SharedModel",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift")
+            ]
+        )
         
     ]
 )

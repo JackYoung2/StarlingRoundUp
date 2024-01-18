@@ -15,4 +15,5 @@ public struct ColorSystem {
     public static let text = UIColor.init(resource: .init(name: "text", bundle: Bundle.module))
     public static let secondaryText = UIColor.init(resource: .init(name: "secondaryText", bundle: Bundle.module))
     public static let separator = UIColor.init(resource: .init(name: "separator", bundle: Bundle.module))
+    public static let tint = UIColor.init(resource: .init(name: "tint", bundle: Bundle.module))
 }

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SavingsGoalFeature
+import SavingsGoalListFeature
 import RxSwift
 import RxRelay
 import SharedModel
@@ -26,7 +26,7 @@ public class RoundUpListViewModel {
 //        Transaction(amount: 0.87, category: "Bills", merchant: "Tesco", date: .yesterday)
     ]
     
-    var tableViewSections: [Section] = [] 
+    var tableViewSections: [Section] = []
     
 //    {
 //        transactions.reduce(into: [Section]()) { partialResult, next in
@@ -51,7 +51,7 @@ public class RoundUpListViewModel {
     }
     
     enum Route {
-        case savingsGoal(SavingsGoalViewModel)
+        case savingsGoal(SavingsGoalListViewModel)
     }
     
     func roundButtonTapped() {

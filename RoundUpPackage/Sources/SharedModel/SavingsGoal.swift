@@ -16,10 +16,17 @@ public struct SavingsGoal: Codable {
     public let name: String
     public let target: Amount
     public let totalSaved: Amount
-    public let savedPercentage: Int
+    public let savedPercentage: Double
     public let state: String
     
-    public init(savingsGoalUid: String, name: String, target: Amount, totalSaved: Amount, savedPercentage: Int, state: String) {
+    public init(
+        savingsGoalUid: String,
+        name: String,
+        target: Amount,
+        totalSaved: Amount,
+        savedPercentage: Double,
+        state: String
+    ) {
         self.savingsGoalUid = savingsGoalUid
         self.name = name
         self.target = target
