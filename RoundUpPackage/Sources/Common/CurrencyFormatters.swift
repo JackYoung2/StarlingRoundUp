@@ -7,23 +7,56 @@
 
 import Foundation
 
-
 public extension NumberFormatter {
-    static var currencyFormatter: Self {
-        let formatter = Self.init()
+    static func currencyFormatter(for currencyCode: String) -> NumberFormatter {
+        let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.locale = .current
-        #if DEBUG
-        formatter.locale = Locale(identifier: "en_GB")
-        #endif
+        formatter.currencyCode = currencyCode
+        
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
         return formatter
     }
-}
+    
+//    static func formatCurrency(minorUnits: Int, currencyCode: String) -> Decimal? {
+//        let majorUnits = Decimal(value: Double(minorUnits) / 100.0)
+//        return majorUnits as Decimal
+//    }
+    
+//    static func currencyString(_ code: String, minorUnits: Int) -> String? {
+//        let formatter = NumberFormatter.currencyFormatter(for: code)
+//        let value = Self.formatCurrency(minorUnits: minorUnits, currencyCode: code)
+//        let stringValue = formatter.string(from: minorUnits as NSNumber)
+//        return stringValue
+//    }
+    
+    func convertMinorUnits(_ units: Int, currencyCode: String) -> Decimal {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currencyISOCode
+        currencyFormatter.currencyCode = currencyCode.uppercased()
 
-public extension Decimal {
-    var asCurrencyString: String? {
-        let formatter = NumberFormatter.currencyFormatter
-        let stringValue = formatter.string(from: self as NSNumber)
+        return Decimal(units) / pow(10, currencyFormatter.minimumFractionDigits)
+    }
+    
+    static func formattedCurrencyFrom(code: String, amount: Int) -> String? {
+        let formatter = NumberFormatter.currencyFormatter(for: code)
+        let majorUnits = formatter.getMajorUnits(code: code, amount: amount)
+        let stringValue = formatter.string(from: majorUnits as NSNumber)
         return stringValue
     }
+    
+    func getMajorUnits(code: String, amount: Int) -> Decimal {
+        return Decimal(amount) / pow(10, self.minimumFractionDigits)
+    }
 }
+
+//public extension Int {
+//    var asCurrencyString: String? {
+//       
+//        
+//       
+//        let stringValue = formatter.string(from: self as NSNumber)
+//        return stringValue
+//    }
+//}

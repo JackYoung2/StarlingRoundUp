@@ -19,27 +19,22 @@ public class RoundUpListViewModel {
     }
     
     var route: BehaviorRelay<Route?>
+    lazy var dataSource = RoundUpListDataSource(viewModel: self)
     
-    var transactions: [Transaction] = [
-//        Transaction(amount: 4.35, category: "Transport", merchant: "Uber", date: .now),
-//        Transaction(amount: 5.20, category: "Bills", merchant: "Tesco", date: .yesterday),
-//        Transaction(amount: 0.87, category: "Bills", merchant: "Tesco", date: .yesterday)
-    ]
+    let transactions = dummyTransactions
     
-    var tableViewSections: [Section] = []
-    
-//    {
-//        transactions.reduce(into: [Section]()) { partialResult, next in
-//            if let index = partialResult.firstIndex(where: { section in
-//                section.date == next.date
-//            }) {
-//                partialResult[index].transactions.append(next)
-//            } else {
-//                partialResult.append(Section(date: next.date, transactions: [next]))
-//            }
-//        }
-//    }
-//
+    var tableViewSections: [Section] {
+        transactions.reduce(into: [Section]()) { partialResult, next in
+            if let index = partialResult.firstIndex(where: { section in
+                section.date == next.settlementTime
+            }) {
+                partialResult[index].transactions.append(next)
+            } else {
+                partialResult.append(Section(date: next.settlementTime, transactions: [next]))
+            }
+        }
+    }
+
 //    
     init(
       route: Route? = nil

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public class SavingsGoalDataSource: NSObject, UITableViewDataSource, ObservableObject {
+public class SavingsGoalDataSource: NSObject, UITableViewDataSource {
 
     unowned var viewModel: SavingsGoalListViewModel
     

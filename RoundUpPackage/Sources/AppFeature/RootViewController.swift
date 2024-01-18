@@ -13,57 +13,11 @@ import Transaction
 import RxSwift
 import SavingsGoalListFeature
 
-public class RootViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+public class RootViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    
     let viewModel = RoundUpListViewModel()
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.tableViewSections[section].transactions.count
-    }
-    
-    public func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.tableViewSections.count
-    }
-    
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        viewModel.tableViewSections[section].date.relativeDate
-    }
-    
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        .zero
-    }
-    
-    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
-    {
-        let corners = tableView.corners(for: cell, at: indexPath)
-        let cornerRadius = space4
-        let maskLayer = CAShapeLayer()
-        
-        maskLayer.path = UIBezierPath(
-            roundedRect: cell.bounds,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(
-                width: cornerRadius, height: cornerRadius)
-        ).cgPath
-        cell.layer.mask = maskLayer
-    }
-    
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TransactionTableViewCell.identifier) as? TransactionTableViewCell else {
-            return UITableViewCell()
-        }
-        
-        let transaction = viewModel.tableViewSections[indexPath.section].transactions[indexPath.row]
-        let isLastInSection = viewModel.tableViewSections[indexPath.section].transactions.count - 1 == indexPath.row
-        cell.bind(TransactionViewModel.init(transaction: transaction), hidesDivider: isLastInSection)
-        
-        return cell
-    }
-    
-    
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -79,10 +33,7 @@ public class RootViewController: UIViewController, UITableViewDataSource, UITabl
             .subscribe { route in
                 switch route {
                 case let .savingsGoal(viewModel):
-                    
                     let vc = SavingsGoalListViewController(viewModel)
-                    //                    context.present(vc, animated: true)
-                    
                     context.show(vc, sender: nil)
                     
                     
@@ -108,7 +59,8 @@ private extension RootViewController {
         let baseView = Components.createBaseContainerView()
         let button = Components.createPrimaryButton("Round", space2, action: #selector(roundUp))
         
-        let tableView = Components.baseTableView()
+        let tableView = Components.baseTableView(delegate: viewModel.dataSource, dataSource: viewModel.dataSource)
+        
         tableView.register(cell: TransactionTableViewCell.self)
         
         baseView.addSubview(stack)
@@ -118,7 +70,6 @@ private extension RootViewController {
         
         self.view.addSubview(baseView)
         self.view.addSubview(tableView)
-        //        secondBaseView.addSubview(tableView)
         
         NSLayoutConstraint.activate([
             stack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -space6),

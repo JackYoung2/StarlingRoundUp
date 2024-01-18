@@ -15,7 +15,8 @@ let package = Package(
         .library(name: "SharedModel", targets: ["SharedModel"]),
         .library(name: "RoundUpClient", targets: ["RoundUpClient"]),
         .library(name: "SavingsGoalListFeature", targets: ["SavingsGoalListFeature"]),
-        .library(name: "SavingsGoalFeature", targets: ["SavingsGoalFeature"])
+        .library(name: "SavingsGoalFeature", targets: ["SavingsGoalFeature"]),
+        .library(name: "CreateSavingsGoalFeature", targets: ["CreateSavingsGoalFeature"])
     ],
     dependencies: [
         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0"))
@@ -37,7 +38,7 @@ let package = Package(
         ),
         .target(name: "Transaction", dependencies: ["Views", "SharedModel"]),
         .target(name: "SharedModel"),
-        .target(name: "RoundUpClient"),
+        .target(name: "RoundUpClient", dependencies: ["Common"]),
         .target(
             name: "Common",
             resources: [.process("Resources")]
@@ -60,7 +61,15 @@ let package = Package(
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]
+        ),
+        .target(
+            name: "CreateSavingsGoalFeature",
+            dependencies: [
+                "Views",
+                "SharedModel",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift")
+            ]
         )
-        
     ]
 )

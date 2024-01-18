@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Common
 
 public protocol RoundUpClientProtocol {
     
@@ -15,11 +16,14 @@ public struct RoundUpClient: RoundUpClientProtocol {
     
     public init(){}
     
-    public func roundUpSpend(_ transactionAmmount: Decimal) -> Decimal {
-        let ammount = NSDecimalNumber(decimal: transactionAmmount).doubleValue
-        let difference = (ceil(ammount) - ammount)
-        let trim = Double(round(1000 * difference) / 1000)
-        let decimal = Decimal(trim)
-        return decimal
+    public func roundUpSpend(code: String, _ transactionAmount: Int) -> Int {
+        let formatter = NumberFormatter.currencyFormatter(for: code)
+        let amountDecimal = Decimal(transactionAmount) / pow(10, formatter.minimumFractionDigits)
+        let amountDecimalAsDouble = NSDecimalNumber(decimal: amountDecimal).doubleValue
+        let roundUpAmountDouble = (ceil(amountDecimalAsDouble) - amountDecimalAsDouble)
+        let roundUpAmountDoubleAsMinorUnits = roundUpAmountDouble * pow(Double(10), Double(formatter.minimumFractionDigits))
+    
+        return Int(roundUpAmountDoubleAsMinorUnits)
     }
+    
 }

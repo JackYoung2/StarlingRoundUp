@@ -11,8 +11,8 @@ import Common
 public extension Components {
     static func baseTableView(
         cells: [AnyClass] = [],
-        _ delegate: UITableViewDelegate? = nil,
-        _ dataSource: UITableViewDataSource? = nil
+        delegate: UITableViewDelegate? = nil,
+        dataSource: UITableViewDataSource? = nil
     ) -> UITableView {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false

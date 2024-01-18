@@ -20,12 +20,12 @@ public class SavingsGoalViewModel {
     
     public var displayedProgress: Float { Float(savingsGoal.savedPercentage / 100) }
     
-    public var displayedTarget: String {
-        savingsGoal.totalSaved.minorUnits.asCurrencyString ?? ""
+    public var displayedTarget: String { ""
+//        savingsGoal.totalSaved.minorUnits.asCurrencyString ?? ""
     }
     
-    public var displayedCurrentAmount: String {
-        savingsGoal.target.minorUnits.asCurrencyString ?? ""
+    public var displayedCurrentAmount: String { ""
+//        savingsGoal.target.minorUnits.asCurrencyString ?? ""
     }
     
     public subscript<T>(dynamicMember keyPath: KeyPath<SavingsGoal, T>) -> T {

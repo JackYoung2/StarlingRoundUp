@@ -71,9 +71,9 @@ public class TransactionTableViewCell: UITableViewCell {
     
     public func bind(_ item: TransactionViewModel, hidesDivider: Bool = false) {
         roundLabel.text = item.roundedUpDisplay
-//        priceLabel.text = item.transactionDisplay
-//        merchantLabel.text = item.transaction.merchant
-//        dateLabel.text = item.timeDisplay
+        priceLabel.text = item.transactionDisplay
+        merchantLabel.text = item.transaction.counterPartyName
+        dateLabel.text = item.timeDisplay
         divider.isHidden = hidesDivider
     }
 }
