@@ -26,8 +26,8 @@ public class SavingsGoalTableViewCell: UITableViewCell {
     var currentAmmountLabel = Components.baseLabel()
     var targetAmmountLabel = Components.baseLabel()
     
-    let progressStack = Components.createStackView(.vertical, space2)
-    let metaStack = Components.createStackView(.vertical, space2)
+    let progressStack = Components.createStackView(axis: .vertical, spacing: space2)
+    let metaStack = Components.createStackView(axis: .vertical, spacing: space2)
     let divider = Components.createDivider()
     let progressBar = Components.progressBar()
     
@@ -36,7 +36,7 @@ public class SavingsGoalTableViewCell: UITableViewCell {
         metaStack.addArrangedSubview(nameLabel)
         
         
-        let amountsStack = Components.createStackView(.horizontal)
+        let amountsStack = Components.createStackView(axis: .horizontal, distribution: .fill)
         amountsStack.addArrangedSubview(targetAmmountLabel)
         amountsStack.addArrangedSubview(currentAmmountLabel)
         
@@ -52,10 +52,7 @@ public class SavingsGoalTableViewCell: UITableViewCell {
             metaStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: space5),
             metaStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -space5),
             metaStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space3),
-//            metaStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -space3),
-//
-//            rightStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -space5),
-//            rightStack.topAnchor.constraint(equalTo: leftStack.topAnchor, constant: space3),
+            
             
             divider.topAnchor.constraint(equalTo: metaStack.bottomAnchor, constant: space5),
             divider.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),

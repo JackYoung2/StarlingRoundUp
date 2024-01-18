@@ -23,14 +23,18 @@ public extension Components {
     }
     
     static func createStackView(
-        _ axis: NSLayoutConstraint.Axis? = nil,
-        _ spacing: Double? = nil
+        axis: NSLayoutConstraint.Axis = .horizontal,
+        spacing: Double = space3,
+        distribution: UIStackView.Distribution = .equalSpacing,
+        alignment: UIStackView.Alignment = .fill,
+        subViews: [UIView] = []
     ) -> UIStackView {
-        let view = UIStackView()
+        let view = UIStackView(arrangedSubviews: subViews)
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = ColorSystem.background
-        view.axis = axis ?? .horizontal
-        view.spacing = spacing ?? space3
+        view.axis = axis
+        view.distribution = distribution
+        view.spacing = spacing
+        view.alignment = alignment
         return view
     }
 }

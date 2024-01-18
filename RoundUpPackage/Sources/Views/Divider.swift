@@ -10,10 +10,10 @@ import UIKit
 import Common
 
 public extension Components {
-    static func createDivider() -> UIView {
+    static func createDivider(_ height: CGFloat = 1) -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        view.heightAnchor.constraint(equalToConstant: height).isActive = true
         view.backgroundColor = ColorSystem.separator
         return view
     }

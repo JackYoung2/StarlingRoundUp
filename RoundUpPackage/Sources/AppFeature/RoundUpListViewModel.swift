@@ -10,6 +10,7 @@ import SavingsGoalListFeature
 import RxSwift
 import RxRelay
 import SharedModel
+import CreateSavingsGoalFeature
 
 public class RoundUpListViewModel {
     
@@ -47,10 +48,12 @@ public class RoundUpListViewModel {
     
     enum Route {
         case savingsGoal(SavingsGoalListViewModel)
+        case createSavingsGoal(CreateSavingsGoalViewModel)
     }
     
     func roundButtonTapped() {
         self.route.accept(.savingsGoal(.init()))
+//        self.route.accept(.createSavingsGoal(.init()))
 //        self.route = .savingsGoal(.init())
     }
     

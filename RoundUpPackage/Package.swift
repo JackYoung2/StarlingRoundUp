@@ -36,7 +36,7 @@ let package = Package(
                 .product(name: "RxRelay", package: "RxSwift")
             ]
         ),
-        .target(name: "Transaction", dependencies: ["Views", "SharedModel"]),
+        .target(name: "Transaction", dependencies: ["Views", "SharedModel", "RoundUpClient"]),
         .target(name: "SharedModel"),
         .target(name: "RoundUpClient", dependencies: ["Common"]),
         .target(
@@ -49,6 +49,7 @@ let package = Package(
                 "Views", 
                 "SharedModel",
                 "SavingsGoalFeature",
+                "CreateSavingsGoalFeature",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]

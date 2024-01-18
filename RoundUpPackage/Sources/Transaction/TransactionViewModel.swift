@@ -20,7 +20,7 @@ public struct TransactionViewModel {
     }
 //    
     var timeDisplay: String {
-        "\(transaction.settlementTime.asTimeString ?? "nope")"
+        "\(transaction.settlementTime.asTimeString ?? "")"
     }
     
 //    var roundedUpAmount: Decimal {

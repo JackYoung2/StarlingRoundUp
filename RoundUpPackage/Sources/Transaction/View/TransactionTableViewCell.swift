@@ -26,9 +26,9 @@ public class TransactionTableViewCell: UITableViewCell {
     let merchantLabel = Components.baseLabel()
     let dateLabel = Components.detailLabel()
     
-    let leftStack = Components.createStackView(.vertical, space2)
-    let rightStack = Components.createStackView(.vertical, space2)
-    let metaStack = Components.createStackView(.horizontal, space2)
+    let leftStack = Components.createStackView(axis: .vertical, spacing: space2)
+    let rightStack = Components.createStackView(axis: .vertical, spacing: space2)
+    let metaStack = Components.createStackView(axis: .horizontal, spacing: space2)
     
     let divider = Components.createDivider()
     

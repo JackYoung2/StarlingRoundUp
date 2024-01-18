@@ -23,6 +23,7 @@ public extension Components {
         tableView.separatorInset = UIEdgeInsets.init(top: 0, left: space2, bottom: 0, right: 0)
         tableView.sectionFooterHeight = 0.0
         tableView.backgroundColor = .clear
+        tableView.showsVerticalScrollIndicator = false
         cells.forEach { tableView.register(cell: $0) }
         
         return tableView

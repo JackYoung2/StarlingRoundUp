@@ -19,7 +19,7 @@ public extension Components {
     }
     
     static func titleLabel(_ text: String? = nil) -> UILabel {
-        let label = baseLabel()
+        let label = baseLabel(text)
         label.font = UIFont.Title.mediumBold
         return label
     }
