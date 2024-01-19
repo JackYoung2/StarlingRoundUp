@@ -10,6 +10,7 @@ import SharedModel
 import RxSwift
 import RxRelay
 import Common
+import APIClient
 
 public protocol CreateSavingsGoalViewModelProtocol {
     //    var apiClient: APIClient
@@ -26,6 +27,8 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     }
     var account: Account
     public var route: BehaviorRelay<Route?>
+    public var apiClient: APIClientProtocol
+    public var isNetworking: PublishRelay<Bool> = .init()
     
     
 //    lazy var savingsGoalRelay = BehaviorRelay(value: )
@@ -36,10 +39,12 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     
     public init(
         account: Account,
-        route: Route? = nil
+        route: Route? = nil,
+        apiClient: APIClientProtocol
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.account = account
+        self.apiClient = apiClient
 //        setUpSubs()
     }
     
@@ -59,15 +64,42 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
             name: name,
             target: .init(currency: account.currency, minorUnits: target)
             )
+        
+        Task {
+            try await postSavingsGoal(savingsGoal)
+        }
     }
     
     func cancelButtonTapped() {
         self.route.accept(nil)
     }
     
+    func postSavingsGoal(_ savingsGoal: SavingsGoal) async throws {
+        isNetworking.accept(true)
+        var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
+        let result = try await apiClient.call(&endpoint)
+        
+        switch result {
+        case .success(let success):
+            print("It went up")
+        case .failure(let failure):
+            switch failure {
+            case .networkError:
+                self.route.accept(.alert(.network))
+            default:
+                self.route.accept(.alert(.genericError))
+            }
+            
+        }
+        
+        isNetworking.accept(false)
+    }
+    
 }
 
 extension AlertState {
     static var emptyName = Self.init(title: "Name Missing", message: "Please choose a name for your savings goal")
-    static var targetTooLow = Self.init(title: "Target Too Low", message: "Targert is currently amount is currently 0. Let's aim a little higher!")
+    static var targetTooLow = Self.init(title: "Target Too Low", message: "Target amount is currently 0. Let's aim a little higher!")
+    static var genericError = Self.init(title: "Unable To Create Savings Goal", message: "An unknown error occured")
+    static var network = Self.init(title: "Unable To Create Savings Goal", message: "Please check your connection and try again")
 }

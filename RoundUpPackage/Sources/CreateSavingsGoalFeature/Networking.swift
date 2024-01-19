@@ -7,9 +7,13 @@
 
 import APIClient
 import Foundation
+import SharedModel
 
-extension Endpoint {
-    static func createSavingsGoal(for account: String) -> Self {
+public extension Endpoint {
+    static func createSavingsGoal(
+        for account: String,
+        goal: SavingsGoal
+    ) -> Self {
         .init(
             path: "/account/\(account)/savings-goals",
             method: .put

@@ -11,6 +11,18 @@ public struct SavingsGoalListResponse: Codable {
     public let savingsGoalList: [SavingsGoal]
 }
 
+
+public struct CreateSavingsGoalResponse: Codable {
+    public let savingsGoalUid: String
+    public let success: Bool
+    
+    public init(savingsGoalUid: String, success: Bool) {
+        self.savingsGoalUid = savingsGoalUid
+        self.success = success
+    }
+}
+
+
 public struct SavingsGoal: Codable {
     public let savingsGoalUid: String
     public let name: String
@@ -34,13 +46,4 @@ public struct SavingsGoal: Codable {
         self.savedPercentage = savedPercentage
         self.state = state
     }
-
-//    enum CodingKeys: String, CodingKey {
-//        case savingsGoalUid
-//        case name
-//        case target
-//        case totalSaved
-//        case savedPercentage
-//        case state
-//    }
 }

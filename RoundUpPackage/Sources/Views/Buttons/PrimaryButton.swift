@@ -16,7 +16,7 @@ public extension Components {
         _ corners: Double? = nil,
         action: Selector? = nil
     ) -> UIButton {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle(text, for: .normal)
         if let action {
             button.addTarget(self, action: action, for: .touchUpInside)

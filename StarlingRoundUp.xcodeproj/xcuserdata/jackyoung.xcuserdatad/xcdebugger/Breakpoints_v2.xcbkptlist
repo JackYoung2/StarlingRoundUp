@@ -498,5 +498,69 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E1E79B3D-91F7-4849-B13B-DD977F89D387"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RoundUpPackage/Sources/CreateSavingsGoalFeature/CreateSavingsGoalViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "setUpSubscribers(context:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "756F3EDE-98D8-46AE-A5FA-37DEBF220C7D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RoundUpPackage/Sources/CreateSavingsGoalFeature/CreateSavingsGoalViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
+            landmarkName = "postSavingsGoal(_:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "756F3EDE-98D8-46AE-A5FA-37DEBF220C7D - d7cdfd9fd31fc214"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for CreateSavingsGoalFeature.CreateSavingsGoalViewModel.postSavingsGoal(SharedModel.SavingsGoal) async throws -&gt; ()"
+                  moduleName = "StarlingRoundUp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/CreateSavingsGoalFeature/CreateSavingsGoalViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "85"
+                  endingLineNumber = "85"
+                  offsetFromSymbolStart = "592">
+               </Location>
+               <Location
+                  uuid = "756F3EDE-98D8-46AE-A5FA-37DEBF220C7D - d7cdfd9fd31fc277"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for CreateSavingsGoalFeature.CreateSavingsGoalViewModel.postSavingsGoal(SharedModel.SavingsGoal) async throws -&gt; ()"
+                  moduleName = "StarlingRoundUp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/CreateSavingsGoalFeature/CreateSavingsGoalViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "380">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

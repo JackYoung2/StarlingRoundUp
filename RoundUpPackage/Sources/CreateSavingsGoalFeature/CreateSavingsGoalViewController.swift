@@ -9,6 +9,7 @@ import UIKit
 import Views
 import Common
 import RxSwift
+import RxCocoa
 
 public class CreateSavingsGoalViewController: UIViewController {
     
@@ -29,7 +30,7 @@ public class CreateSavingsGoalViewController: UIViewController {
     let divider = Components.createDivider()
     let metaStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
     let doneButton = Components.borderButton("Done", action: #selector(doneButtonTapped))
-    
+    let indicator = Components.indicator()
     let baseView = Components.createBaseContainerView()
     
     public override func viewDidLoad() {
@@ -70,6 +71,8 @@ public class CreateSavingsGoalViewController: UIViewController {
         view.addSubview(baseView)
         view.addSubview(metaStack)
         
+        view.addSubview(indicator)
+        
         NSLayoutConstraint.activate([
             
             baseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
@@ -87,35 +90,65 @@ public class CreateSavingsGoalViewController: UIViewController {
             doneButton.topAnchor.constraint(equalTo: baseView.bottomAnchor, constant: space4),
             doneButton.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: space3),
             doneButton.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -space3),
+            
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
 
         ])
+        
+        nameTextField.text = "Test"
+        targetTextField.text = "100"
     }
     
     @objc func doneButtonTapped() {
         viewModel.doneButtonTapped()
     }
     
-    
+    @MainActor
     func setUpSubscribers(context: UIViewController) {
         
         var presentedViewController: UIViewController?
         
         viewModel.route
+            .observe(on: MainScheduler.instance)
             .subscribe { route in
                 switch route {
                 case let .alert(alertState):
                     let vc = Components.alert(state: alertState)
-                    context.present(vc, animated: true)
-                    
+            
                     vc.addAction(.init(title: "Ok", style: .default, handler: { _ in
                         self.viewModel.cancelButtonTapped()
                     }))
                     
+//                    DispatchQueue.main.async {
+                        context.present(vc, animated: true)
+//                    }
                     presentedViewController = vc
+                    
                 case .none:
                     presentedViewController = nil
                 }
             }.disposed(by: disposeBag)
+        
+        
+        nameTextField.rx
+            .text
+            .orEmpty
+            .subscribe(onNext: { text in
+                self.viewModel.name = text
+            })
+            .disposed(by: disposeBag)
+
+        
+        targetTextField.rx
+            .text
+            .orEmpty
+            .subscribe(onNext: { text in
+//                TODO: - Format
+                self.viewModel.target = Int(text) ?? 100
+            })
+            .disposed(by: disposeBag)
+
         
     }
 }

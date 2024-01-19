@@ -45,7 +45,7 @@ public class SavingsGoalListViewController: UIViewController {
     }
     
     @objc func addButtonTapped() {
-        viewModel.route.accept(.createSavingsGoal(.init(account: viewModel.account)))
+        viewModel.route.accept(.createSavingsGoal(.init(account: viewModel.account, apiClient: viewModel.apiClient)))
     }
     
 

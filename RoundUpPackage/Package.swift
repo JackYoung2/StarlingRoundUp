@@ -77,7 +77,8 @@ let package = Package(
                 "SharedModel",
                 "APIClient",
                 .product(name: "RxSwift", package: "RxSwift"),
-                .product(name: "RxRelay", package: "RxSwift")
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift")
             ]
         ),
         .target(
