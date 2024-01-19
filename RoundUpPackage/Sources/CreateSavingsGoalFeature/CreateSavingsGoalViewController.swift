@@ -15,7 +15,6 @@ public class CreateSavingsGoalViewController: UIViewController {
     
 //    TODO: - RXify
     @objc func myTextFieldDidChange(_ textField: UITextField) {
-
         if let amountString = textField.text?.currencyInputFormatting("GBP") {
             textField.text = amountString
         }

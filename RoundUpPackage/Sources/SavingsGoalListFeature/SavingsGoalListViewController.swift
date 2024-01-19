@@ -11,6 +11,7 @@ import Views
 import CreateSavingsGoalFeature
 import RxRelay
 import RxSwift
+import RxDataSources
 
 public class SavingsGoalListViewController: UIViewController {
     
@@ -18,9 +19,17 @@ public class SavingsGoalListViewController: UIViewController {
     
     let viewModel: SavingsGoalListViewModel
     let tableView = Components.savingsGoalTableView()
+    let indicator = Components.indicator()
+    
+    let emptyStatebaseView = Components.createBaseContainerView()
+    let emptyStatelabel = Components.baseLabel("Hit the + button to create your first savings goal")
 
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Task {
+            try await viewModel.getSavingsGoals()
+        }
     }
     
     public init(_ viewModel: SavingsGoalListViewModel) {
@@ -41,47 +50,47 @@ public class SavingsGoalListViewController: UIViewController {
         
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonTapped))
         navigationItem.rightBarButtonItem = addButton
-       
-        guard !viewModel.savingsGoals.value.isEmpty else {
-            setUpEmptyStateView()
-            return
-        }
+     
+        self.navigationItem.title = "Add to Savings Goal"
+    
+        setUpEmptyStateView()
         
-        tableView.dataSource = viewModel.dataSource
         tableView.delegate = self
         
-        
         view.addSubview(tableView)
+        view.addSubview(indicator)
         
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: space3),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -space3)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -space3),
+            
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        func setUpEmptyStateView() {
+            emptyStatelabel.textAlignment = .center
+            
+            emptyStatebaseView.addSubview(emptyStatelabel)
+            view.addSubview(emptyStatebaseView)
+            
+            NSLayoutConstraint.activate([
+                emptyStatelabel.leadingAnchor.constraint(equalTo: emptyStatebaseView.leadingAnchor, constant: space3),
+                emptyStatelabel.topAnchor.constraint(equalTo: emptyStatebaseView.topAnchor, constant: space3),
+                emptyStatelabel.trailingAnchor.constraint(equalTo: emptyStatebaseView.trailingAnchor, constant: -space3),
+                emptyStatelabel.bottomAnchor.constraint(equalTo: emptyStatebaseView.bottomAnchor, constant: -space3),
+
+                emptyStatebaseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
+                emptyStatebaseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
+                emptyStatebaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
+    //            baseView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -space3)
+            ])
+        }
     }
     
-    func setUpEmptyStateView() {
-        
-        let baseView = Components.createBaseContainerView()
-        let label = Components.baseLabel("Hit the + button to create your first savings goal")
-        label.textAlignment = .center
-        
-        baseView.addSubview(label)
-        view.addSubview(baseView)
-        
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: space3),
-            label.topAnchor.constraint(equalTo: baseView.topAnchor, constant: space3),
-            label.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -space3),
-            label.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -space3),
-
-            baseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
-            baseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
-            baseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
-//            baseView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -space3)
-        ])
-    }
+    
     
     func setUpSubscribers(context: UIViewController) {
         viewModel.route
@@ -94,6 +103,40 @@ public class SavingsGoalListViewController: UIViewController {
                     break
                 }
             }.disposed(by: disposeBag)
+        
+
+        viewModel
+            .tableViewSections
+            .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
+            .disposed(by: disposeBag)
+        
+        let waitForit = viewModel.savingsGoals
+            .asObservable()
+            .map { _ in false }
+            .skip(1)
+            .startWith(true)
+            .asDriver(onErrorJustReturn: false)
+        
+        waitForit
+            .drive(indicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+       
+        let emptyGoals = viewModel
+            .savingsGoals
+            .map { !$0.isEmpty }
+            .skip(1)
+          .startWith(true)
+            .asDriver(onErrorJustReturn: false)
+        
+        emptyGoals
+            .drive(emptyStatebaseView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+//        loading
+//          .drive(dateStack.rx.isHidden)
+//          .disposed(by: disposeBag)
+        
     }
 }
 

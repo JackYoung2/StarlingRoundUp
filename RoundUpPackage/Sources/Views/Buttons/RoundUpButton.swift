@@ -10,8 +10,8 @@ import Common
 
 public extension Components {
     
-    static func roundUpButton(action: Selector? = nil) -> RoundUpButton {
-        let button = RoundUpButton(action: action)
+    static func roundUpButton(action: Selector? = nil, target: Any? = nil) -> RoundUpButton {
+        let button = RoundUpButton(action: action, target: target)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }
@@ -21,7 +21,7 @@ public class RoundUpButton: UIButton {
     
     public let label = Components.baseLabel()
 
-    init(action: Selector? = nil) {
+    init(action: Selector? = nil, target: Any? = nil) {
         super.init(frame: .zero)
         setUpView(action: action)
     }
@@ -30,7 +30,7 @@ public class RoundUpButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUpView(action: Selector? = nil) {
+    func setUpView(action: Selector? = nil, target: Any? = nil) {
         label.textColor = ColorSystem.tint
         
         let upImageView = UIImageView(image: UIImage(named: "arrow.up"))
@@ -44,7 +44,7 @@ public class RoundUpButton: UIButton {
         self.addSubview(label)
         
         if let action {
-            self.addTarget(self, action: action, for: .touchUpInside)
+            self.addTarget(target, action: action, for: .touchUpInside)
         }
         
         NSLayoutConstraint.activate([

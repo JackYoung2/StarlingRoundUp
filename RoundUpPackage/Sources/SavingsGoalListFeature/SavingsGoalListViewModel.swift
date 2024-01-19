@@ -5,12 +5,14 @@
 //  Created by Jack Young on 15/01/2024.
 //
 
-import Foundation
+import UIKit
 import SharedModel
 import RxSwift
 import RxRelay
+import RxDataSources
 import SavingsGoalFeature
 import CreateSavingsGoalFeature
+import APIClient
 
 public protocol SavingsGoalListViewModelProtocol {
     var savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> { get }
@@ -26,18 +28,69 @@ public class SavingsGoalListViewModel {
         case createSavingsGoal(CreateSavingsGoalViewModel)
     }
     
-    var savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: testSavingsGoals.map(SavingsGoalViewModel.init))
-    lazy var dataSource = SavingsGoalDataSource(viewModel: self)
+    var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
+    let savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: [])
+    
+    var apiClient: APIClientProtocol
+    var account: Account
+    
+    let disposeBag = DisposeBag()
+    
+//    lazy var dataSource = SavingsGoalDataSource(viewModel: self)
+    
+    lazy var dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, SavingsGoalViewModel>>(
+        configureCell: { [weak self] (_, tableView, indexPath, element) in
+            
+            guard let self = self, let cell = tableView.dequeueReusableCell(
+                withIdentifier: SavingsGoalTableViewCell.identifier
+            ) as? SavingsGoalTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            let savingsGoal = self.savingsGoals.value[indexPath.row]
+            cell.bind(savingsGoal)
+            
+            return cell
+        }
+    )
     
     public var route: BehaviorRelay<Route?>
     
-    public init(route: Route? = nil) {
+    public init(
+        route: Route? = nil, 
+        apiClient: APIClientProtocol,
+        account: Account
+    ) {
         self.route = BehaviorRelay<Route?>(value: nil)
+        self.apiClient = apiClient
+        self.account = account
+        setUpSubs()
+    }
+    
+    func getSavingsGoals() async throws {
+        var endpoint = Endpoint<SavingsGoalListResponse>.getSavingsGoals(for: account.accountUid)
+        let result = try await apiClient.call(&endpoint)
+        
+        switch result {
+        case let .success(response):
+            print(response.savingsGoalList)
+            self.savingsGoals.accept(response.savingsGoalList.map(SavingsGoalViewModel.init))
+        case let .failure(error):
+            print("Error")
+        }
+    }
+    
+    func setUpSubs() {
+        savingsGoals.subscribe {
+            self.tableViewSections.accept(
+                [SectionModel(model: UUID().uuidString, items: $0)]
+                )
+        }.disposed(by: disposeBag)
     }
 }
 
 
-let testSavingsGoals: [SavingsGoal] = []
+//let testSavingsGoals: [SavingsGoal] = []
 //    SavingsGoal(
 //        savingsGoalUid: "c0efc8ad-1a48-4bf3-b0c8-d2f23b370774",
 //        name: "Trip to Paris",

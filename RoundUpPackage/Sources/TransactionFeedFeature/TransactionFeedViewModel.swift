@@ -85,14 +85,15 @@ public class TransactionFeedViewModel {
     }
 
     func roundButtonTapped() {
-        self.route.accept(.savingsGoal(.init()))
+        guard let account = accountRelay.value else {
+            preconditionFailure("Should have account")
+        }
+        
+        self.route.accept(.savingsGoal(.init(apiClient: apiClient, account: account)))
     }
     
     func setUpSubscribers() {
        transactions
-            .map {
-                $0.filter { $0.direction == .out && $0.status == .settled }
-            }
             .map {
                 $0.reduce(into: [SectionModel<Date, Transaction>]()) { partialResult, next in
                     if let index = partialResult.firstIndex(where: { section in
@@ -129,7 +130,8 @@ public class TransactionFeedViewModel {
         
         switch result {
         case .success(let result):
-            self.transactions.accept(result.feedItems)
+//            TODO: - Move this?
+            self.transactions.accept(result.feedItems.filter { $0.direction == .out && $0.status == .settled })
         case .failure(let failure):
             print(failure)
 //        TODO: - Handle failure

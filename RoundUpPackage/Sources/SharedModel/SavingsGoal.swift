@@ -8,7 +8,7 @@
 import Foundation
 
 public struct SavingsGoalListResponse: Codable {
-    let savingsGoalList: [SavingsGoal]
+    public let savingsGoalList: [SavingsGoal]
 }
 
 public struct SavingsGoal: Codable {

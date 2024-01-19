@@ -55,7 +55,9 @@ let package = Package(
                 "SavingsGoalFeature",
                 "CreateSavingsGoalFeature",
                 .product(name: "RxSwift", package: "RxSwift"),
-                .product(name: "RxRelay", package: "RxSwift")
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift"),
+                .product(name: "RxDataSources", package: "RxDataSources")
             ]
         ),
         .target(
@@ -64,6 +66,7 @@ let package = Package(
                 "Views",
                 "SharedModel",
                 .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]
         ),

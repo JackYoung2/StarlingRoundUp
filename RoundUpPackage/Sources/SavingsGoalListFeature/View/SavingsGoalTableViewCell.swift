@@ -37,8 +37,8 @@ public class SavingsGoalTableViewCell: UITableViewCell {
         
         
         let amountsStack = Components.createStackView(axis: .horizontal, distribution: .fill)
-        amountsStack.addArrangedSubview(targetAmmountLabel)
         amountsStack.addArrangedSubview(currentAmmountLabel)
+        amountsStack.addArrangedSubview(targetAmmountLabel)
         
         progressStack.addArrangedSubview(amountsStack)
         progressStack.addArrangedSubview(progressBar)

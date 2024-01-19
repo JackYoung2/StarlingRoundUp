@@ -8,6 +8,8 @@
 import Foundation
 import SharedModel
 import Common
+import RxSwift
+import RxCocoa
 
 public protocol SavingsGoalViewModelProtocol {
     var displayedProgress: Float { get }
@@ -18,7 +20,6 @@ public protocol SavingsGoalViewModelProtocol {
 
 @dynamicMemberLookup
 public class SavingsGoalViewModel: SavingsGoalViewModelProtocol {
-    
     var savingsGoal: SavingsGoal
     
     public init(savingsGoal: SavingsGoal) {

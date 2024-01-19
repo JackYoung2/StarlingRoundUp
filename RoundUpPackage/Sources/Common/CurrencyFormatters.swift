@@ -40,6 +40,9 @@ public extension NumberFormatter {
     }
     
     static func formattedCurrencyFrom(code: String, amount: Int) -> String? {
+        
+        print(amount)
+        
         let formatter = NumberFormatter.currencyFormatter(for: code)
         let majorUnits = formatter.getMajorUnits(code: code, amount: amount)
         let stringValue = formatter.string(from: majorUnits as NSNumber)
@@ -47,6 +50,7 @@ public extension NumberFormatter {
     }
     
     func getMajorUnits(code: String, amount: Int) -> Decimal {
+//        print(Decimal(amount) / pow(10, self.minimumFractionDigits))
         return Decimal(amount) / pow(10, self.minimumFractionDigits)
     }
 }
