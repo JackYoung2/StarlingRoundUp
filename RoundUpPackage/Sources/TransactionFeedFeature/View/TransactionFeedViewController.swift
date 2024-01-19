@@ -9,19 +9,23 @@ import UIKit
 import Views
 import Common
 import SharedModel
-import Transaction
 import RxSwift
 import SavingsGoalListFeature
 import CreateSavingsGoalFeature
 
-public class RootViewController: UIViewController {
+public class TransactionFeedViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    let viewModel = RoundUpListViewModel()
+    let viewModel = TransactionFeedViewModel()
 
     let accountLabel = Components.titleLabel("Account: ")
     let accountNameLabel = Components.baseLabel("Primary")
     let accountStack = Components.createStackView(axis: .horizontal)
+    
+    let weekLabel = Components.titleLabel("Week Beginning: ")
+    let dateLabel = Components.baseLabel("01/01/25")
+    let dateStack = Components.createStackView(axis: .horizontal)
+    
     let roundUpStack = Components.createStackView()
 //    TODO: - Format properly
     let roundUpButton = Components.roundUpButton("£100", action: #selector(roundToSavingsGoalButtonTapped))
@@ -53,10 +57,9 @@ public class RootViewController: UIViewController {
             }.disposed(by: disposeBag)
     }
     
-    
 }
 
-private extension RootViewController {
+private extension TransactionFeedViewController {
     func setUpView() {
         self.view.backgroundColor = ColorSystem.background
         self.navigationItem.title = "Transactions"
@@ -68,11 +71,14 @@ private extension RootViewController {
         
         accountStack.addArrangedSubview(accountLabel)
         accountStack.addArrangedSubview(accountNameLabel)
+        dateStack.addArrangedSubview(weekLabel)
+        dateStack.addArrangedSubview(dateLabel)
         
         roundUpStack.isLayoutMarginsRelativeArrangement = true
         roundUpStack.layoutMargins = .init(top: space4, left: space4, bottom: space4, right: space4)
         
         view.addSubview(accountStack)
+        view.addSubview(dateStack)
         view.addSubview(roundUpStack)
         
 //        stack.addArrangedSubview(button)
@@ -83,11 +89,13 @@ private extension RootViewController {
         
 
         NSLayoutConstraint.activate([
-            accountStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
+            dateStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
+            accountStack.topAnchor.constraint(equalTo: dateStack.bottomAnchor, constant: space3),
 //            accountStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
             accountStack.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -space3),
+            dateStack.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -space3),
             
-            tableView.topAnchor.constraint(equalTo: accountStack.bottomAnchor, constant: space3),
+            tableView.topAnchor.constraint(equalTo: dateStack.bottomAnchor, constant: space3),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             

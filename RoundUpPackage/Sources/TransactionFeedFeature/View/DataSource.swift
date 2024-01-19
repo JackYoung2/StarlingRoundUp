@@ -8,13 +8,12 @@
 import UIKit
 import Common
 import Views
-import Transaction
 
-public class RoundUpListDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+public class TransactionFeedDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    unowned var viewModel: RoundUpListViewModel
+    unowned var viewModel: TransactionFeedViewModel
     
-    public init(viewModel: RoundUpListViewModel) {
+    public init(viewModel: TransactionFeedViewModel) {
         self.viewModel = viewModel
     }
     

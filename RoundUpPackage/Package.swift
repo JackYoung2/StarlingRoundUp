@@ -8,9 +8,9 @@ let package = Package(
     platforms: [.iOS(.v13)],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "APIClient", targets: ["APIClient"]),
         .library(name: "Views", targets: ["Views"]),
-        .library(name: "RoundUpListFeature", targets: ["RoundUpListFeature"]),
-        .library(name: "Transaction", targets: ["Transaction"]),
+        .library(name: "TransactionFeedFeature", targets: ["TransactionFeedFeature"]),
         .library(name: "Common", targets: ["Common"]),
         .library(name: "SharedModel", targets: ["SharedModel"]),
         .library(name: "RoundUpClient", targets: ["RoundUpClient"]),
@@ -23,20 +23,18 @@ let package = Package(
     ],
     targets: [
         .target(name: "Views", dependencies: ["Common"]),
-        .target(name: "AppFeature", dependencies: ["Views", "SharedModel", "RoundUpListFeature"]),
+        .target(name: "AppFeature", dependencies: ["Views", "SharedModel", "TransactionFeedFeature"]),
         .target(
-            name: "RoundUpListFeature",
+            name: "TransactionFeedFeature",
             dependencies: [
                 "Views", 
                 "SharedModel",
-                "Transaction",
                 "RoundUpClient",
                 "SavingsGoalListFeature",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]
         ),
-        .target(name: "Transaction", dependencies: ["Views", "SharedModel", "RoundUpClient"]),
         .target(name: "SharedModel"),
         .target(name: "RoundUpClient", dependencies: ["Common"]),
         .target(
@@ -68,6 +66,13 @@ let package = Package(
             dependencies: [
                 "Views",
                 "SharedModel",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift")
+            ]
+        ),
+        .target(
+            name: "APIClient",
+            dependencies: [
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]

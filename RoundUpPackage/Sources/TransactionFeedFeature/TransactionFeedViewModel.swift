@@ -12,7 +12,23 @@ import RxRelay
 import SharedModel
 import CreateSavingsGoalFeature
 
-public class RoundUpListViewModel {
+protocol TransactionFeedViewModelProtocol {
+    var route: BehaviorRelay<TransactionFeedViewModel.Route?> { get }
+    var dataSource: TransactionFeedDataSource { get }
+    var transactions: [Transaction] { get }
+    var tableViewSections: [TransactionFeedViewModel.Section] { get }
+    
+    init(route: TransactionFeedViewModel.Route?)
+    func roundButtonTapped()
+}
+
+
+public class TransactionFeedViewModel {
+    
+    enum Route {
+        case savingsGoal(SavingsGoalListViewModel)
+        case createSavingsGoal(CreateSavingsGoalViewModel)
+    }
     
     struct Section {
         var date: Date
@@ -20,7 +36,7 @@ public class RoundUpListViewModel {
     }
     
     var route: BehaviorRelay<Route?>
-    lazy var dataSource = RoundUpListDataSource(viewModel: self)
+    lazy var dataSource = TransactionFeedDataSource(viewModel: self)
     
     let transactions = dummyTransactions
     
@@ -36,25 +52,14 @@ public class RoundUpListViewModel {
         }
     }
 
-//    
     init(
       route: Route? = nil
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
-//        self.tableViewSections.append(
-//            Section(date: Date(), transactions: transactions)
-//        )
     }
-    
-    enum Route {
-        case savingsGoal(SavingsGoalListViewModel)
-        case createSavingsGoal(CreateSavingsGoalViewModel)
-    }
-    
+
     func roundButtonTapped() {
         self.route.accept(.savingsGoal(.init()))
-//        self.route.accept(.createSavingsGoal(.init()))
-//        self.route = .savingsGoal(.init())
     }
     
 }

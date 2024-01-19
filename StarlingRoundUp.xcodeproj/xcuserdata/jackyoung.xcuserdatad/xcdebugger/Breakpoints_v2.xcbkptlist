@@ -126,8 +126,8 @@
             filePath = "RoundUpPackage/Sources/AppFeature/RootViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -142,8 +142,8 @@
             filePath = "RoundUpPackage/Sources/AppFeature/RootViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "setUpView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -162,6 +162,54 @@
             endingLineNumber = "60"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "11506E90-74D2-4258-BC39-6368D89C91F1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
+            landmarkName = "setUpSubscribers(context:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "11506E90-74D2-4258-BC39-6368D89C91F1 - 55172f16a3441d2e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SavingsGoalListFeature.SavingsGoalListViewController.setUpSubscribers(context: __C.UIViewController) -&gt; ()"
+                  moduleName = "StarlingRoundUp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "11506E90-74D2-4258-BC39-6368D89C91F1 - bb3696a9f1f712ea"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;SavingsGoalListFeature.SavingsGoalListViewModel.Route&gt;) -&gt; () in SavingsGoalListFeature.SavingsGoalListViewController.setUpSubscribers(context: __C.UIViewController) -&gt; ()"
+                  moduleName = "StarlingRoundUp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63"
+                  offsetFromSymbolStart = "168">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

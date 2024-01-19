@@ -9,7 +9,7 @@ import Foundation
 import Common
 
 public protocol RoundUpClientProtocol {
-    
+    func roundUpSpend(code: String, _ transactionAmount: Int) -> Int
 }
 
 public struct RoundUpClient: RoundUpClientProtocol {

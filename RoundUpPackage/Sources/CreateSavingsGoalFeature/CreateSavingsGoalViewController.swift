@@ -11,6 +11,8 @@ import Common
 
 public class CreateSavingsGoalViewController: UIViewController {
     
+    var viewModel: CreateSavingsGoalViewModel
+    
 //    TODO: - RXify
     @objc func myTextFieldDidChange(_ textField: UITextField) {
 
@@ -21,16 +23,11 @@ public class CreateSavingsGoalViewController: UIViewController {
     
     let nameTextField = Components.createTextField("Name")
     let targetTextField = Components.createTextField("Target Amount")
-    let nameLabel = Components.titleLabel("Name")
-    
     let nameStack = Components.createStackView(axis: .horizontal, alignment: .center)
-    let targetStack = Components.createStackView(
-)
+    let targetStack = Components.createStackView()
     let divider = Components.createDivider()
-    
     let metaStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
-    
-    let doneButton = Components.borderButton("Done", action: nil)
+    let doneButton = Components.borderButton("Done", action: #selector(doneButtonTapped))
     
     let baseView = Components.createBaseContainerView()
     
@@ -40,6 +37,7 @@ public class CreateSavingsGoalViewController: UIViewController {
     }
     
     public init(_ viewModel: CreateSavingsGoalViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         setUpView()
     }
@@ -89,28 +87,21 @@ public class CreateSavingsGoalViewController: UIViewController {
             doneButton.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -space3),
 
         ])
-        
+    }
+    
+    @objc func doneButtonTapped() {
+        viewModel.doneButtonTapped()
     }
 }
 
 
 import SwiftUI
+import Common
+
 struct CreateSavingsGoalViewController_Previews: PreviewProvider {
     static var previews: some View {
         ToSwiftUI {
             UINavigationController(rootViewController: CreateSavingsGoalViewController(.init()))
-            
         }
-    }
-}
-
-struct ToSwiftUI: UIViewControllerRepresentable {
-    let viewController: () -> UIViewController
-    
-    func makeUIViewController(context: Context) -> UIViewController {
-        self.viewController()
-    }
-    
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     }
 }

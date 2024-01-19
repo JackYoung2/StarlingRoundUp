@@ -9,8 +9,15 @@ import Foundation
 import SharedModel
 import Common
 
+public protocol SavingsGoalViewModelProtocol {
+    var displayedProgress: Float { get }
+    var displayedTarget: String { get }
+    var displayedCurrentAmount: String { get }
+    subscript<T>(dynamicMember keyPath: KeyPath<SavingsGoal, T>) -> T { get }
+}
+
 @dynamicMemberLookup
-public class SavingsGoalViewModel {
+public class SavingsGoalViewModel: SavingsGoalViewModelProtocol {
     
     var savingsGoal: SavingsGoal
     
