@@ -8,14 +8,16 @@
 import UIKit
 import Views
 import Common
+import RxSwift
 
 public class CreateSavingsGoalViewController: UIViewController {
     
     var viewModel: CreateSavingsGoalViewModel
+    let disposeBag = DisposeBag()
     
 //    TODO: - RXify
     @objc func myTextFieldDidChange(_ textField: UITextField) {
-        if let amountString = textField.text?.currencyInputFormatting("GBP") {
+        if let amountString = textField.text?.currencyInputFormatting(viewModel.account.currency) {
             textField.text = amountString
         }
     }
@@ -39,6 +41,7 @@ public class CreateSavingsGoalViewController: UIViewController {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         setUpView()
+        setUpSubscribers(context: self)
     }
     
     required init?(coder: NSCoder) {
@@ -91,16 +94,40 @@ public class CreateSavingsGoalViewController: UIViewController {
     @objc func doneButtonTapped() {
         viewModel.doneButtonTapped()
     }
-}
-
-
-import SwiftUI
-import Common
-
-struct CreateSavingsGoalViewController_Previews: PreviewProvider {
-    static var previews: some View {
-        ToSwiftUI {
-            UINavigationController(rootViewController: CreateSavingsGoalViewController(.init()))
-        }
+    
+    
+    func setUpSubscribers(context: UIViewController) {
+        
+        var presentedViewController: UIViewController?
+        
+        viewModel.route
+            .subscribe { route in
+                switch route {
+                case let .alert(alertState):
+                    let vc = Components.alert(state: alertState)
+                    context.present(vc, animated: true)
+                    
+                    vc.addAction(.init(title: "Ok", style: .default, handler: { _ in
+                        self.viewModel.cancelButtonTapped()
+                    }))
+                    
+                    presentedViewController = vc
+                case .none:
+                    presentedViewController = nil
+                }
+            }.disposed(by: disposeBag)
+        
     }
 }
+
+
+//import SwiftUI
+//import Common
+//
+//struct CreateSavingsGoalViewController_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ToSwiftUI {
+//            UINavigationController(rootViewController: CreateSavingsGoalViewController(.init(account: .init())))
+//        }
+//    }
+//}

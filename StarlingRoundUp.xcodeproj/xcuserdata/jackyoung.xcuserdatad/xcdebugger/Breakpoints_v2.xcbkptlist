@@ -174,8 +174,8 @@
             filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "setUpSubscribers(context:)"
             landmarkType = "7">
             <Locations>
@@ -222,8 +222,8 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "fetchTransactions()"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "fetchTransactions()"
             landmarkType = "7">
          </BreakpointContent>
@@ -332,8 +332,8 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
             landmarkName = "fetchAccount()"
             landmarkType = "7">
             <Locations>
@@ -380,8 +380,8 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
             landmarkName = "fetchAccount()"
             landmarkType = "7">
             <Locations>
@@ -479,6 +479,22 @@
             startingLineNumber = "101"
             endingLineNumber = "101"
             landmarkName = "setUpSubscribers(context:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "52DFFDB5-77DF-4A6F-B1F7-33BF8815C3FD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "setUpView()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

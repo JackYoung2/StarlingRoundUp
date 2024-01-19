@@ -24,8 +24,14 @@ public protocol SavingsGoalListViewModelProtocol {
 
 public class SavingsGoalListViewModel {
     
-    public enum Route {
+    public indirect enum Route {
         case createSavingsGoal(CreateSavingsGoalViewModel)
+    }
+    
+    public let roundUpAmount: Amount
+    
+    public var roundUpDisplayString: String {
+        NumberFormatter.formattedCurrencyFrom(code: account.currency, amount: roundUpAmount.minorUnits) ?? ""
     }
     
     var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
@@ -33,6 +39,10 @@ public class SavingsGoalListViewModel {
     
     var apiClient: APIClientProtocol
     var account: Account
+    
+    var titleString: String {
+        "Add\(" " + roundUpDisplayString) to Savings Goal"
+    }
     
     let disposeBag = DisposeBag()
     
@@ -59,11 +69,14 @@ public class SavingsGoalListViewModel {
     public init(
         route: Route? = nil, 
         apiClient: APIClientProtocol,
-        account: Account
+        account: Account,
+        roundUpAmount: Amount
+    
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.apiClient = apiClient
         self.account = account
+        self.roundUpAmount = roundUpAmount
         setUpSubs()
     }
     

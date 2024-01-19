@@ -89,7 +89,8 @@ public class TransactionFeedViewModel {
             preconditionFailure("Should have account")
         }
         
-        self.route.accept(.savingsGoal(.init(apiClient: apiClient, account: account)))
+//        TODO: -
+        self.route.accept(.savingsGoal(.init(apiClient: apiClient, account: account, roundUpAmount: .init(currency: "gbp", minorUnits: 1))))
     }
     
     func setUpSubscribers() {

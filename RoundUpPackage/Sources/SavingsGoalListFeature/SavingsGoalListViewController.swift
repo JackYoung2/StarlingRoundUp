@@ -44,14 +44,18 @@ public class SavingsGoalListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func addButtonTapped() { viewModel.route.accept(.createSavingsGoal(.init())) }
+    @objc func addButtonTapped() {
+        viewModel.route.accept(.createSavingsGoal(.init(account: viewModel.account)))
+    }
+    
+
     
     func setUpView() {
         
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonTapped))
         navigationItem.rightBarButtonItem = addButton
      
-        self.navigationItem.title = "Add to Savings Goal"
+//        self.configureNavigationTitle(viewModel.titleString)
     
         setUpEmptyStateView()
         
