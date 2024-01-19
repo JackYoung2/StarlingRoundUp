@@ -22,6 +22,20 @@ public extension DateFormatter {
         return formatter
     }()
     
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
+    static let isoDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+//        formatter.timeZone = TimeZone(identifier: "UTC")
+        return formatter
+    }()
+
+    
     static let relativeDateFormatter: DateFormatter = {
         let relativeDateFormatter = DateFormatter()
         relativeDateFormatter.timeStyle = .none
@@ -33,12 +47,21 @@ public extension DateFormatter {
 }
 
 
+
 public extension Date {
     var asTimeString: String? {
         DateFormatter.timeFormatter.string(from: self)
     }
     
+    var asDateString: String? {
+        DateFormatter.dateFormatter.string(from: self)
+    }
+    
     var relativeDate: String? {
         DateFormatter.relativeDateFormatter.string(from: self)
+    }
+    
+    var asISO8601Format: String? {
+        DateFormatter.isoDateFormatter.string(from: self)
     }
 }

@@ -7,25 +7,16 @@
 
 import Foundation
 
-struct AccountResponse: Codable {
-    let accounts: [Account]
+public struct AccountResponse: Codable {
+    public let accounts: [Account]
 }
 
-struct Account: Codable {
-    let accountUid: String
-    let accountType: String
-    let defaultCategory: String
-    let currency: String
-    let createdAt: String
-    let name: String
-
-//    enum CodingKeys: String, CodingKey {
-//        case accountUid
-//        case accountType
-//        case defaultCategory
-//        case currency
-//        case createdAt
-//        case name
-//    }
+public struct Account: Codable {
+    public let accountUid: String
+    public let accountType: String
+    public let defaultCategory: String
+    public let currency: String
+    public let createdAt: String
+    public let name: String
 }
 

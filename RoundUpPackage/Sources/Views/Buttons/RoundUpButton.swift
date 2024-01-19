@@ -10,40 +10,53 @@ import Common
 
 public extension Components {
     
-    static func roundUpButton(_ roundUpTotal: String, action: Selector? = nil) -> UIButton {
-        let button = UIButton()
+    static func roundUpButton(action: Selector? = nil) -> RoundUpButton {
+        let button = RoundUpButton(action: action)
         button.translatesAutoresizingMaskIntoConstraints = false
-        
-        let label = Components.baseLabel("Add \(roundUpTotal) to savings goal")
-        label.textColor = ColorSystem.tint
+        return button
+    }
+}
+
+public class RoundUpButton: UIButton {
     
-        let poundImageView = UIImageView(image: UIImage(named: "sterlingsign.circle.fill"))
-        button.addSubview(poundImageView)
-        poundImageView.translatesAutoresizingMaskIntoConstraints = false
+    public let label = Components.baseLabel()
+
+    init(action: Selector? = nil) {
+        super.init(frame: .zero)
+        setUpView(action: action)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setUpView(action: Selector? = nil) {
+        label.textColor = ColorSystem.tint
         
         let upImageView = UIImageView(image: UIImage(named: "arrow.up"))
         upImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        button.addSubview(upImageView)
-        button.addSubview(label)
+        let poundImageView = UIImageView(image: UIImage(named: "sterlingsign.circle.fill"))
+        poundImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(poundImageView)
+        self.addSubview(upImageView)
+        self.addSubview(label)
         
         if let action {
-            button.addTarget(self, action: action, for: .touchUpInside)
+            self.addTarget(self, action: action, for: .touchUpInside)
         }
-
         
         NSLayoutConstraint.activate([
             label.trailingAnchor.constraint(equalTo: poundImageView.leadingAnchor, constant: -space3),
             label.centerYAnchor.constraint(equalTo: poundImageView.centerYAnchor),
             
             upImageView.centerXAnchor.constraint(equalTo: poundImageView.trailingAnchor, constant: space2),
-            upImageView.topAnchor.constraint(equalTo: button.topAnchor),
-            upImageView.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -space3),
+            upImageView.topAnchor.constraint(equalTo: self.topAnchor),
+            upImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -space3),
             
-            poundImageView.topAnchor.constraint(equalTo: button.topAnchor, constant: space2),
-            poundImageView.bottomAnchor.constraint(equalTo: button.bottomAnchor, constant: -space3),
+            poundImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: space2),
+            poundImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -space3),
         ])
-        
-        return button
     }
 }

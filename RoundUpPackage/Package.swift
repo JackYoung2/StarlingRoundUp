@@ -16,10 +16,13 @@ let package = Package(
         .library(name: "RoundUpClient", targets: ["RoundUpClient"]),
         .library(name: "SavingsGoalListFeature", targets: ["SavingsGoalListFeature"]),
         .library(name: "SavingsGoalFeature", targets: ["SavingsGoalFeature"]),
-        .library(name: "CreateSavingsGoalFeature", targets: ["CreateSavingsGoalFeature"])
+        .library(name: "CreateSavingsGoalFeature", targets: ["CreateSavingsGoalFeature"]),
+        .library(name: "SessionManager", targets: ["SessionManager"]),
+        .library(name: "AccountsFeature", targets: ["AccountsFeature"])
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0"))
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0")),
+        .package(url: "https://github.com/RxSwiftCommunity/RxDataSources.git", from: "5.0.0")
     ],
     targets: [
         .target(name: "Views", dependencies: ["Common"]),
@@ -31,8 +34,11 @@ let package = Package(
                 "SharedModel",
                 "RoundUpClient",
                 "SavingsGoalListFeature",
+                "AccountsFeature",
                 .product(name: "RxSwift", package: "RxSwift"),
-                .product(name: "RxRelay", package: "RxSwift")
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift"),
+                .product(name: "RxDataSources", package: "RxDataSources")
             ]
         ),
         .target(name: "SharedModel"),
@@ -66,6 +72,7 @@ let package = Package(
             dependencies: [
                 "Views",
                 "SharedModel",
+                "APIClient",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]
@@ -73,9 +80,18 @@ let package = Package(
         .target(
             name: "APIClient",
             dependencies: [
+                "Common",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]
+        ),
+        .target(
+            name: "SessionManager",
+            dependencies: []
+        ),
+        .target(
+            name: "AccountsFeature",
+            dependencies: ["APIClient", "SharedModel"]
         )
     ]
 )

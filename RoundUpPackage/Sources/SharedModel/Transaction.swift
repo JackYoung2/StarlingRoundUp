@@ -8,11 +8,15 @@
 import Foundation
 
 public enum SettlementStatus: String, Codable {
-    case settled
+    case settled = "SETTLED"
 }
 
 public enum Direction: String, Codable {
-    case `in`, out
+    case `in` = "IN", out = "OUT"
+}
+
+public struct TransactionFeedItemResponse: Codable {
+    public var feedItems: [Transaction]
 }
 
 public struct Transaction: Codable {
@@ -57,50 +61,6 @@ public struct Transaction: Codable {
         self.spendingCategory = spendingCategory
     }
 }
-
-public struct Amount: Codable {
-    public let currency: String
-    public let minorUnits: Int
-    
-    public init(currency: String, minorUnits: Int) {
-        self.currency = currency
-        self.minorUnits = minorUnits
-    }
-}
-
-//enum CodingKeys: String, CodingKey {
-//        case feedItemUid
-//        case categoryUid
-//        case amount
-//        case sourceAmount
-//        case direction
-//        case updatedAt
-//        case transactionTime
-//        case settlementTime
-//        case source
-//        case status
-//        case transactingApplicationUserUid
-//        case counterPartyType
-//        case counterPartyUid
-//        case counterPartyName
-//        case counterPartySubEntityUid
-//        case counterPartySubEntityName
-//        case counterPartySubEntityIdentifier
-//        case counterPartySubEntitySubIdentifier
-//        case reference
-//        case country
-//        case spendingCategory
-//        case hasAttachment
-//        case hasReceipt
-//        case batchPaymentDetails
-//    }
-
-let dateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-    formatter.timeZone = TimeZone(identifier: "UTC")
-    return formatter
-}()
 
 public let dummyTransactions: [Transaction] = [
     Transaction(
@@ -174,3 +134,11 @@ public let dummyTransactions: [Transaction] = [
         spendingCategory: "Health"
     ),
 ]
+
+//TODO: - Move
+public let dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    formatter.timeZone = TimeZone(identifier: "UTC")
+    return formatter
+}()

@@ -7,6 +7,7 @@
 
 import UIKit
 import Common
+import RxSwift
 
 public extension Components {
     static func baseLabel(_ text: String? = nil) -> UILabel {
