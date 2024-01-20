@@ -19,19 +19,14 @@ public class TransactionFeedViewController: UIViewController {
     let viewModel = TransactionFeedViewModel()
     
     lazy var tableView = Components.baseTableView()
-    
     let accountLabel = Components.titleLabel("Account: ")
     let accountNameLabel = Components.baseLabel()
     let accountStack = Components.createStackView(axis: .horizontal)
-    
     let sinceLabel = Components.titleLabel("Since: ")
     let dateLabel = Components.baseLabel()
     let dateStack = Components.createStackView(axis: .horizontal)
-    
     let indicator = Components.indicator()
-    
     let roundUpStack = Components.createStackView()
-    //    TODO: - Format properly
     let roundUpButton = Components.roundUpButton(action: #selector(roundToSavingsGoalButtonTapped))
     
     public override func viewDidLoad() {
@@ -49,17 +44,33 @@ public class TransactionFeedViewController: UIViewController {
     }
     
     func setUpSubscribers(context: UIViewController) {
-        
 //        MARK: - Navigation
+        var presentedViewController: UIViewController?
+        
         viewModel.route
-            .subscribe { route in
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] route in
+                guard let self = self else { return }
                 switch route {
                 case let .savingsGoal(viewModel):
+                    viewModel
+                        .addToGoalSuccessPublisher
+                        .filter { if case .success = $0 { return true } else { return false } }
+                        .subscribe { result in
+                            presentedViewController = nil
+                            context.navigationController?.popViewController(animated: true)
+                            viewModel.route.accept(.alert(.itWorked))
+                        }
+                        .disposed(by: self.disposeBag)
+                    
                     let vc = SavingsGoalListViewController(viewModel)
                     context.show(vc, sender: nil)
                     
                 case .none:
+                    presentedViewController = nil
+                    
                     break
+                    
                 case let .createSavingsGoal(viewModel):
                     let vc = CreateSavingsGoalViewController(viewModel)
                     context.show(vc, sender: nil)
@@ -165,7 +176,7 @@ private extension TransactionFeedViewController {
         dateStack.addArrangedSubview(sinceLabel)
         dateStack.addArrangedSubview(dateLabel)
         
-//        TODO: - Sort out tableview delegate and height
+        tableView.delegate = self
         
         roundUpStack.isLayoutMarginsRelativeArrangement = true
         roundUpStack.layoutMargins = .init(top: space4, left: space4, bottom: space4, right: space4)
@@ -198,5 +209,26 @@ private extension TransactionFeedViewController {
             indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+}
+
+extension TransactionFeedViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .zero
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    {
+        let corners = tableView.corners(for: cell, at: indexPath)
+        let cornerRadius = space4
+        let maskLayer = CAShapeLayer()
+        
+        maskLayer.path = UIBezierPath(
+            roundedRect: cell.bounds,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(
+                width: cornerRadius, height: cornerRadius)
+        ).cgPath
+        cell.layer.mask = maskLayer
     }
 }

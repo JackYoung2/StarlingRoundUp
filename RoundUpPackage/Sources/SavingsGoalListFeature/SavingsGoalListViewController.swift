@@ -55,15 +55,9 @@ public class SavingsGoalListViewController: UIViewController {
         try await Task.sleep(nanoseconds: 1_000_000_000)
         viewModel.isNetworking.accept(false)
         
-        let result: Result<Bool, APIError> = .failure(.networkError)
+        let result: AddToGoalsResult = .success(true)
         
-        switch result {
-        case .success(let success):
-            print("Worked")
-        case .failure(let failure):
-            self.viewModel.route.accept(.alert(.genericError))
-        }
-        //        Do networking
+        viewModel.addToGoalSuccessPublisher.accept(result)
     }
     
     func cancelAddTapped() {
@@ -136,6 +130,7 @@ public class SavingsGoalListViewController: UIViewController {
                     
                     switch alertType {
                     case .confirmAddToGoal:
+//                    TODO: - abstract away
                         alert.addAction(
                             .init(title: "OK", style: .default, handler: { _ in
                                 presentedViewController = nil
@@ -205,6 +200,16 @@ public class SavingsGoalListViewController: UIViewController {
         //        loading
         //          .drive(dateStack.rx.isHidden)
         //          .disposed(by: disposeBag)
+        
+        viewModel
+            .addToGoalSuccessPublisher
+            .subscribe { result in
+                if case let .failure(error) = result {
+                    self.viewModel.route.accept(.alert(.genericError))
+                }
+            }
+            .disposed(by: disposeBag)
+
         
     }
 }

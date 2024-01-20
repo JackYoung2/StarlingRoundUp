@@ -33,6 +33,7 @@ protocol TransactionFeedViewModelProtocol {
 
 
 public class TransactionFeedViewModel {
+
     
     enum Route {
         case savingsGoal(SavingsGoalListViewModel)
@@ -72,9 +73,8 @@ public class TransactionFeedViewModel {
     var accountRelay = BehaviorRelay<Account?>(value: nil)
     var roundUpValue = BehaviorRelay<Int>(value: 0)
     
-    var currencyCode: String {
-        accountRelay.value?.currency ?? ""
-    }
+    
+    var currencyCode: String { accountRelay.value?.currency ?? "" }
     
     var account: Driver<Account?> {
         return accountRelay.asDriver(onErrorJustReturn: nil)

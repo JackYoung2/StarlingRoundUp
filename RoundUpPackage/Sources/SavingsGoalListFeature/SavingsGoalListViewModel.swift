@@ -23,12 +23,16 @@ public protocol SavingsGoalListViewModelProtocol {
     init(route: SavingsGoalListViewModel.Route?)
 }
 
+public typealias AddToGoalsResult = Result<Bool, APIError>
+
 public class SavingsGoalListViewModel {
     
     public indirect enum Route {
         case createSavingsGoal(CreateSavingsGoalViewModel)
         case alert(AlertType)
     }
+    
+    let disposeBag = DisposeBag()
     
     public let roundUpAmount: Amount
     
@@ -38,15 +42,13 @@ public class SavingsGoalListViewModel {
     
     var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
     let savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: [])
+    public var addToGoalSuccessPublisher = PublishRelay<AddToGoalsResult>()
     
     var apiClient: APIClientProtocol
     var account: Account
     
-    var titleString: String {
-        "Add\(" " + roundUpDisplayString) to Savings Goal"
-    }
+    var titleString: String { "Add\(" " + roundUpDisplayString) to Savings Goal" }
     
-    let disposeBag = DisposeBag()
     
     
     public var isNetworking: PublishRelay<Bool> = .init()
