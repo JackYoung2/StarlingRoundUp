@@ -15,20 +15,12 @@ public class CreateSavingsGoalViewController: UIViewController {
     
     var viewModel: CreateSavingsGoalViewModel
     let disposeBag = DisposeBag()
-    
-//    TODO: - RXify
-    @objc func myTextFieldDidChange(_ textField: UITextField) {
-        if let amountString = textField.text?.currencyInputFormatting(viewModel.account.currency) {
-            textField.text = amountString
-        }
-    }
-    
     let nameTextField = Components.createTextField("Name")
     let targetTextField = Components.createTextField("Target Amount")
     let nameStack = Components.createStackView(axis: .horizontal, alignment: .center)
     let targetStack = Components.createStackView()
     let divider = Components.createDivider()
-    let contentStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
+    let contentStack = Components.createStackView(axis: .vertical, spacing: space5, distribution: .fill, alignment: .fill)
     let textEntryStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
     let doneButton = Components.borderButton("Done", action: #selector(doneButtonTapped))
     let indicator = Components.indicator()
@@ -75,11 +67,13 @@ public class CreateSavingsGoalViewController: UIViewController {
         view.addSubview(indicator)
         view.addSubview(contentStack)
         
+        targetTextField.delegate = self
+        
         NSLayoutConstraint.activate([
             
-            baseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
-            baseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
-            baseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
+//            baseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
+//            baseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
+//            baseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             
             divider.heightAnchor.constraint(equalToConstant: 1),
             divider.widthAnchor.constraint(equalTo: textEntryStack.widthAnchor),
@@ -89,21 +83,34 @@ public class CreateSavingsGoalViewController: UIViewController {
             textEntryStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 0),
             textEntryStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -space3),
             
-            doneButton.topAnchor.constraint(equalTo: baseView.bottomAnchor, constant: space4),
-            doneButton.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: space3),
-            doneButton.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -space3),
+            contentStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space4),
+            contentStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
+            contentStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             
             indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            contentStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            contentStack.topAnchor.constraint(equalTo: view.topAnchor, constant: space3)
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
 
         ])
     }
     
     @objc func doneButtonTapped() {
         viewModel.doneButtonTapped()
+    }
+    
+    @objc func myTextFieldDidChange(_ textField: UITextField) {
+        if let amountString = textField.text?.currencyInputFormatting(viewModel.account.currency) {
+            textField.text = amountString
+        }
+    }
+    
+    func convertTargetTextToMinorUnits(text: String) -> Int? {
+        let formatter = NumberFormatter.currencyFormatter(for: self.viewModel.account.currency)
+        guard let majorUnit = formatter.number(from: text) as? Double else {
+            return nil
+        }
+        let minorUnit = majorUnit * pow(10, Double(formatter.maximumFractionDigits))
+
+        return Int(minorUnit)
     }
     
     @MainActor
@@ -134,20 +141,20 @@ public class CreateSavingsGoalViewController: UIViewController {
         nameTextField.rx
             .text
             .orEmpty
-            .subscribe(onNext: { text in
-//                TODO: -
-//                self.viewModel.name = text
-            })
+            .bind(to: viewModel.name)
             .disposed(by: disposeBag)
 
         
         targetTextField.rx
             .text
             .orEmpty
-            .subscribe(onNext: { text in
-//                TODO: - Format
-//                self.viewModel.target = Int(text) ?? 100
-            })
+            .skip(1)
+            .compactMap { [weak self] in
+                guard let self else { return nil }
+                print(self.convertTargetTextToMinorUnits(text: $0) ?? 0)
+                return self.convertTargetTextToMinorUnits(text: $0)
+            }
+            .bind(to: viewModel.target)
             .disposed(by: disposeBag)
 
             
@@ -163,3 +170,14 @@ public class CreateSavingsGoalViewController: UIViewController {
         
     }
 }
+
+extension CreateSavingsGoalViewController: UITextFieldDelegate {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let maxLength = viewModel.maxGoalAmountDigits
+        let currentString: NSString = (textField.text ?? "") as NSString
+        let newString: NSString =  currentString.replacingCharacters(in: range, with: string) as NSString
+
+        return newString.length <= maxLength
+    }
+}
+

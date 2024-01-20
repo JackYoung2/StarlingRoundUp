@@ -24,6 +24,7 @@ public extension Components {
         tableView.sectionFooterHeight = 0.0
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
+        tableView.automaticallyAdjustsScrollIndicatorInsets = false
         cells.forEach { tableView.register(cell: $0) }
         
         return tableView

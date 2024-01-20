@@ -13,21 +13,7 @@ public protocol RoundUpClientProtocol {
 }
 
 public struct RoundUpClient: RoundUpClientProtocol {
-    
-    let roundingUpHandler: NSDecimalNumberHandler
-
-    
-    public init(roundingUpHandler: NSDecimalNumberHandler? = nil){
-        self.roundingUpHandler = roundingUpHandler ??
-        NSDecimalNumberHandler(
-            roundingMode: .up,
-            scale: 0,
-            raiseOnExactness: false,
-            raiseOnOverflow: false,
-            raiseOnUnderflow: false,
-            raiseOnDivideByZero: false
-        )
-    }
+    public init() {}
     
     public func roundUpSpend(code: String, _ transactionAmount: Int) -> Int {
         let formatter = NumberFormatter.currencyFormatter(for: code)

@@ -13,15 +13,12 @@ public extension Components {
         let textField = UITextField(frame: .zero)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = placeholder
-//        textField.backgroundColor = ColorSystem.background
         return textField
     }
 }
 
 // Credit
 // https://stackoverflow.com/questions/29782982/how-to-input-currency-format-on-a-text-field-from-right-to-left-using-swift
-
-
 
 public extension String {
 

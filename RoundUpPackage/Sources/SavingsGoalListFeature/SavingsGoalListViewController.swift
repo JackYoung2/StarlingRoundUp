@@ -62,6 +62,8 @@ public class SavingsGoalListViewController: UIViewController {
         
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addButtonTapped))
         navigationItem.rightBarButtonItem = addButton
+        navigationItem.largeTitleDisplayMode = .never
+        navigationItem.title = "Add \(viewModel.roundUpDisplayString) to savings goal"
         
         setUpEmptyStateView()
         
@@ -71,10 +73,10 @@ public class SavingsGoalListViewController: UIViewController {
         view.addSubview(indicator)
         
         NSLayoutConstraint.activate([
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: space3),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -space3),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -space3),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -space3),
             
             indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -114,7 +116,7 @@ public class SavingsGoalListViewController: UIViewController {
                        
                             presentedViewController = nil
                             context.navigationController?.popViewController(animated: true)
-                            self.viewModel.route.accept(.alert(.createGoalSuccess(savingsGoalviewModel.name)))
+                            self.viewModel.route.accept(.alert(.createGoalSuccess(savingsGoalviewModel.name.value)))
                             
                             Task {
                                 try await self.viewModel.getSavingsGoals()

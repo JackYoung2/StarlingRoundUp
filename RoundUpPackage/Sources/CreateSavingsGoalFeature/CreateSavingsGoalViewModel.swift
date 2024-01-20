@@ -32,20 +32,16 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     public var route: BehaviorRelay<Route?>
     public var apiClient: APIClientProtocol
     private var isNetworking: PublishRelay<Bool> = .init()
+    public let maxGoalAmountDigits: Int = 12
+    
     public var networkingDriver: Driver<Bool> {
         isNetworking.asDriver(onErrorJustReturn: false)
     }
     
     public var createGoalResultPublisher = PublishRelay<CreateSavingsGoalResult>()
-    
-    
-    //    lazy var savingsGoalRelay = BehaviorRelay(value: )
-    
-    
-    private(set) public var name: String = "Test"
-    private var target: Int = 1110
+    public var name: BehaviorRelay<String> = .init(value: "")
+    public var target: BehaviorRelay<Int> = .init(value: 0)
 
-    
     public init(
         account: Account,
         route: Route? = nil,
@@ -58,20 +54,20 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     }
     
     func doneButtonTapped() {
-        guard !name.isEmpty else {
+        guard !name.value.isEmpty else {
             self.route.accept(.alert(.emptyName))
             return
         }
         
-        guard target > 0 else {
+        guard target.value > 0 else {
             self.route.accept(.alert(.targetTooLow))
             return
         }
         
         let savingsGoal = SavingsGoalRequestBody(
-            name: name,
+            name: name.value,
             currency: account.currency,
-            target: .init(currency: account.currency, minorUnits: target)
+            target: .init(currency: account.currency, minorUnits: target.value)
         )
         
         Task {
@@ -85,31 +81,9 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     
     func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
         isNetworking.accept(true)
-//        try await Task.sleep(nanoseconds: 1_000_000_000)
         var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
         let result = try await apiClient.call(&endpoint)
-//        
-//        let result: CreateSavingsGoalResult = .success(
-//            .init(savingsGoalUid: "123", success: true)
-//        )
-        
-//        let result: CreateSavingsGoalResult = .failure(.networkError)
-        
         self.createGoalResultPublisher.accept(result)
-        
-//        switch result {
-//        case .success(let success):
-//            print("It went up")
-//        case .failure(let failure):
-//            switch failure {
-//            case .networkError:
-//                self.route.accept(.alert(.network))
-//            default:
-//                self.route.accept(.alert(.genericError))
-//            }
-//            
-//        }
-        
         isNetworking.accept(false)
     }
     

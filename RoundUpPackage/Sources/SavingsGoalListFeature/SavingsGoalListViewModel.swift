@@ -186,19 +186,13 @@ public class SavingsGoalListViewModel {
                 }
             }
             .disposed(by: disposeBag)
-        
-        
     }
-    
-    
-    
+
     func didTapItem(at indexPath: IndexPath) {
         guard let amountString = NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) else { return }
         let tappedGoal = self.savingsGoals.value[indexPath.row]
         route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.savingsGoal)))
     }
-    
-    
 }
 
 

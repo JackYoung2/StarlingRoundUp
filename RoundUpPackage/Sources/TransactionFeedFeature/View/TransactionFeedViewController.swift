@@ -28,6 +28,8 @@ public class TransactionFeedViewController: UIViewController {
     let indicator = Components.indicator()
     let roundUpStack = Components.createStackView()
     let roundUpButton = Components.roundUpButton(action: #selector(roundToSavingsGoalButtonTapped))
+    let refreshControl = UIRefreshControl()
+
     
     let emptyStateView = Components.emptyStateView(text: "No transactions found. Spend some money to get started!")
     
@@ -45,6 +47,13 @@ public class TransactionFeedViewController: UIViewController {
         viewModel.roundButtonTapped()
     }
     
+    @objc func didPullToRefresh() {
+        Task {
+            try await viewModel.fetchTransactions()
+            refreshControl.endRefreshing()
+        }
+    }
+    
     func setUpSubscribers(context: UIViewController) {
 //        MARK: - Navigation
         var presentedViewController: UIViewController?
@@ -55,24 +64,11 @@ public class TransactionFeedViewController: UIViewController {
                 guard let self = self else { return }
                 switch route {
                 case let .savingsGoal(viewModel):
-                    
-//                    viewModel
-//                        .addToGoalResultPublisher
-//                        .filter { $0.success }
-//                        .subscribe { result in
-//                            presentedViewController = nil
-//                            context.navigationController?.popViewController(animated: true)
-////                            TODO: -
-//                            viewModel.route.accept(.alert(.savingsAddedSuccesfully("", "")))
-//                        }
-//                        .disposed(by: self.disposeBag)
-                    
                     let vc = SavingsGoalListViewController(viewModel)
                     context.show(vc, sender: nil)
                     
                 case .none:
                     presentedViewController = nil
-                    
                     break
                     
                 case let .createSavingsGoal(viewModel):
@@ -209,6 +205,10 @@ private extension TransactionFeedViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = true
     
         tableView.register(cell: TransactionTableViewCell.self)
+           refreshControl.attributedTitle = NSAttributedString(string: "Fetch Transactions")
+           refreshControl.addTarget(self, action: #selector(self.didPullToRefresh), for: .valueChanged)
+           tableView.addSubview(refreshControl)
+
         
         accountStack.addArrangedSubview(accountLabel)
         accountStack.addArrangedSubview(accountNameLabel)
@@ -234,7 +234,7 @@ private extension TransactionFeedViewController {
             accountStack.topAnchor.constraint(equalTo: dateStack.bottomAnchor, constant: space3),
             accountStack.trailingAnchor.constraint(equalTo: tableView.trailingAnchor, constant: -space3),
             
-            tableView.topAnchor.constraint(equalTo: dateStack.bottomAnchor, constant: space3),
+            tableView.topAnchor.constraint(equalTo: accountStack.bottomAnchor, constant: space2),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             
