@@ -12,7 +12,6 @@ import SharedModel
 import RxSwift
 import SavingsGoalListFeature
 import CreateSavingsGoalFeature
-//import RoundUpClient
 
 public class TransactionFeedViewController: UIViewController {
     
@@ -85,12 +84,16 @@ public class TransactionFeedViewController: UIViewController {
             .asDriver(onErrorJustReturn: Date())
         
         let roundUpSumText = viewModel
-            .roundUpString
+            .roundUpValue
+            .compactMap { [weak self] in
+                guard let self = self else { return nil }
+                return Amount(currency: self.viewModel.currencyCode, minorUnits: $0)
+            }
+            .compactMap(NumberFormatter.formattedCurrencyFrom)
+            .map { "Add \($0) to savings goal" }
             .skip(1)
             .asDriver(onErrorJustReturn: "")
-        
-        
-        
+
         account
             .compactMap { $0?.name }
             .drive(accountNameLabel.rx.text)
@@ -149,9 +152,6 @@ public class TransactionFeedViewController: UIViewController {
     
 }
 
-
-
-
 private extension TransactionFeedViewController {
     func setUpView() {
         self.view.backgroundColor = ColorSystem.background
@@ -198,16 +198,5 @@ private extension TransactionFeedViewController {
             indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-    }
-}
-
-public extension Date {
-    static var now = Date()
-    static var yesterday: Date {
-        Date.now.addingTimeInterval(-86400)
-    }
-    
-    static var distantPast: Date {
-        Date.now.addingTimeInterval(-186400)
     }
 }

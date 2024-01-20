@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModel
 
 public extension NumberFormatter {
     static func currencyFormatter(for currencyCode: String) -> NumberFormatter {
@@ -39,12 +40,12 @@ public extension NumberFormatter {
         return Decimal(units) / pow(10, currencyFormatter.minimumFractionDigits)
     }
     
-    static func formattedCurrencyFrom(code: String, amount: Int) -> String? {
+    static func formattedCurrencyFrom(amount: Amount) -> String? {
         
 //        print(amount)
         
-        let formatter = NumberFormatter.currencyFormatter(for: code)
-        let majorUnits = formatter.getMajorUnits(code: code, amount: amount)
+        let formatter = NumberFormatter.currencyFormatter(for: amount.currency)
+        let majorUnits = formatter.getMajorUnits(code: amount.currency, amount: amount.minorUnits)
         let stringValue = formatter.string(from: majorUnits as NSNumber)
         return stringValue
     }

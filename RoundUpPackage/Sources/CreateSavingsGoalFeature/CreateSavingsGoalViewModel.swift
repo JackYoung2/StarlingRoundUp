@@ -96,10 +96,3 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     }
     
 }
-
-extension AlertState {
-    static var emptyName = Self.init(title: "Name Missing", message: "Please choose a name for your savings goal")
-    static var targetTooLow = Self.init(title: "Target Too Low", message: "Target amount is currently 0. Let's aim a little higher!")
-    static var genericError = Self.init(title: "Unable To Create Savings Goal", message: "An unknown error occured")
-    static var network = Self.init(title: "Unable To Create Savings Goal", message: "Please check your connection and try again")
-}

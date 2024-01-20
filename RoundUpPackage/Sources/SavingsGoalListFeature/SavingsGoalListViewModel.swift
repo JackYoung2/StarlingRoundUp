@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Jack Young on 15/01/2024.
 //
@@ -13,10 +13,11 @@ import RxDataSources
 import SavingsGoalFeature
 import CreateSavingsGoalFeature
 import APIClient
+import Common
 
 public protocol SavingsGoalListViewModelProtocol {
     var savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> { get }
-    var dataSource: SavingsGoalDataSource { get }
+    //    var dataSource: SavingsGoalDataSource { get }
     var route: BehaviorRelay<SavingsGoalListViewModel.Route?> { get }
     
     init(route: SavingsGoalListViewModel.Route?)
@@ -26,12 +27,13 @@ public class SavingsGoalListViewModel {
     
     public indirect enum Route {
         case createSavingsGoal(CreateSavingsGoalViewModel)
+        case alert(AlertType)
     }
     
     public let roundUpAmount: Amount
     
     public var roundUpDisplayString: String {
-        NumberFormatter.formattedCurrencyFrom(code: account.currency, amount: roundUpAmount.minorUnits) ?? ""
+        NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) ?? ""
     }
     
     var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
@@ -46,7 +48,11 @@ public class SavingsGoalListViewModel {
     
     let disposeBag = DisposeBag()
     
-//    lazy var dataSource = SavingsGoalDataSource(viewModel: self)
+    
+    public var isNetworking: PublishRelay<Bool> = .init()
+
+    
+    //    lazy var dataSource = SavingsGoalDataSource(viewModel: self)
     
     lazy var dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, SavingsGoalViewModel>>(
         configureCell: { [weak self] (_, tableView, indexPath, element) in
@@ -67,11 +73,11 @@ public class SavingsGoalListViewModel {
     public var route: BehaviorRelay<Route?>
     
     public init(
-        route: Route? = nil, 
+        route: Route? = nil,
         apiClient: APIClientProtocol,
         account: Account,
         roundUpAmount: Amount
-    
+        
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.apiClient = apiClient
@@ -89,6 +95,7 @@ public class SavingsGoalListViewModel {
             print(response.savingsGoalList)
             self.savingsGoals.accept(response.savingsGoalList.map(SavingsGoalViewModel.init))
         case let .failure(error):
+            //            TODO: -
             print("Error")
         }
     }
@@ -97,9 +104,19 @@ public class SavingsGoalListViewModel {
         savingsGoals.subscribe {
             self.tableViewSections.accept(
                 [SectionModel(model: UUID().uuidString, items: $0)]
-                )
+            )
         }.disposed(by: disposeBag)
     }
+    
+    func didTapItem(at indexPath: IndexPath) {
+        guard let amountString = NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) else { return }
+        
+        let tappedGoal = self.savingsGoals.value[indexPath.row]
+        
+        route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.name)))
+    }
+    
+    
 }
 
 

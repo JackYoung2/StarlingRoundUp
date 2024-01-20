@@ -16,7 +16,7 @@ public struct TransactionViewModel {
     var transaction: Transaction
     
     var transactionDisplay: String {
-       NumberFormatter.formattedCurrencyFrom(code: transaction.amount.currency, amount: transaction.amount.minorUnits) ?? ""
+        NumberFormatter.formattedCurrencyFrom(amount: transaction.amount) ?? ""
     }
 //    
     var timeDisplay: String {
@@ -29,8 +29,10 @@ public struct TransactionViewModel {
     
     var roundedUpDisplay: String {
         let differenceInMinorUnits = roundUpClient.roundUpSpend(code: transaction.amount.currency, transaction.amount.minorUnits)
-        let displayValue = NumberFormatter.formattedCurrencyFrom(code: transaction.amount.currency, amount: differenceInMinorUnits) ?? ""
-        
+        guard differenceInMinorUnits != 0 else { return "" }
+        let amount = Amount(currency: transaction.amount.currency, minorUnits: differenceInMinorUnits)
+        let displayValue = NumberFormatter.formattedCurrencyFrom(amount: amount) ?? ""
+
         return "+\(displayValue)"
     }
     

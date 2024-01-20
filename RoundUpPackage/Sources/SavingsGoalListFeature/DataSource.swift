@@ -8,25 +8,25 @@
 import Foundation
 import UIKit
 
-public class SavingsGoalDataSource: NSObject, UITableViewDataSource {
-
-    unowned var viewModel: SavingsGoalListViewModel
-    
-    init(viewModel: SavingsGoalListViewModel) {
-        self.viewModel = viewModel
-    }
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.savingsGoals.value.count
-    }
-
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SavingsGoalTableViewCell.identifier, for: indexPath) as! SavingsGoalTableViewCell
-        
-        let savingsGoal = viewModel.savingsGoals.value[indexPath.row]
-        cell.bind(savingsGoal)
-        return cell
-    }
-    
-    
-}
+//public class SavingsGoalDataSource: NSObject, UITableViewDataSource {
+//
+//    unowned var viewModel: SavingsGoalListViewModel
+//    
+//    init(viewModel: SavingsGoalListViewModel) {
+//        self.viewModel = viewModel
+//    }
+//    
+//    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        viewModel.savingsGoals.value.count
+//    }
+//
+//    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: SavingsGoalTableViewCell.identifier, for: indexPath) as! SavingsGoalTableViewCell
+//        
+//        let savingsGoal = viewModel.savingsGoals.value[indexPath.row]
+//        cell.bind(savingsGoal)
+//        return cell
+//    }
+//    
+//    
+//}

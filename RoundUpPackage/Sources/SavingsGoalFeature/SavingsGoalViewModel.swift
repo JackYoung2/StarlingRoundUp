@@ -29,11 +29,11 @@ public class SavingsGoalViewModel: SavingsGoalViewModelProtocol {
     public var displayedProgress: Float { Float(savingsGoal.savedPercentage / 100) }
     
     public var displayedTarget: String {
-        NumberFormatter.formattedCurrencyFrom(code: savingsGoal.target.currency, amount: savingsGoal.target.minorUnits) ?? ""
+        NumberFormatter.formattedCurrencyFrom(amount: savingsGoal.target) ?? ""
     }
     
     public var displayedCurrentAmount: String {
-        NumberFormatter.formattedCurrencyFrom(code: savingsGoal.totalSaved.currency, amount: savingsGoal.totalSaved.minorUnits) ?? ""
+        NumberFormatter.formattedCurrencyFrom(amount: savingsGoal.totalSaved) ?? ""
     }
     
     public subscript<T>(dynamicMember keyPath: KeyPath<SavingsGoal, T>) -> T {

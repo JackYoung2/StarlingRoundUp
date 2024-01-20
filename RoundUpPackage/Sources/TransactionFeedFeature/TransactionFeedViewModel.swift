@@ -65,13 +65,16 @@ public class TransactionFeedViewModel {
     
     let roundUpClient: RoundUpClientProtocol
     
-   
     
     //    TODO: - Add selection period
     var transactionCutOffDate = BehaviorRelay<Date>(value: .oneWeekAgo)
     var transactions = BehaviorRelay<[Transaction]>(value: [])
     var accountRelay = BehaviorRelay<Account?>(value: nil)
-    var roundUpString = BehaviorRelay<String>(value: "")
+    var roundUpValue = BehaviorRelay<Int>(value: 0)
+    
+    var currencyCode: String {
+        accountRelay.value?.currency ?? ""
+    }
     
     var account: Driver<Account?> {
         return accountRelay.asDriver(onErrorJustReturn: nil)
@@ -91,12 +94,18 @@ public class TransactionFeedViewModel {
     }
 
     func roundButtonTapped() {
-        guard let account = accountRelay.value else {
-            preconditionFailure("Should have account")
-        }
+        guard let account = accountRelay.value else { assert(false, "Should have account") }
         
 //        TODO: -
-        self.route.accept(.savingsGoal(.init(apiClient: apiClient, account: account, roundUpAmount: .init(currency: "gbp", minorUnits: 1))))
+        self.route.accept(
+            .savingsGoal(
+                .init(
+                    apiClient: apiClient, 
+                    account: account,
+                    roundUpAmount: .init(currency: account.currency, minorUnits: roundUpValue.value)
+                )
+            )
+        )
     }
     
     func setUpSubscribers() {
@@ -115,17 +124,18 @@ public class TransactionFeedViewModel {
             .bind(to: tableViewSections)
           .disposed(by: disposeBag)
         
-        transactions.map { [weak self] in
-            $0.reduce(into: 0) { partialResult, transaction in
-                partialResult += self?.roundUpClient.roundUpSpend(
-                    code: self?.accountRelay.value?.currency ?? "GBP", 
+        transactions
+            .map { [weak self] in
+                guard let self = self else { return 0 }
+                
+            return $0.reduce(into: 0) { partialResult, transaction in
+                partialResult += self.roundUpClient.roundUpSpend(
+                    code: self.currencyCode,
                     transaction.amount.minorUnits
-                ) ?? 0
+                )
             }
         }
-        .compactMap { NumberFormatter.formattedCurrencyFrom(code: "GBP", amount: $0) }
-        .map { "Add \($0) to savings goal" }
-        .bind(to: roundUpString)
+        .bind(to: roundUpValue)
         .disposed(by: disposeBag)
     }
     

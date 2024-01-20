@@ -14,4 +14,11 @@ extension Endpoint {
             method: .get
         )
     }
+    
+//    static func add(_ minorUnits: Int, to account: String) -> Self {
+//        .init(
+//            path: "/api/v2/account/\(account)/savings-goals",
+//            method: .get
+//        )
+//    }
 }
