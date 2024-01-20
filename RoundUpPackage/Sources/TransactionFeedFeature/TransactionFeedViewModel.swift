@@ -16,6 +16,7 @@ import APIClient
 import AccountsFeature
 import RxDataSources
 import UIKit
+import RoundUpClient
 
 protocol TransactionFeedViewModelProtocol {
     var route: BehaviorRelay<TransactionFeedViewModel.Route?> { get }
@@ -62,12 +63,15 @@ public class TransactionFeedViewModel {
     
     let disposeBag = DisposeBag()
     
-    var transactions = BehaviorRelay<[Transaction]>(value: [])
+    let roundUpClient: RoundUpClientProtocol
+    
+   
     
     //    TODO: - Add selection period
     var transactionCutOffDate = BehaviorRelay<Date>(value: .oneWeekAgo)
-    
+    var transactions = BehaviorRelay<[Transaction]>(value: [])
     var accountRelay = BehaviorRelay<Account?>(value: nil)
+    var roundUpString = BehaviorRelay<String>(value: "")
     
     var account: Driver<Account?> {
         return accountRelay.asDriver(onErrorJustReturn: nil)
@@ -77,10 +81,12 @@ public class TransactionFeedViewModel {
 
     init(
         apiClient: APIClient = APIClient(),
-        route: Route? = nil
+        route: Route? = nil,
+        roundUpClient: RoundUpClientProtocol = RoundUpClient()
     ) {
         self.apiClient = apiClient
         self.route = BehaviorRelay<Route?>(value: nil)
+        self.roundUpClient = roundUpClient
         setUpSubscribers()
     }
 
@@ -109,6 +115,18 @@ public class TransactionFeedViewModel {
             .bind(to: tableViewSections)
           .disposed(by: disposeBag)
         
+        transactions.map { [weak self] in
+            $0.reduce(into: 0) { partialResult, transaction in
+                partialResult += self?.roundUpClient.roundUpSpend(
+                    code: self?.accountRelay.value?.currency ?? "GBP", 
+                    transaction.amount.minorUnits
+                ) ?? 0
+            }
+        }
+        .compactMap { NumberFormatter.formattedCurrencyFrom(code: "GBP", amount: $0) }
+        .map { "Add \($0) to savings goal" }
+        .bind(to: roundUpString)
+        .disposed(by: disposeBag)
     }
     
     func fetchTransactions() async throws {

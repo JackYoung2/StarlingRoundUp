@@ -27,17 +27,17 @@ public struct SavingsGoal: Codable {
     public let savingsGoalUid: String
     public let name: String
     public let target: Amount
-    public let totalSaved: Amount?
-    public let savedPercentage: Double?
-    public let state: String?
+    public let totalSaved: Amount
+    public let savedPercentage: Double
+    public let state: String
     
     public init(
         savingsGoalUid: String,
         name: String,
         target: Amount,
-        totalSaved: Amount? = nil,
-        savedPercentage: Double? = nil,
-        state: String? = nil
+        totalSaved: Amount,
+        savedPercentage: Double,
+        state: String
     ) {
         self.savingsGoalUid = savingsGoalUid
         self.name = name
@@ -47,3 +47,19 @@ public struct SavingsGoal: Codable {
         self.state = state
     }
 }
+
+public struct SavingsGoalRequestBody: Codable {
+    public let name: String
+    public let currency: String
+    public let target: Amount
+//    public let base64EncodedPhoto: String
+    
+    public init(name: String, currency: String, target: Amount ) {
+        self.name = name
+        self.currency = currency
+        self.target = target
+//        self.base64EncodedPhoto = ""
+    }
+}
+
+//base64EncodedPhoto: String = ""

@@ -41,7 +41,7 @@ public extension NumberFormatter {
     
     static func formattedCurrencyFrom(code: String, amount: Int) -> String? {
         
-        print(amount)
+//        print(amount)
         
         let formatter = NumberFormatter.currencyFormatter(for: code)
         let majorUnits = formatter.getMajorUnits(code: code, amount: amount)

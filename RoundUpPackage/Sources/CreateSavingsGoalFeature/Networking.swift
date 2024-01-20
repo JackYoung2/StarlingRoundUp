@@ -12,13 +12,13 @@ import SharedModel
 public extension Endpoint {
     static func createSavingsGoal(
         for account: String,
-        goal: SavingsGoal
+        goal: SavingsGoalRequestBody,
+        encoder: JSONEncoder = JSONEncoder()
     ) -> Self {
         .init(
-            path: "/account/\(account)/savings-goals",
-            method: .put
+            path: "/api/v2/account/\(account)/savings-goals",
+            method: .put,
+            body: try? encoder.encode(goal)
         )
     }
 }
-
-//https://api-sandbox.starlingbank.com/api/v2/account/c0957db4-4587-4c91-96ec-787f45e3c5cd/savings-goals

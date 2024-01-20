@@ -31,7 +31,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     public var isNetworking: PublishRelay<Bool> = .init()
     
     
-//    lazy var savingsGoalRelay = BehaviorRelay(value: )
+    //    lazy var savingsGoalRelay = BehaviorRelay(value: )
     
     
     var name: String = ""
@@ -45,7 +45,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.account = account
         self.apiClient = apiClient
-//        setUpSubs()
+        //        setUpSubs()
     }
     
     func doneButtonTapped() {
@@ -59,11 +59,11 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
             return
         }
         
-        let savingsGoal = SavingsGoal(
-            savingsGoalUid: UUID().uuidString,
+        let savingsGoal = SavingsGoalRequestBody(
             name: name,
+            currency: account.currency,
             target: .init(currency: account.currency, minorUnits: target)
-            )
+        )
         
         Task {
             try await postSavingsGoal(savingsGoal)
@@ -74,7 +74,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
         self.route.accept(nil)
     }
     
-    func postSavingsGoal(_ savingsGoal: SavingsGoal) async throws {
+    func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
         isNetworking.accept(true)
         var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
         let result = try await apiClient.call(&endpoint)

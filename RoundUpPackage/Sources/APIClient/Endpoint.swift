@@ -13,17 +13,20 @@ public struct Endpoint<Decodable> {
     let queryItems: [URLQueryItem]
     let method: HTTPMethod
     var headers: [String: String]
+    var body: Data?
 
     public init(
          path: String,
          queryItems: [URLQueryItem] = [],
          method: HTTPMethod = .get,
-         headers: [String: String] = ["Accept": "application/json"]
+         headers: [String: String] = ["Accept": "application/json"],
+         body: Data? = nil
     ) {
         self.path = path
         self.queryItems = queryItems
         self.method = method
         self.headers = headers
+        self.body = body
     }
 
     func urlRequest() -> URLRequest {
@@ -38,6 +41,8 @@ public struct Endpoint<Decodable> {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
+        request.httpBody = body
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
         return request
     }

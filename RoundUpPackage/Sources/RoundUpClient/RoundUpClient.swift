@@ -14,16 +14,30 @@ public protocol RoundUpClientProtocol {
 
 public struct RoundUpClient: RoundUpClientProtocol {
     
-    public init(){}
+    let roundingUpHandler: NSDecimalNumberHandler
+
+    
+    public init(roundingUpHandler: NSDecimalNumberHandler? = nil){
+        self.roundingUpHandler = roundingUpHandler ??
+        NSDecimalNumberHandler(
+            roundingMode: .up,
+            scale: 0,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        )
+    }
     
     public func roundUpSpend(code: String, _ transactionAmount: Int) -> Int {
         let formatter = NumberFormatter.currencyFormatter(for: code)
-        let amountDecimal = Decimal(transactionAmount) / pow(10, formatter.minimumFractionDigits)
-        let amountDecimalAsDouble = NSDecimalNumber(decimal: amountDecimal).doubleValue
-        let roundUpAmountDouble = (ceil(amountDecimalAsDouble) - amountDecimalAsDouble)
-        let roundUpAmountDoubleAsMinorUnits = roundUpAmountDouble * pow(Double(10), Double(formatter.minimumFractionDigits))
-    
-        return Int(roundUpAmountDoubleAsMinorUnits)
+        let divisor = pow(10.0, Double(formatter.maximumFractionDigits))
+        let decimalValue = Double(transactionAmount) / divisor
+        let rounded = decimalValue.rounded(.up)
+        let difference = abs(Decimal(decimalValue) - Decimal(rounded))
+        let differeceAsMinorUnits = difference * Decimal(divisor)
+        let cast = NSDecimalNumber(decimal: differeceAsMinorUnits)
+        return Int(truncating: cast)
     }
     
 }

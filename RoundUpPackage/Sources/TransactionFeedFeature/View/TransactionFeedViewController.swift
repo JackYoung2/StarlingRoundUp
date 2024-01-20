@@ -12,6 +12,7 @@ import SharedModel
 import RxSwift
 import SavingsGoalListFeature
 import CreateSavingsGoalFeature
+//import RoundUpClient
 
 public class TransactionFeedViewController: UIViewController {
     
@@ -83,18 +84,20 @@ public class TransactionFeedViewController: UIViewController {
             .transactionCutOffDate
             .asDriver(onErrorJustReturn: Date())
         
+        let roundUpSumText = viewModel
+            .roundUpString
+            .skip(1)
+            .asDriver(onErrorJustReturn: "")
+        
+        
+        
         account
             .compactMap { $0?.name }
             .drive(accountNameLabel.rx.text)
             .disposed(by: disposeBag)
         
-        transactions.map {
-            $0.reduce(into: 0) { partialResult, transaction in
-                partialResult += transaction.amount.minorUnits
-            }
-        }
-        .compactMap { NumberFormatter.formattedCurrencyFrom(code: "GBP", amount: $0) }
-        .map { "Add \($0) to savings goal" }
+        
+        roundUpSumText
         .drive(roundUpButton.label.rx.text)
         .disposed(by: disposeBag)
         
@@ -112,7 +115,9 @@ public class TransactionFeedViewController: UIViewController {
             transactions.asObservable(),
             account.asObservable(),
             date.asObservable(),
-            resultSelector: { transactions, acount, date in
+            roundUpSumText.asObservable(),
+            
+            resultSelector: { _,_,_,_ in
                 false
             }
           )
