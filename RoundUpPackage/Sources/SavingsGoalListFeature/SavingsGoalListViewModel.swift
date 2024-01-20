@@ -23,7 +23,13 @@ public protocol SavingsGoalListViewModelProtocol {
     init(route: SavingsGoalListViewModel.Route?)
 }
 
-public typealias AddToGoalsResult = Result<Bool, APIError>
+public struct SavingsGoalWrapper {
+    var goalId: String
+    var result: AddToGoalsResult
+}
+
+public typealias AddToGoalsResult = Result<SavingsGoalTransferResponse, APIError>
+public typealias GetSavingsGoalsListResult = Result<SavingsGoalListResponse, APIError>
 
 public class SavingsGoalListViewModel {
     
@@ -42,7 +48,10 @@ public class SavingsGoalListViewModel {
     
     var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
     let savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: [])
-    public var addToGoalResultPublisher = PublishRelay<AddToGoalsResult>()
+    
+    public let getSavingsGoalsListResultPublisher = PublishRelay<GetSavingsGoalsListResult>()
+    public let addToGoalResultPublisher = PublishRelay<SavingsGoalWrapper>()
+    
     
     var apiClient: APIClientProtocol
     var account: Account
@@ -52,7 +61,7 @@ public class SavingsGoalListViewModel {
     
     
     public var isNetworking: PublishRelay<Bool> = .init()
-
+    
     
     //    lazy var dataSource = SavingsGoalDataSource(viewModel: self)
     
@@ -92,17 +101,28 @@ public class SavingsGoalListViewModel {
         isNetworking.accept(true)
         var endpoint = Endpoint<SavingsGoalListResponse>.getSavingsGoals(for: account.accountUid)
         let result = try await apiClient.call(&endpoint)
+        getSavingsGoalsListResultPublisher.accept(result)
+        isNetworking.accept(false)
+    }
+    
+    func confirmAddTapped(goalId: String) async throws {
+        isNetworking.accept(true)
         
-        //            TODO: - mOVE
-        switch result {
-        case let .success(response):
-            print(response.savingsGoalList)
-            self.savingsGoals.accept(response.savingsGoalList.map(SavingsGoalViewModel.init))
-        case let .failure(error):
-            //            TODO: -
-            print("Error")
+        guard let amountData = try? JSONEncoder().encode(TopUpRequest(amount: roundUpAmount)) else {
+            self.route.accept(.alert(.genericError))
+            return
         }
         
+        var endpoint = Endpoint<SavingsGoalTransferResponse>.add(
+            amountData,
+            to: goalId,
+            for: account.accountUid,
+            with: UUID().uuidString
+        )
+        
+        let result = try await apiClient.call(&endpoint)
+        let wrapper = SavingsGoalWrapper(goalId: goalId, result: result)
+        addToGoalResultPublisher.accept(wrapper)
         isNetworking.accept(false)
     }
     
@@ -112,12 +132,70 @@ public class SavingsGoalListViewModel {
                 [SectionModel(model: UUID().uuidString, items: $0)]
             )
         }.disposed(by: disposeBag)
+        
+        self
+            .getSavingsGoalsListResultPublisher
+            .subscribe { [weak self] result in
+                switch result {
+                case let .success(response):
+                    self?.savingsGoals.accept(response.savingsGoalList.map(SavingsGoalViewModel.init))
+                case let .failure(error):
+                    switch error {
+                    case .networkError:
+                        self?.route.accept(.alert(.network))
+                    case .parsingError:
+                        self?.route.accept(.alert(.genericError))
+                    }
+                    
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        self
+            .addToGoalResultPublisher
+            .subscribe { [weak self] wrapper in
+                guard let self else { return }
+                switch wrapper.result {
+                case .success:
+                    
+                    let goalName = self.savingsGoals.value.first(where: {
+                        $0.savingsGoalUid == wrapper.goalId
+                    })?.name ?? ""
+                    
+                    self.route.accept(
+                        .alert(
+                            .savingsAddedSuccesfully(
+                                NumberFormatter.formattedCurrencyFrom(amount: self.roundUpAmount) ?? "",
+                                goalName
+                            )
+                        )
+                    )
+                    
+                    Task {
+                        try await self.getSavingsGoals()
+                    }
+                    
+                case let .failure(error):
+                    switch error {
+                    case .networkError:
+                        self.route.accept(.alert(.network))
+                    case .parsingError:
+                        self.route.accept(.alert(.genericError))
+                    }
+                    
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        
     }
+    
+    
     
     func didTapItem(at indexPath: IndexPath) {
         guard let amountString = NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) else { return }
         let tappedGoal = self.savingsGoals.value[indexPath.row]
-        route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.name)))
+        route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.savingsGoal)))
     }
     
     

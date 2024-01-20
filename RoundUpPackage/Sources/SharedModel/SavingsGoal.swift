@@ -22,6 +22,15 @@ public struct CreateSavingsGoalResponse: Codable {
     }
 }
 
+public struct SavingsGoalTransferResponse: Codable {
+    public let transferUid: String
+    public let success: Bool
+    
+    public init(transferUid: String, success: Bool) {
+        self.transferUid = transferUid
+        self.success = success
+    }
+}
 
 public struct SavingsGoal: Codable {
     public let savingsGoalUid: String
@@ -61,5 +70,14 @@ public struct SavingsGoalRequestBody: Codable {
 //        self.base64EncodedPhoto = ""
     }
 }
+
+public struct TopUpRequest: Codable {
+    public let amount: Amount
+    
+    public init(amount: Amount) {
+        self.amount = amount
+    }
+}
+
 
 //base64EncodedPhoto: String = ""

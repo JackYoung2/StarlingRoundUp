@@ -55,16 +55,17 @@ public class TransactionFeedViewController: UIViewController {
                 guard let self = self else { return }
                 switch route {
                 case let .savingsGoal(viewModel):
-                    viewModel
-                        .addToGoalResultPublisher
-                        .filter { $0.success }
-                        .subscribe { result in
-                            presentedViewController = nil
-                            context.navigationController?.popViewController(animated: true)
-//                            TODO: -
-                            viewModel.route.accept(.alert(.savingsAddedSuccesfully("", "")))
-                        }
-                        .disposed(by: self.disposeBag)
+                    
+//                    viewModel
+//                        .addToGoalResultPublisher
+//                        .filter { $0.success }
+//                        .subscribe { result in
+//                            presentedViewController = nil
+//                            context.navigationController?.popViewController(animated: true)
+////                            TODO: -
+//                            viewModel.route.accept(.alert(.savingsAddedSuccesfully("", "")))
+//                        }
+//                        .disposed(by: self.disposeBag)
                     
                     let vc = SavingsGoalListViewController(viewModel)
                     context.show(vc, sender: nil)

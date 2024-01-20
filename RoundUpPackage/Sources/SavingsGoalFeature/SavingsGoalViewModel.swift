@@ -20,7 +20,7 @@ public protocol SavingsGoalViewModelProtocol {
 
 @dynamicMemberLookup
 public class SavingsGoalViewModel: SavingsGoalViewModelProtocol {
-    var savingsGoal: SavingsGoal
+    public var savingsGoal: SavingsGoal
     
     public init(savingsGoal: SavingsGoal) {
         self.savingsGoal = savingsGoal

@@ -45,6 +45,7 @@ let package = Package(
         .target(name: "RoundUpClient", dependencies: ["Common"]),
         .target(
             name: "Common",
+            dependencies: ["SharedModel"],
             resources: [.process("Resources")]
         ),
         .target(

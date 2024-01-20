@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SharedModel
 
 public struct AlertState {
     public var title: String
@@ -32,7 +33,7 @@ public enum AlertType {
          targetTooLow,
          genericError,
          network,
-         confirmAddToGoal(String, String),
+         confirmAddToGoal(String, SavingsGoal),
          savingsAddedSuccesfully(String, String),
          createGoalSuccess(String)
     
@@ -47,7 +48,7 @@ public enum AlertType {
         case .network:
             return .network
         case let .confirmAddToGoal(amount, goal):
-            return .confirmAddToSavingsGoal(amount, goalName: goal)
+            return .confirmAddToSavingsGoal(amount, goalName: goal.name)
         case let .savingsAddedSuccesfully(amount, goal):
             return .savingsAddedSuccesfully(amount, goalName: goal)
         case let .createGoalSuccess(name):
@@ -60,7 +61,7 @@ public enum AlertType {
 public extension AlertState {
     static var emptyName = Self.init(title: "Name Missing", message: "Please choose a name for your savings goal")
     static var targetTooLow = Self.init(title: "Target Too Low", message: "Target amount is currently 0. Let's aim a little higher!")
-    static var genericError = Self.init(title: "Unable To Create Savings Goal", message: "An unknown error occured")
+    static var genericError = Self.init(title: "Unable To Complete Operation", message: "An unknown error occured")
     static var network = Self.init(title: "Unable To Create Savings Goal", message: "Please check your connection and try again")
     
     static func confirmAddToSavingsGoal(_ amountString: String, goalName: String) -> Self {
@@ -73,7 +74,7 @@ public extension AlertState {
     static func savingsAddedSuccesfully(_ amountString: String, goalName: String) -> Self {
         Self.init(
             title: "Success",
-            message: "Added\(amountString) to \(goalName)!"
+            message: "Added \(amountString) to \(goalName)!"
         )
     }
     

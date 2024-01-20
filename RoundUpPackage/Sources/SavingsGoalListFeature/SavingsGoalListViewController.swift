@@ -48,15 +48,8 @@ public class SavingsGoalListViewController: UIViewController {
         viewModel.route.accept(.createSavingsGoal(.init(account: viewModel.account, apiClient: viewModel.apiClient)))
     }
     
-    func confirmAddTapped() async throws {
-        //        TODO: - Move to viewmodel
-        viewModel.isNetworking.accept(true)
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        viewModel.isNetworking.accept(false)
-        
-        let result: AddToGoalsResult = .success(true)
-        
-        viewModel.addToGoalResultPublisher.accept(result)
+    func confirmAddTapped(goalId: String) async throws {
+        try await viewModel.confirmAddTapped(goalId: goalId)
     }
     
     func cancelAddTapped() {
@@ -139,13 +132,13 @@ public class SavingsGoalListViewController: UIViewController {
                     let alert = Components.alert(state: alertType.alertState)
                     
                     switch alertType {
-                    case .confirmAddToGoal:
+                    case let .confirmAddToGoal(_, goal):
 //                    TODO: - abstract away
                         alert.addAction(
                             .init(title: "OK", style: .default, handler: { _ in
                                 presentedViewController = nil
                                 Task {
-                                    try await self.confirmAddTapped()
+                                    try await self.confirmAddTapped(goalId: goal.savingsGoalUid)
                                 }
                             }))
                         
@@ -211,14 +204,27 @@ public class SavingsGoalListViewController: UIViewController {
         //          .drive(dateStack.rx.isHidden)
         //          .disposed(by: disposeBag)
         
-        viewModel
-            .addToGoalResultPublisher
-            .filter { $0.failure }
-            .subscribe { result in
-//                TODO: - More specific handling
-                    self.viewModel.route.accept(.alert(.genericError))
-            }
-            .disposed(by: disposeBag)
+//        viewModel
+//            .addToGoalResultPublisher
+//            .observe(on: MainScheduler.instance)
+//            .subscribe { [weak self] result in
+//                guard let self else { return }
+//                switch result {
+//                case .success(let response):
+//                    self.viewModel.route.accept(
+//                        .alert(
+//                            .savingsAddedSuccesfully(
+//                                NumberFormatter.formattedCurrencyFrom(amount: self.viewModel.roundUpAmount) ?? "",
+//                                <#T##String#>
+//                            )
+//                        )
+//                    )
+//                case .failure(let error):
+////                TODO: - More specific handling
+//                    self.viewModel.route.accept(.alert(.genericError))
+//                }
+//            }
+//            .disposed(by: disposeBag)
     }
 }
 
