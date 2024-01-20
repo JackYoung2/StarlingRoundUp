@@ -22,9 +22,8 @@ public class SavingsGoalListViewController: UIViewController {
     let tableView = Components.savingsGoalTableView()
     let indicator = Components.indicator()
     
-    let emptyStatebaseView = Components.createBaseContainerView()
-    let emptyStatelabel = Components.baseLabel("Hit the + button to create your first savings goal")
-    
+    let emptyStateView = Components.emptyStateView(text: "Hit the + button to create your first savings goal")
+ 
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,7 +56,7 @@ public class SavingsGoalListViewController: UIViewController {
         
         let result: AddToGoalsResult = .success(true)
         
-        viewModel.addToGoalSuccessPublisher.accept(result)
+        viewModel.addToGoalResultPublisher.accept(result)
     }
     
     func cancelAddTapped() {
@@ -89,21 +88,13 @@ public class SavingsGoalListViewController: UIViewController {
         ])
         
         func setUpEmptyStateView() {
-            emptyStatelabel.textAlignment = .center
             
-            emptyStatebaseView.addSubview(emptyStatelabel)
-            view.addSubview(emptyStatebaseView)
+            view.addSubview(emptyStateView)
             
             NSLayoutConstraint.activate([
-                emptyStatelabel.leadingAnchor.constraint(equalTo: emptyStatebaseView.leadingAnchor, constant: space3),
-                emptyStatelabel.topAnchor.constraint(equalTo: emptyStatebaseView.topAnchor, constant: space3),
-                emptyStatelabel.trailingAnchor.constraint(equalTo: emptyStatebaseView.trailingAnchor, constant: -space3),
-                emptyStatelabel.bottomAnchor.constraint(equalTo: emptyStatebaseView.bottomAnchor, constant: -space3),
-                
-                emptyStatebaseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
-                emptyStatebaseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
-                emptyStatebaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
-                //            baseView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -space3)
+                emptyStateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
+                emptyStateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
+                emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             ])
         }
     }
@@ -116,10 +107,29 @@ public class SavingsGoalListViewController: UIViewController {
         
         viewModel.route
             .observe(on: MainScheduler.instance)
-            .subscribe { route in
+            .subscribe { [weak self] route in
+                guard let self = self else { return }
                 switch route {
-                case let .createSavingsGoal(viewModel):
-                    let vc = CreateSavingsGoalViewController(viewModel)
+                case let .createSavingsGoal(savingsGoalviewModel):
+                    let vc = CreateSavingsGoalViewController(savingsGoalviewModel)
+                    
+                    savingsGoalviewModel
+                        .createGoalResultPublisher
+                        .observe(on: MainScheduler.instance)
+                        .filter { $0.success }
+                        .subscribe { result in
+                       
+                            presentedViewController = nil
+                            context.navigationController?.popViewController(animated: true)
+                            self.viewModel.route.accept(.alert(.createGoalSuccess(savingsGoalviewModel.name)))
+                            
+                            Task {
+                                try await self.viewModel.getSavingsGoals()
+                            }
+                            
+                    }
+                    .disposed(by: disposeBag)
+                    
                     context.show(vc, sender: nil)
                     
                 case .none:
@@ -163,17 +173,17 @@ public class SavingsGoalListViewController: UIViewController {
             .bind(to: tableView.rx.items(dataSource: viewModel.dataSource))
             .disposed(by: disposeBag)
         
-        let loading = viewModel.savingsGoals
-            .asObservable()
-            .map { _ in false }
-            .skip(1)
-            .startWith(true)
-            .asDriver(onErrorJustReturn: false)
-        
-        loading
-            .drive(indicator.rx.isAnimating)
-            .disposed(by: disposeBag)
-        
+//        let loading = viewModel.savingsGoals
+//            .asObservable()
+//            .map { _ in false }
+//            .skip(1)
+//            .startWith(true)
+//            .asDriver(onErrorJustReturn: false)
+//        
+//        loading
+//            .drive(indicator.rx.isAnimating)
+//            .disposed(by: disposeBag)
+//        
         let networking = viewModel
             .isNetworking
             .asDriver(onErrorJustReturn: false)
@@ -194,7 +204,7 @@ public class SavingsGoalListViewController: UIViewController {
             .asDriver(onErrorJustReturn: false)
         
         emptyGoals
-            .drive(emptyStatebaseView.rx.isHidden)
+            .drive(emptyStateView.rx.isHidden)
             .disposed(by: disposeBag)
         
         //        loading
@@ -202,15 +212,13 @@ public class SavingsGoalListViewController: UIViewController {
         //          .disposed(by: disposeBag)
         
         viewModel
-            .addToGoalSuccessPublisher
+            .addToGoalResultPublisher
+            .filter { $0.failure }
             .subscribe { result in
-                if case let .failure(error) = result {
+//                TODO: - More specific handling
                     self.viewModel.route.accept(.alert(.genericError))
-                }
             }
             .disposed(by: disposeBag)
-
-        
     }
 }
 

@@ -42,7 +42,7 @@ public class SavingsGoalListViewModel {
     
     var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
     let savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: [])
-    public var addToGoalSuccessPublisher = PublishRelay<AddToGoalsResult>()
+    public var addToGoalResultPublisher = PublishRelay<AddToGoalsResult>()
     
     var apiClient: APIClientProtocol
     var account: Account
@@ -89,9 +89,11 @@ public class SavingsGoalListViewModel {
     }
     
     func getSavingsGoals() async throws {
+        isNetworking.accept(true)
         var endpoint = Endpoint<SavingsGoalListResponse>.getSavingsGoals(for: account.accountUid)
         let result = try await apiClient.call(&endpoint)
         
+        //            TODO: - mOVE
         switch result {
         case let .success(response):
             print(response.savingsGoalList)
@@ -100,6 +102,8 @@ public class SavingsGoalListViewModel {
             //            TODO: -
             print("Error")
         }
+        
+        isNetworking.accept(false)
     }
     
     func setUpSubs() {
@@ -112,9 +116,7 @@ public class SavingsGoalListViewModel {
     
     func didTapItem(at indexPath: IndexPath) {
         guard let amountString = NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) else { return }
-        
         let tappedGoal = self.savingsGoals.value[indexPath.row]
-        
         route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.name)))
     }
     

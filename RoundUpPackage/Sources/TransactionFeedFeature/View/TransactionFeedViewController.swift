@@ -29,6 +29,8 @@ public class TransactionFeedViewController: UIViewController {
     let roundUpStack = Components.createStackView()
     let roundUpButton = Components.roundUpButton(action: #selector(roundToSavingsGoalButtonTapped))
     
+    let emptyStateView = Components.emptyStateView(text: "No transactions found. Spend some money to get started!")
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -54,12 +56,13 @@ public class TransactionFeedViewController: UIViewController {
                 switch route {
                 case let .savingsGoal(viewModel):
                     viewModel
-                        .addToGoalSuccessPublisher
-                        .filter { if case .success = $0 { return true } else { return false } }
+                        .addToGoalResultPublisher
+                        .filter { $0.success }
                         .subscribe { result in
                             presentedViewController = nil
                             context.navigationController?.popViewController(animated: true)
-                            viewModel.route.accept(.alert(.itWorked))
+//                            TODO: -
+                            viewModel.route.accept(.alert(.savingsAddedSuccesfully("", "")))
                         }
                         .disposed(by: self.disposeBag)
                     
@@ -139,6 +142,17 @@ public class TransactionFeedViewController: UIViewController {
           .startWith(true)
           .asDriver(onErrorJustReturn: false)
         
+        let emptyTransactions =
+        Observable
+            .combineLatest(
+                loading.asObservable(),
+                transactions.asObservable(),
+                resultSelector: { loading, transactions in
+                    !loading && transactions.isEmpty
+                }
+            )
+            .asDriver(onErrorJustReturn: false)
+        
       
         loading
           .drive(indicator.rx.isAnimating)
@@ -156,9 +170,33 @@ public class TransactionFeedViewController: UIViewController {
           .drive(accountStack.rx.isHidden)
           .disposed(by: disposeBag)
 
-        loading
-          .drive(roundUpButton.rx.isHidden)
-          .disposed(by: disposeBag)
+//        loading
+//          .drive(roundUpButton.rx.isHidden)
+//          .disposed(by: disposeBag)
+        
+        emptyTransactions
+            .map { !$0 }
+            .drive(emptyStateView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        emptyTransactions
+            .startWith(true)
+            .drive(roundUpStack.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        emptyTransactions
+            .skip(1)
+            .startWith(true)
+            .drive(roundUpButton.roundUpImage.rx.isHidden)
+//            .subscribe {
+//                self.roundUpButton.roundUpImage.isHidden = $0
+//            }
+            .disposed(by: disposeBag)
+//        emptyTransactions
+//            .startWith(false)
+//            .drive(roundUpButton.roundUpImage.rx.isHidden)
+//            .disposed(by: disposeBag)
+        
     }
     
 }
@@ -178,17 +216,15 @@ private extension TransactionFeedViewController {
         
         tableView.delegate = self
         
-        roundUpStack.isLayoutMarginsRelativeArrangement = true
-        roundUpStack.layoutMargins = .init(top: space4, left: space4, bottom: space4, right: space4)
-        
         view.addSubview(accountStack)
         view.addSubview(dateStack)
         view.addSubview(roundUpStack)
         view.addSubview(indicator)
         
         roundUpStack.addArrangedSubview(roundUpButton)
-        self.view.addSubview(tableView)
         
+        self.view.addSubview(tableView)
+        setUpEmptyStateView()
         
         NSLayoutConstraint.activate([
             dateStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
@@ -209,6 +245,17 @@ private extension TransactionFeedViewController {
             indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        func setUpEmptyStateView() {
+            
+            view.addSubview(emptyStateView)
+            
+            NSLayoutConstraint.activate([
+                emptyStateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
+                emptyStateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+                emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
+            ])
+        }
     }
 }
 

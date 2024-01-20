@@ -28,7 +28,13 @@ public struct AlertState {
 }
 
 public enum AlertType {
-    case emptyName, targetTooLow, genericError, network, confirmAddToGoal(String, String), itWorked
+    case emptyName,
+         targetTooLow,
+         genericError,
+         network,
+         confirmAddToGoal(String, String),
+         savingsAddedSuccesfully(String, String),
+         createGoalSuccess(String)
     
     public var alertState: AlertState {
         switch self {
@@ -42,8 +48,10 @@ public enum AlertType {
             return .network
         case let .confirmAddToGoal(amount, goal):
             return .confirmAddToSavingsGoal(amount, goalName: goal)
-        case .itWorked:
-            return .resultWasASuccess
+        case let .savingsAddedSuccesfully(amount, goal):
+            return .savingsAddedSuccesfully(amount, goalName: goal)
+        case let .createGoalSuccess(name):
+            return .goalAddedSuccesfully(name)
         
         }
     }
@@ -54,12 +62,25 @@ public extension AlertState {
     static var targetTooLow = Self.init(title: "Target Too Low", message: "Target amount is currently 0. Let's aim a little higher!")
     static var genericError = Self.init(title: "Unable To Create Savings Goal", message: "An unknown error occured")
     static var network = Self.init(title: "Unable To Create Savings Goal", message: "Please check your connection and try again")
-    static var resultWasASuccess = Self.init(title: "It worked", message: "Yay!")
     
     static func confirmAddToSavingsGoal(_ amountString: String, goalName: String) -> Self {
         Self.init(
             title: "Add \(amountString) Savings Goal?",
             message: "Are you sure you want to add \(amountString) to \(goalName)?"
+        )
+    }
+    
+    static func savingsAddedSuccesfully(_ amountString: String, goalName: String) -> Self {
+        Self.init(
+            title: "Success",
+            message: "Added\(amountString) to \(goalName)!"
+        )
+    }
+    
+    static func goalAddedSuccesfully(_ goalName: String) -> Self {
+        Self.init(
+            title: "Success",
+            message: "\(goalName) created successfully!"
         )
     }
 }

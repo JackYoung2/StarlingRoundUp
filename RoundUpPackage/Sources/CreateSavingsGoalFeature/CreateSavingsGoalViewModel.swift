@@ -11,31 +11,40 @@ import RxSwift
 import RxRelay
 import Common
 import APIClient
+import RxCocoa
 
 public protocol CreateSavingsGoalViewModelProtocol {
     //    var apiClient: APIClient
     //    var uuid: () -> UUID
 }
 
+public typealias CreateSavingsGoalResult = Result<CreateSavingsGoalResponse, APIError>
+
 public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
-    //    public var uuid: () -> UUID = {
-    //        UUID().uuid
-    //    }
     
     public indirect enum Route {
         case alert(AlertState)
     }
+    
+    let disposeBag = DisposeBag()
+    
     var account: Account
     public var route: BehaviorRelay<Route?>
     public var apiClient: APIClientProtocol
-    public var isNetworking: PublishRelay<Bool> = .init()
+    private var isNetworking: PublishRelay<Bool> = .init()
+    public var networkingDriver: Driver<Bool> {
+        isNetworking.asDriver(onErrorJustReturn: false)
+    }
+    
+    public var createGoalResultPublisher = PublishRelay<CreateSavingsGoalResult>()
     
     
     //    lazy var savingsGoalRelay = BehaviorRelay(value: )
     
     
-    var name: String = ""
-    var target: Int = 0
+    private(set) public var name: String = "Test"
+    private var target: Int = 1110
+
     
     public init(
         account: Account,
@@ -45,7 +54,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.account = account
         self.apiClient = apiClient
-        //        setUpSubs()
+        setUpSubs()
     }
     
     func doneButtonTapped() {
@@ -76,23 +85,42 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     
     func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
         isNetworking.accept(true)
+//        try await Task.sleep(nanoseconds: 1_000_000_000)
         var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
         let result = try await apiClient.call(&endpoint)
+//        
+//        let result: CreateSavingsGoalResult = .success(
+//            .init(savingsGoalUid: "123", success: true)
+//        )
         
-        switch result {
-        case .success(let success):
-            print("It went up")
-        case .failure(let failure):
-            switch failure {
-            case .networkError:
-                self.route.accept(.alert(.network))
-            default:
-                self.route.accept(.alert(.genericError))
-            }
-            
-        }
+//        let result: CreateSavingsGoalResult = .failure(.networkError)
+        
+        self.createGoalResultPublisher.accept(result)
+        
+//        switch result {
+//        case .success(let success):
+//            print("It went up")
+//        case .failure(let failure):
+//            switch failure {
+//            case .networkError:
+//                self.route.accept(.alert(.network))
+//            default:
+//                self.route.accept(.alert(.genericError))
+//            }
+//            
+//        }
         
         isNetworking.accept(false)
+    }
+    
+    func setUpSubs() {
+        self
+            .createGoalResultPublisher
+            .filter { $0.failure }
+            .subscribe { result in
+                self.route.accept(.alert(.genericError))
+            }
+            .disposed(by: disposeBag)
     }
     
 }

@@ -28,7 +28,8 @@ public class CreateSavingsGoalViewController: UIViewController {
     let nameStack = Components.createStackView(axis: .horizontal, alignment: .center)
     let targetStack = Components.createStackView()
     let divider = Components.createDivider()
-    let metaStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
+    let contentStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
+    let textEntryStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
     let doneButton = Components.borderButton("Done", action: #selector(doneButtonTapped))
     let indicator = Components.indicator()
     let baseView = Components.createBaseContainerView()
@@ -55,23 +56,24 @@ public class CreateSavingsGoalViewController: UIViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         
         nameStack.isLayoutMarginsRelativeArrangement = true
-        nameStack.layoutMargins = .init(top: space4, left: space4, bottom: space4, right: space4)
-        
+        nameStack.directionalLayoutMargins = .init(top: space4, leading: space4, bottom: space4, trailing: space4)
         targetStack.isLayoutMarginsRelativeArrangement = true
-        targetStack.layoutMargins = .init(top: space4, left: space4, bottom: space4, right: space4)
+        targetStack.directionalLayoutMargins = .init(top: space4, leading: space4, bottom: space4, trailing: space4)
         
         nameStack.addArrangedSubview(nameTextField)
         targetStack.addArrangedSubview(targetTextField)
         
-        metaStack.addArrangedSubview(nameStack)
-        metaStack.addArrangedSubview(divider)
-        metaStack.addArrangedSubview(targetStack)
+        textEntryStack.addArrangedSubview(nameStack)
+        textEntryStack.addArrangedSubview(divider)
+        textEntryStack.addArrangedSubview(targetStack)
         
-        view.addSubview(doneButton)
-        view.addSubview(baseView)
-        view.addSubview(metaStack)
+        
+        baseView.addSubview(textEntryStack)
+        contentStack.addArrangedSubview(baseView)
+        contentStack.addArrangedSubview(doneButton)
         
         view.addSubview(indicator)
+        view.addSubview(contentStack)
         
         NSLayoutConstraint.activate([
             
@@ -80,24 +82,24 @@ public class CreateSavingsGoalViewController: UIViewController {
             baseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             
             divider.heightAnchor.constraint(equalToConstant: 1),
-            divider.widthAnchor.constraint(equalTo: metaStack.widthAnchor),
+            divider.widthAnchor.constraint(equalTo: textEntryStack.widthAnchor),
 
-            metaStack.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 0),
-            metaStack.topAnchor.constraint(equalTo: baseView.topAnchor, constant: space3),
-            metaStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 0),
-            metaStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -space3),
+            textEntryStack.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 0),
+            textEntryStack.topAnchor.constraint(equalTo: baseView.topAnchor, constant: space3),
+            textEntryStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 0),
+            textEntryStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -space3),
             
             doneButton.topAnchor.constraint(equalTo: baseView.bottomAnchor, constant: space4),
             doneButton.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: space3),
             doneButton.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -space3),
             
             indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            contentStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            contentStack.topAnchor.constraint(equalTo: view.topAnchor, constant: space3)
 
         ])
-        
-        nameTextField.text = "Test"
-        targetTextField.text = "100"
     }
     
     @objc func doneButtonTapped() {
@@ -120,9 +122,7 @@ public class CreateSavingsGoalViewController: UIViewController {
                         self.viewModel.cancelButtonTapped()
                     }))
                     
-//                    DispatchQueue.main.async {
-                        context.present(vc, animated: true)
-//                    }
+                    context.present(vc, animated: true)
                     presentedViewController = vc
                     
                 case .none:
@@ -135,7 +135,8 @@ public class CreateSavingsGoalViewController: UIViewController {
             .text
             .orEmpty
             .subscribe(onNext: { text in
-                self.viewModel.name = text
+//                TODO: -
+//                self.viewModel.name = text
             })
             .disposed(by: disposeBag)
 
@@ -145,22 +146,20 @@ public class CreateSavingsGoalViewController: UIViewController {
             .orEmpty
             .subscribe(onNext: { text in
 //                TODO: - Format
-                self.viewModel.target = Int(text) ?? 100
+//                self.viewModel.target = Int(text) ?? 100
             })
             .disposed(by: disposeBag)
 
+            
+        viewModel
+            .networkingDriver
+            .drive(indicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        viewModel
+            .networkingDriver
+            .drive(contentStack.rx.isHidden)
+            .disposed(by: disposeBag)
         
     }
 }
-
-
-//import SwiftUI
-//import Common
-//
-//struct CreateSavingsGoalViewController_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ToSwiftUI {
-//            UINavigationController(rootViewController: CreateSavingsGoalViewController(.init(account: .init())))
-//        }
-//    }
-//}
