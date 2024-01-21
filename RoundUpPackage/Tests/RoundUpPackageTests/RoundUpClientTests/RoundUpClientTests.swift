@@ -12,36 +12,21 @@ import SharedModel
 
 class RoundUpClientTests: XCTestCase {
     func testRoundUpSpend() {
-        let values = [
-            Amount(currency: "GBP", minorUnits: 1),
-            Amount(currency: "GBP", minorUnits: 2),
-            Amount(currency: "GBP", minorUnits: 3),
-            Amount(currency: "GBP", minorUnits: 4),
-            Amount(currency: "GBP", minorUnits: 5),
-            Amount(currency: "GBP", minorUnits: 6),
-            Amount(currency: "GBP", minorUnits: 7),
-            Amount(currency: "GBP", minorUnits: 8),
-            Amount(currency: "GBP", minorUnits: 9),
-            Amount(currency: "GBP", minorUnits: 10),
-            Amount(currency: "GBP", minorUnits: 11),
-            Amount(currency: "GBP", minorUnits: 12),
-            Amount(currency: "GBP", minorUnits: 13),
-            Amount(currency: "GBP", minorUnits: 14),
-            Amount(currency: "GBP", minorUnits: 15),
-            Amount(currency: "GBP", minorUnits: 100),
-        ]
+        let values = (1...100).map { Amount(currency: "GBP", minorUnits: $0) }
+
         
         let expected = [
-            99,98,97,96,95,94,93,92,91,90,89,88,87,86,85, 0
+           99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
         ]
         
         let rounded = values.map {
             RoundUpClient().roundUpSpend(code: $0.currency, $0.minorUnits)
         }
         
+        XCTAssertEqual(values.count, expected.count)
         XCTAssertEqual(rounded, expected)
         
-        print(rounded)
+//        print(rounded)
     }
     
 }

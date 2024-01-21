@@ -17,7 +17,7 @@ extension TransactionFeedViewModel.Route: Equatable {
             return lhs == rhs
             
         case (.savingsGoal, .savingsGoal):
-            return lhs == rhs
+            return true
             
         default:
             return false

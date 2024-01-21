@@ -56,6 +56,8 @@ class TransactionFeedViewModelTests: XCTestCase {
         setUpApiHappyPath()
         setUpViewModel()
         
+        viewModel.accountRelay.accept(.mock())
+        
         viewModel.roundButtonTapped()
         
         XCTAssertEqual(
