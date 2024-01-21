@@ -15,7 +15,6 @@ public protocol SavingsGoalViewModelProtocol {
     var displayedProgress: Float { get }
     var displayedTarget: String { get }
     var displayedCurrentAmount: String { get }
-    subscript<T>(dynamicMember keyPath: KeyPath<SavingsGoal, T>) -> T { get }
 }
 
 @dynamicMemberLookup

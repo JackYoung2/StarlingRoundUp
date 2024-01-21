@@ -13,6 +13,7 @@ import Common
 import APIClient
 import RxCocoa
 
+//    MARK: - Abstraction
 public protocol CreateSavingsGoalViewModelProtocol {
     //    var apiClient: APIClient
     //    var uuid: () -> UUID
@@ -20,28 +21,31 @@ public protocol CreateSavingsGoalViewModelProtocol {
 
 public typealias CreateSavingsGoalResult = Result<CreateSavingsGoalResponse, APIError>
 
+//    MARK: - Concretion
 public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     
+    //    MARK: - Navigation
     public indirect enum Route {
         case alert(AlertState)
     }
-    
-    let disposeBag = DisposeBag()
-    
-    var account: Account
     public var route: BehaviorRelay<Route?>
+    
+    //    MARK: - Dependencies
+    let disposeBag = DisposeBag()
     public var apiClient: APIClientProtocol
-    private var isNetworking: PublishRelay<Bool> = .init()
+    
+    //    MARK: - Constants
     public let maxGoalAmountDigits: Int = 12
+    let account: Account
     
-    public var networkingDriver: Driver<Bool> {
-        isNetworking.asDriver(onErrorJustReturn: false)
-    }
-    
-    public var createGoalResultPublisher = PublishRelay<CreateSavingsGoalResult>()
-    public var name: BehaviorRelay<String> = .init(value: "")
-    public var target: BehaviorRelay<Int> = .init(value: 0)
+    //    MARK: - Drivers + relays
+    public var networkingDriver: Driver<Bool> { isNetworking.asDriver(onErrorJustReturn: false) }
+    private let isNetworking: PublishRelay<Bool> = .init()
+    public let createGoalResultPublisher = PublishRelay<CreateSavingsGoalResult>()
+    public let name: BehaviorRelay<String> = .init(value: "")
+    public let target: BehaviorRelay<Int> = .init(value: 0)
 
+    //    MARK: - Init
     public init(
         account: Account,
         route: Route? = nil,
@@ -50,44 +54,11 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.account = account
         self.apiClient = apiClient
-        setUpSubs()
+        setUpSubscribers()
     }
     
-    func doneButtonTapped() {
-        guard !name.value.isEmpty else {
-            self.route.accept(.alert(.emptyName))
-            return
-        }
-        
-        guard target.value > 0 else {
-            self.route.accept(.alert(.targetTooLow))
-            return
-        }
-        
-        let savingsGoal = SavingsGoalRequestBody(
-            name: name.value,
-            currency: account.currency,
-            target: .init(currency: account.currency, minorUnits: target.value)
-        )
-        
-        Task {
-            try await postSavingsGoal(savingsGoal)
-        }
-    }
-    
-    func cancelButtonTapped() {
-        self.route.accept(nil)
-    }
-    
-    func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
-        isNetworking.accept(true)
-        var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
-        let result = try await apiClient.call(&endpoint)
-        self.createGoalResultPublisher.accept(result)
-        isNetworking.accept(false)
-    }
-    
-    func setUpSubs() {
+    //    MARK: - State management
+    func setUpSubscribers() {
         self
             .createGoalResultPublisher
             .filter { $0.failure }
@@ -97,4 +68,30 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
             .disposed(by: disposeBag)
     }
     
+    //    MARK: - User input
+    func doneButtonTapped() {
+        guard !name.value.isEmpty else { self.route.accept(.alert(.emptyName)); return }
+        guard target.value > 0 else { self.route.accept(.alert(.targetTooLow)); return }
+        
+        let savingsGoal = SavingsGoalRequestBody(
+            name: name.value,
+            currency: account.currency,
+            target: .init(currency: account.currency, minorUnits: target.value)
+        )
+        
+        Task { try await postSavingsGoal(savingsGoal) }
+    }
+    
+    func cancelButtonTapped() {
+        self.route.accept(nil)
+    }
+    
+    //    MARK: - Dependency Integration
+    func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
+        isNetworking.accept(true)
+        var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
+        let result = try await apiClient.call(&endpoint)
+        self.createGoalResultPublisher.accept(result)
+        isNetworking.accept(false)
+    }
 }

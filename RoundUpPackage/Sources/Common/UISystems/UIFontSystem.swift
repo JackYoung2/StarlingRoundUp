@@ -14,7 +14,6 @@ private extension CGFloat {
 }
 
 public extension UIFont {
-
     struct Title {
         public static let medium: UIFont = UIFont.systemFont(ofSize: .medium, weight: .medium)
         public static let mediumBold: UIFont = UIFont.systemFont(ofSize: .medium, weight: .bold)
@@ -26,6 +25,4 @@ public extension UIFont {
            public static let small: UIFont = UIFont.systemFont(ofSize: .small, weight: .semibold)
            public static let extraSmall: UIFont = UIFont.systemFont(ofSize: .extraSmall, weight: .semibold)
        }
-      
-   
 }

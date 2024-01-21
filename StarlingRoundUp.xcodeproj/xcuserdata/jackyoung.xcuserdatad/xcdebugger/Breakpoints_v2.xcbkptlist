@@ -174,9 +174,9 @@
             filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -210,38 +210,6 @@
                   offsetFromSymbolStart = "168">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "22FE28C3-2D4B-4D75-9E7E-0273D1DDCCA1"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "fetchTransactions()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "ECBF9BA0-ECB0-4BAF-AF65-6693CC8B3CFD"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
-            landmarkName = "fetchTransactions()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -355,102 +323,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A6D18441-F484-46C5-BF39-E35D1675A987"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
-            landmarkName = "fetchAccount()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A6D18441-F484-46C5-BF39-E35D1675A987 - 2c307481fc93a88c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for TransactionFeedFeature.TransactionFeedViewModel.fetchAccount() async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "116"
-                  endingLineNumber = "116"
-                  offsetFromSymbolStart = "264">
-               </Location>
-               <Location
-                  uuid = "A6D18441-F484-46C5-BF39-E35D1675A987 - 2c307481fc93af30"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for TransactionFeedFeature.TransactionFeedViewModel.fetchAccount() async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "120"
-                  endingLineNumber = "120"
-                  offsetFromSymbolStart = "264">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0E2E43CC-DCA3-4AC8-A92D-BFB93C359B47"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
-            landmarkName = "fetchAccount()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "0E2E43CC-DCA3-4AC8-A92D-BFB93C359B47 - 2c307481fc93af4e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for TransactionFeedFeature.TransactionFeedViewModel.fetchAccount() async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "118"
-                  endingLineNumber = "118"
-                  offsetFromSymbolStart = "768">
-               </Location>
-               <Location
-                  uuid = "0E2E43CC-DCA3-4AC8-A92D-BFB93C359B47 - 2c307481fc93aff2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for TransactionFeedFeature.TransactionFeedViewModel.fetchAccount() async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/TransactionFeedFeature/TransactionFeedViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "122"
-                  endingLineNumber = "122"
-                  offsetFromSymbolStart = "768">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "04DC361B-6763-4E62-BB4E-1961DCA32169"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -506,9 +378,9 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/View/TransactionFeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -522,8 +394,8 @@
             filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "236"
-            endingLineNumber = "236"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "tableView(_:numberOfRowsInSection:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -538,8 +410,8 @@
             filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "249"
-            endingLineNumber = "249"
+            startingLineNumber = "169"
+            endingLineNumber = "169"
             landmarkName = "tableView(_:willDisplay:forRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -554,9 +426,9 @@
             filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -570,8 +442,8 @@
             filePath = "RoundUpPackage/Sources/CreateSavingsGoalFeature/CreateSavingsGoalViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
             landmarkName = "postSavingsGoal(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -586,9 +458,9 @@
             filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -602,9 +474,9 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/View/TransactionFeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -618,9 +490,9 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/View/TransactionFeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -634,314 +506,10 @@
             filePath = "RoundUpPackage/Sources/TransactionFeedFeature/View/TransactionFeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2B2E7F3D-3A6A-4DD2-A7CD-91C014162886"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/TransactionFeedFeature/View/TransactionFeedViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
-            landmarkName = "setUpSubscribers(context:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5A29FE4E-CFBA-4102-8A71-50D30A4BD7A0"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
-            landmarkName = "setUpSubs()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "5A29FE4E-CFBA-4102-8A71-50D30A4BD7A0 - cfa0e829b34deff9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #3 (Swift.Result&lt;SharedModel.SavingsGoalTransferResponse, APIClient.APIError&gt;) -&gt; () in SavingsGoalListFeature.SavingsGoalListViewModel.setUpSubs() -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "174"
-                  endingLineNumber = "174"
-                  offsetFromSymbolStart = "1588">
-               </Location>
-               <Location
-                  uuid = "5A29FE4E-CFBA-4102-8A71-50D30A4BD7A0 - ef24ac1e82042e0f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #3 (SavingsGoalListFeature.SavingsGoalWrapper) -&gt; () in SavingsGoalListFeature.SavingsGoalListViewModel.setUpSubs() -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "180"
-                  endingLineNumber = "180"
-                  offsetFromSymbolStart = "1548">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7C3C43B2-ABAD-4EE4-8ADE-6257D24CE581"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
-            landmarkName = "setUpSubs()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "7C3C43B2-ABAD-4EE4-8ADE-6257D24CE581 - 93e6ecb6c1e997b0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Result&lt;SharedModel.SavingsGoalListResponse, APIClient.APIError&gt;) -&gt; () in SavingsGoalListFeature.SavingsGoalListViewModel.setUpSubs() -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "144"
-                  endingLineNumber = "144"
-                  offsetFromSymbolStart = "1156">
-               </Location>
-               <Location
-                  uuid = "7C3C43B2-ABAD-4EE4-8ADE-6257D24CE581 - 93e6ecb6c1e997df"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Result&lt;SharedModel.SavingsGoalListResponse, APIClient.APIError&gt;) -&gt; () in SavingsGoalListFeature.SavingsGoalListViewModel.setUpSubs() -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "145"
-                  endingLineNumber = "145"
-                  offsetFromSymbolStart = "580">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E15E861C-3A08-4C57-B4AC-C1181612C42E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
-            landmarkName = "setUpSubs()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "E15E861C-3A08-4C57-B4AC-C1181612C42E - 279cf872a1da4db7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SavingsGoalListFeature.SavingsGoalListViewModel.setUpSubs() -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "148"
-                  endingLineNumber = "148"
-                  offsetFromSymbolStart = "724">
-               </Location>
-               <Location
-                  uuid = "E15E861C-3A08-4C57-B4AC-C1181612C42E - 93e6ecb6c1e9901d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Result&lt;SharedModel.SavingsGoalListResponse, APIClient.APIError&gt;) -&gt; () in SavingsGoalListFeature.SavingsGoalListViewModel.setUpSubs() -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "147"
-                  endingLineNumber = "147"
-                  offsetFromSymbolStart = "884">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "CC175DBF-C1E3-4205-BB28-8FD6D30DA0C3"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
-            landmarkName = "confirmAddTapped(goalId:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "CC175DBF-C1E3-4205-BB28-8FD6D30DA0C3 - 5ee701f5340a5cef"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for SavingsGoalListFeature.SavingsGoalListViewModel.confirmAddTapped(goalId: Swift.String) async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "113"
-                  endingLineNumber = "113"
-                  offsetFromSymbolStart = "544">
-               </Location>
-               <Location
-                  uuid = "CC175DBF-C1E3-4205-BB28-8FD6D30DA0C3 - 5ee701f5340a5cc0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for SavingsGoalListFeature.SavingsGoalListViewModel.confirmAddTapped(goalId: Swift.String) async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "112"
-                  endingLineNumber = "112"
-                  offsetFromSymbolStart = "996">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D7733634-4E34-49AF-9EBD-6708E98751C5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
-            landmarkName = "confirmAddTapped(goalId:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "D7733634-4E34-49AF-9EBD-6708E98751C5 - 5ee701f5340a5c02"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for SavingsGoalListFeature.SavingsGoalListViewModel.confirmAddTapped(goalId: Swift.String) async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "110"
-                  endingLineNumber = "110"
-                  offsetFromSymbolStart = "724">
-               </Location>
-               <Location
-                  uuid = "D7733634-4E34-49AF-9EBD-6708E98751C5 - 5ee701f5340a5c63"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for SavingsGoalListFeature.SavingsGoalListViewModel.confirmAddTapped(goalId: Swift.String) async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "109"
-                  endingLineNumber = "109"
-                  offsetFromSymbolStart = "164">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B88C0562-E55A-441E-A0BF-A9068C556110"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
-            landmarkName = "confirmAddTapped(goalId:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "B88C0562-E55A-441E-A0BF-A9068C556110 - 5ee701f5340a5c8e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for SavingsGoalListFeature.SavingsGoalListViewModel.confirmAddTapped(goalId: Swift.String) async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "114"
-                  endingLineNumber = "114"
-                  offsetFromSymbolStart = "596">
-               </Location>
-               <Location
-                  uuid = "B88C0562-E55A-441E-A0BF-A9068C556110 - 5ee701f5340a234c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for SavingsGoalListFeature.SavingsGoalListViewModel.confirmAddTapped(goalId: Swift.String) async throws -&gt; ()"
-                  moduleName = "StarlingRoundUp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jackyoung/Documents/Projects/StarlingRoundUp/RoundUpPackage/Sources/SavingsGoalListFeature/SavingsGoalListViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "116"
-                  endingLineNumber = "116"
-                  offsetFromSymbolStart = "724">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1073,16 +641,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8B703A29-EDA3-43C8-91AE-4F59A8EA5EFE"
+            uuid = "9CB598D3-04CC-42DF-A13C-AF3FE83967D3"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "RoundUpPackage/Sources/CreateSavingsGoalFeature/CreateSavingsGoalViewController.swift"
+            filePath = "RoundUpPackage/Sources/TransactionFeedFeature/View/TransactionFeedViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
-            landmarkName = "setUpSubscribers(context:)"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "bindViewModel(context:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -14,10 +14,11 @@ import SavingsGoalListFeature
 import CreateSavingsGoalFeature
 
 public class TransactionFeedViewController: UIViewController {
-    
+    //    MARK: - Dependencies
     let disposeBag = DisposeBag()
     let viewModel = TransactionFeedViewModel()
     
+    //    MARK: - View Components
     lazy var tableView = Components.baseTableView()
     let accountLabel = Components.titleLabel("Account: ")
     let accountNameLabel = Components.baseLabel()
@@ -29,20 +30,20 @@ public class TransactionFeedViewController: UIViewController {
     let roundUpStack = Components.createStackView()
     let roundUpButton = Components.roundUpButton(action: #selector(roundToSavingsGoalButtonTapped))
     let refreshControl = UIRefreshControl()
-
-    
     let emptyStateView = Components.emptyStateView(text: "No transactions found. Spend some money to get started!")
     
+    //    MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
-        setUpSubscribers(context: self)
+        bindViewModel(context: self)
         Task {
             try await viewModel.fetchAccount()
             try await viewModel.fetchTransactions()
         }
     }
     
+    //    MARK: - User Input
     @objc func roundToSavingsGoalButtonTapped() {
         viewModel.roundButtonTapped()
     }
@@ -54,45 +55,40 @@ public class TransactionFeedViewController: UIViewController {
         }
     }
     
-    func setUpSubscribers(context: UIViewController) {
+    //    MARK: - Subscribers
+    func bindViewModel(context: UIViewController) {
 //        MARK: - Navigation
         var presentedViewController: UIViewController?
         
         viewModel.route
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] route in
-                guard let self = self else { return }
+                guard let self else { return }
                 switch route {
                 case let .savingsGoal(viewModel):
                     let vc = SavingsGoalListViewController(viewModel)
                     context.show(vc, sender: nil)
                     
                 case .none:
+                    presentedViewController?.dismiss(animated: true)
                     presentedViewController = nil
                     break
                     
                 case let .createSavingsGoal(viewModel):
                     let vc = CreateSavingsGoalViewController(viewModel)
                     context.show(vc, sender: nil)
-                case let(.alert(text)):
-                    let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
+                    
+                case let .alert(alertType):
+                    let alert = Components.alert(state: alertType.alertState)
+                    alert.addAction(
+                        .init(title: "OK", style: .default, handler: { _ in
+                            self.viewModel.route.accept(nil)
+                        }))
                     context.show(alert, sender: nil)
                 }
             }.disposed(by: disposeBag)
     
-        //        MARK: - UI
-        
-        let account = viewModel
-            .accountRelay
-            .asDriver(onErrorJustReturn: nil)
-        
-        let transactions = viewModel
-            .transactions
-            .asDriver(onErrorJustReturn: [])
-        
-        let date = viewModel
-            .transactionCutOffDate
-            .asDriver(onErrorJustReturn: Date())
+        //    MARK: - UIBindings
         
         let roundUpSumText = viewModel
             .roundUpValue
@@ -105,7 +101,8 @@ public class TransactionFeedViewController: UIViewController {
             .skip(1)
             .asDriver(onErrorJustReturn: "")
 
-        account
+        viewModel
+            .accountDriver
             .compactMap { $0?.name }
             .drive(accountNameLabel.rx.text)
             .disposed(by: disposeBag)
@@ -115,7 +112,8 @@ public class TransactionFeedViewController: UIViewController {
         .drive(roundUpButton.label.rx.text)
         .disposed(by: disposeBag)
         
-        date
+        viewModel
+            .dateDriver
             .map { $0.asDateString }
             .drive(dateLabel.rx.text)
             .disposed(by: disposeBag)
@@ -126,16 +124,16 @@ public class TransactionFeedViewController: UIViewController {
         .disposed(by: disposeBag)
         
         let loading = Observable.combineLatest(
-            transactions.asObservable(),
-            account.asObservable(),
-            date.asObservable(),
+            viewModel.transactionsDriver.asObservable(),
+            viewModel.accountDriver.asObservable(),
+            viewModel.dateDriver.asObservable(),
             roundUpSumText.asObservable(),
             
             resultSelector: { _,_,_,_ in
                 false
             }
           )
-            .skip(1)
+        .skip(1)
           .startWith(true)
           .asDriver(onErrorJustReturn: false)
         
@@ -143,7 +141,7 @@ public class TransactionFeedViewController: UIViewController {
         Observable
             .combineLatest(
                 loading.asObservable(),
-                transactions.asObservable(),
+                viewModel.transactions,
                 resultSelector: { loading, transactions in
                     !loading && transactions.isEmpty
                 }
@@ -167,10 +165,6 @@ public class TransactionFeedViewController: UIViewController {
           .drive(accountStack.rx.isHidden)
           .disposed(by: disposeBag)
 
-//        loading
-//          .drive(roundUpButton.rx.isHidden)
-//          .disposed(by: disposeBag)
-        
         emptyTransactions
             .map { !$0 }
             .drive(emptyStateView.rx.isHidden)
@@ -185,46 +179,56 @@ public class TransactionFeedViewController: UIViewController {
             .skip(1)
             .startWith(true)
             .drive(roundUpButton.roundUpImage.rx.isHidden)
-//            .subscribe {
-//                self.roundUpButton.roundUpImage.isHidden = $0
-//            }
             .disposed(by: disposeBag)
-//        emptyTransactions
-//            .startWith(false)
-//            .drive(roundUpButton.roundUpImage.rx.isHidden)
-//            .disposed(by: disposeBag)
-        
     }
-    
 }
 
+//    MARK: - UITableViewDelegate
+extension TransactionFeedViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .zero
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    {
+        let corners = tableView.corners(for: cell, at: indexPath)
+        let cornerRadius = space4
+        let maskLayer = CAShapeLayer()
+        
+        maskLayer.path = UIBezierPath(
+            roundedRect: cell.bounds,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(
+                width: cornerRadius, height: cornerRadius)
+        ).cgPath
+        cell.layer.mask = maskLayer
+    }
+}
+
+//    MARK: - setUpView
 private extension TransactionFeedViewController {
     func setUpView() {
         self.view.backgroundColor = ColorSystem.background
         self.navigationItem.title = "Transactions"
         self.navigationController?.navigationBar.prefersLargeTitles = true
-    
+        
+        tableView.delegate = self
         tableView.register(cell: TransactionTableViewCell.self)
            refreshControl.attributedTitle = NSAttributedString(string: "Fetch Transactions")
            refreshControl.addTarget(self, action: #selector(self.didPullToRefresh), for: .valueChanged)
            tableView.addSubview(refreshControl)
 
-        
         accountStack.addArrangedSubview(accountLabel)
         accountStack.addArrangedSubview(accountNameLabel)
         dateStack.addArrangedSubview(sinceLabel)
         dateStack.addArrangedSubview(dateLabel)
-        
-        tableView.delegate = self
-        
+        roundUpStack.addArrangedSubview(roundUpButton)
         view.addSubview(accountStack)
         view.addSubview(dateStack)
         view.addSubview(roundUpStack)
         view.addSubview(indicator)
+        view.addSubview(tableView)
         
-        roundUpStack.addArrangedSubview(roundUpButton)
-        
-        self.view.addSubview(tableView)
         setUpEmptyStateView()
         
         NSLayoutConstraint.activate([
@@ -248,35 +252,12 @@ private extension TransactionFeedViewController {
         ])
         
         func setUpEmptyStateView() {
-            
             view.addSubview(emptyStateView)
-            
             NSLayoutConstraint.activate([
                 emptyStateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
                 emptyStateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
                 emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
             ])
         }
-    }
-}
-
-extension TransactionFeedViewController: UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        .zero
-    }
-    
-    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
-    {
-        let corners = tableView.corners(for: cell, at: indexPath)
-        let cornerRadius = space4
-        let maskLayer = CAShapeLayer()
-        
-        maskLayer.path = UIBezierPath(
-            roundedRect: cell.bounds,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(
-                width: cornerRadius, height: cornerRadius)
-        ).cgPath
-        cell.layer.mask = maskLayer
     }
 }

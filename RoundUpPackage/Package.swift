@@ -17,7 +17,6 @@ let package = Package(
         .library(name: "SavingsGoalListFeature", targets: ["SavingsGoalListFeature"]),
         .library(name: "SavingsGoalFeature", targets: ["SavingsGoalFeature"]),
         .library(name: "CreateSavingsGoalFeature", targets: ["CreateSavingsGoalFeature"]),
-        .library(name: "SessionManager", targets: ["SessionManager"]),
         .library(name: "AccountsFeature", targets: ["AccountsFeature"])
     ],
     dependencies: [
@@ -89,10 +88,6 @@ let package = Package(
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift")
             ]
-        ),
-        .target(
-            name: "SessionManager",
-            dependencies: []
         ),
         .target(
             name: "AccountsFeature",

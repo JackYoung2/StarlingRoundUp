@@ -17,32 +17,47 @@ import AccountsFeature
 import RxDataSources
 import UIKit
 import RoundUpClient
+import Common
 
+//    MARK: - Abstraction
 protocol TransactionFeedViewModelProtocol {
     var route: BehaviorRelay<TransactionFeedViewModel.Route?> { get }
     var apiClient: APIClientProtocol { get set }
-//    var dataSource: TransactionFeedDataSource { get }
     var transactions: BehaviorRelay<[Transaction]> { get }
-//    var tableViewSections: [TransactionFeedViewModel.Section] { get }
-    
     var accountRelay: BehaviorRelay<Account> { get }
-    
     init(route: TransactionFeedViewModel.Route?)
     func roundButtonTapped()
 }
 
+public typealias GetTransactionFeedResult = Result<TransactionFeedItemResponse, APIError>
+public typealias GetAccountResult = Result<AccountResponse, APIError>
 
+//    MARK: - Concretion
 public class TransactionFeedViewModel {
 
-    
+    //    MARK: - Navigation
     enum Route {
         case savingsGoal(SavingsGoalListViewModel)
         case createSavingsGoal(CreateSavingsGoalViewModel)
-        case alert(String)
+        case alert(AlertType)
     }
     
-    var apiClient: APIClient
     var route: BehaviorRelay<Route?>
+    
+    //    MARK: - Dependencies
+    var apiClient: APIClient
+    let disposeBag = DisposeBag()
+    let roundUpClient: RoundUpClientProtocol
+    
+    //    MARK: - Relays
+    //    TODO: - Add selection period
+    let transactionCutOffDate = BehaviorRelay<Date>(value: .oneWeekAgo)
+    let transactions = BehaviorRelay<[Transaction]>(value: [])
+    let accountRelay = BehaviorRelay<Account?>(value: nil)
+    let roundUpValue = BehaviorRelay<Int>(value: 0)
+    let tableViewSections = BehaviorRelay<[SectionModel<Date, Transaction>]>(value: [])
+    public let getTransactionFeedResultPublisher = PublishRelay<GetTransactionFeedResult>()
+    public let getAccountResultPublisher = PublishRelay<GetAccountResult>()
     
     lazy var dataSource = RxTableViewSectionedReloadDataSource<SectionModel<Date, Transaction>>(
         configureCell: { [weak self] (_, tableView, indexPath, element) in
@@ -60,28 +75,17 @@ public class TransactionFeedViewModel {
             return dataSource[sectionIndex].model.asDateString
         }
     )
+
     
+    //    MARK: - Drivers
+    public var accountDriver: Driver<Account?> { accountRelay.asDriver(onErrorJustReturn: nil) }
+    public var transactionsDriver: Driver<[Transaction]> { transactions.asDriver(onErrorJustReturn: []) }
+    public var dateDriver: Driver<Date> { transactionCutOffDate.asDriver(onErrorJustReturn: Date()) }
     
-    let disposeBag = DisposeBag()
-    
-    let roundUpClient: RoundUpClientProtocol
-    
-    
-    //    TODO: - Add selection period
-    var transactionCutOffDate = BehaviorRelay<Date>(value: .oneWeekAgo)
-    var transactions = BehaviorRelay<[Transaction]>(value: [])
-    var accountRelay = BehaviorRelay<Account?>(value: nil)
-    var roundUpValue = BehaviorRelay<Int>(value: 0)
-    
-    
+    //    MARK: - Text formatting
     var currencyCode: String { accountRelay.value?.currency ?? "" }
     
-    var account: Driver<Account?> {
-        return accountRelay.asDriver(onErrorJustReturn: nil)
-    }
-    
-    var tableViewSections = BehaviorRelay<[SectionModel<Date, Transaction>]>(value: [])
-
+    //    MARK: - Init
     init(
         apiClient: APIClient = APIClient(),
         route: Route? = nil,
@@ -93,10 +97,10 @@ public class TransactionFeedViewModel {
         setUpSubscribers()
     }
 
+    //    MARK: - User input
     func roundButtonTapped() {
         guard let account = accountRelay.value else { assert(false, "Should have account") }
         
-//        TODO: -
         self.route.accept(
             .savingsGoal(
                 .init(
@@ -108,12 +112,40 @@ public class TransactionFeedViewModel {
         )
     }
     
+    //    MARK: - Dependency Integration
+    func fetchTransactions() async throws {
+        guard let accountId = accountRelay.value?.accountUid,
+        let category = accountRelay.value?.defaultCategory,
+              let date = transactionCutOffDate.value.asISO8601Format
+        else {
+            self.route = .init(value: .alert(.network))
+            return
+        }
+        
+        var endpoint = Endpoint<TransactionFeedItemResponse>.getFeed(
+            for: accountId,
+            in: category,
+            since: date
+        )
+        
+        let result = try await apiClient.call(&endpoint)
+        getTransactionFeedResultPublisher.accept(result)
+    }
+    
+    func fetchAccount() async throws {
+        var endpoint = Endpoint<AccountResponse>.getAccount()
+        let result = try await apiClient.call(&endpoint)
+        getAccountResultPublisher.accept(result)
+    }
+    
+    //    MARK: - State management
     func setUpSubscribers() {
        transactions
             .map {
                 $0.reduce(into: [SectionModel<Date, Transaction>]()) { partialResult, next in
                     if let index = partialResult.firstIndex(where: { section in
-                        section.model == next.settlementTime
+                        let sameDay = Calendar.current.isDate(section.model, equalTo: next.settlementTime, toGranularity: .day)
+                        return sameDay
                     }) {
                         partialResult[index].items.append(next)
                     } else {
@@ -137,48 +169,44 @@ public class TransactionFeedViewModel {
         }
         .bind(to: roundUpValue)
         .disposed(by: disposeBag)
+        
+        self
+            .getAccountResultPublisher
+            .subscribe { [weak self] result in
+                switch result {
+                case let .success(response):
+//                    TODO: - Allow user to switch accounts
+                    self?.accountRelay.accept(response.accounts.first)
+                    
+                case let .failure(error):
+                    switch error {
+                    case .networkError:
+                        self?.route.accept(.alert(.network))
+                    case .parsingError:
+                        self?.route.accept(.alert(.genericError))
+                    }
+                    
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        self
+            .getTransactionFeedResultPublisher
+            .subscribe { [weak self] result in
+                switch result {
+                case let .success(response):
+                    self?.transactions.accept(response.feedItems)
+                    
+                case let .failure(error):
+                    switch error {
+                    case .networkError:
+                        self?.route.accept(.alert(.network))
+                    case .parsingError:
+                        self?.route.accept(.alert(.genericError))
+                    }
+                    
+                }
+            }
+            .disposed(by: disposeBag)
     }
-    
-    func fetchTransactions() async throws {
-        guard let accountId = accountRelay.value?.accountUid,
-        let category = accountRelay.value?.defaultCategory,
-              let date = transactionCutOffDate.value.asISO8601Format
-        else {
-//            TODO: - Get this to work
-            self.route = .init(value: .alert("No account selected"))
-            return
-        }
-        
-        var endpoint = Endpoint<TransactionFeedItemResponse>.getFeed(
-            for: accountId,
-            in: category,
-            since: date
-        )
-        
-        let result = try await apiClient.call(&endpoint)
-        
-        switch result {
-        case .success(let result):
-//            TODO: - Move this?
-            self.transactions.accept(result.feedItems.filter { $0.direction == .out && $0.status == .settled })
-        case .failure(let failure):
-            print(failure)
-//        TODO: - Handle failure
-        }
-    }
-    
-    func fetchAccount() async throws {
-        var endpoint = Endpoint<AccountResponse>.getAccount()
-        let result = try await apiClient.call(&endpoint)
-        
-        switch result {
-        case .success(let result):
-//            TODO: - Multiple accounts
-            accountRelay.accept(result.accounts.first)
-        case .failure(let failure):
-            print(failure)
-//        TODO: - Handle failure
-        }
-    }
-    
 }

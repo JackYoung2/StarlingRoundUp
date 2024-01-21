@@ -11,25 +11,16 @@ import SharedModel
 public struct AlertState {
     public var title: String
     public var message: String
-//    public var confirmAction: UIAlertAction?
-//    public var cancelAction: UIAlertAction?
-    
-    public init(
-        title: String, 
-        message: String
-//        confirmAction: UIAlertAction? = nil,
-//        cancelAction: UIAlertAction? = nil
-    
-    ) {
+
+    public init(title: String, message: String) {
         self.title = title
         self.message = message
-//        self.confirmAction = confirmAction
-//        self.cancelAction = cancelAction
     }
 }
 
 public enum AlertType {
     case emptyName,
+         noAccount,
          targetTooLow,
          genericError,
          network,
@@ -41,6 +32,8 @@ public enum AlertType {
         switch self {
         case .emptyName:
             return .emptyName
+        case .noAccount:
+            return .noAccount
         case .targetTooLow:
             return .targetTooLow
         case .genericError:
@@ -59,10 +52,11 @@ public enum AlertType {
 }
 
 public extension AlertState {
-    static var emptyName = Self.init(title: "Name Missing", message: "Please choose a name for your savings goal")
-    static var targetTooLow = Self.init(title: "Target Too Low", message: "Target amount is currently 0. Let's aim a little higher!")
-    static var genericError = Self.init(title: "Unable To Complete Operation", message: "An unknown error occured")
-    static var network = Self.init(title: "Unable To Create Savings Goal", message: "Please check your connection and try again")
+    static let emptyName = Self.init(title: "Name Missing", message: "Please choose a name for your savings goal")
+    static let targetTooLow = Self.init(title: "Target Too Low", message: "Target amount is currently 0. Let's aim a little higher!")
+    static let genericError = Self.init(title: "Unable To Complete Operation", message: "An unknown error occured")
+    static let network = Self.init(title: "Unable To Create Savings Goal", message: "Please check your connection and try again")
+    static let noAccount = Self.init(title: "No account selected", message: "Please choose an account")
     
     static func confirmAddToSavingsGoal(_ amountString: String, goalName: String) -> Self {
         Self.init(

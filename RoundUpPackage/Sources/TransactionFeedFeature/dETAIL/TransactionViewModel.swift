@@ -14,26 +14,20 @@ public struct TransactionViewModel {
 //    TODO: - Abstract
     var roundUpClient: RoundUpClient = .init()
     var transaction: Transaction
-    
-    var transactionDisplay: String {
-        NumberFormatter.formattedCurrencyFrom(amount: transaction.amount) ?? ""
-    }
-//    
-    var timeDisplay: String {
-        "\(transaction.settlementTime.asTimeString ?? "")"
-    }
-    
-//    var roundedUpAmount: Decimal {
-//        roundUpClient.roundUpSpend(code: transaction.amount.currency, transaction.amount.minorUnits)
-//    }
+    var transactionDisplay: String { NumberFormatter.formattedCurrencyFrom(amount: transaction.amount) ?? "" }
+    var timeDisplay: String { "\(transaction.settlementTime.asTimeString ?? "")" }
     
     var roundedUpDisplay: String {
+        let amount = computeRoundUpDisplay()
+        return amount.isEmpty ? "" : "+\(computeRoundUpDisplay())"
+    }
+    
+    func computeRoundUpDisplay() -> String {
         let differenceInMinorUnits = roundUpClient.roundUpSpend(code: transaction.amount.currency, transaction.amount.minorUnits)
         guard differenceInMinorUnits != 0 else { return "" }
         let amount = Amount(currency: transaction.amount.currency, minorUnits: differenceInMinorUnits)
         let displayValue = NumberFormatter.formattedCurrencyFrom(amount: amount) ?? ""
-
-        return "+\(displayValue)"
+        return displayValue
     }
     
     public init(transaction: Transaction) {

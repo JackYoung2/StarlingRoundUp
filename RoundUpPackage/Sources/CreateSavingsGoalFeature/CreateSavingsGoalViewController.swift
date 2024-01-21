@@ -13,19 +13,23 @@ import RxCocoa
 
 public class CreateSavingsGoalViewController: UIViewController {
     
+//    MARK: - Dependencies
     var viewModel: CreateSavingsGoalViewModel
     let disposeBag = DisposeBag()
-    let nameTextField = Components.createTextField("Name")
-    let targetTextField = Components.createTextField("Target Amount")
+    
+    //    MARK: - View Components
+    let contentStack = Components.createStackView(axis: .vertical, spacing: space5, distribution: .fill, alignment: .fill)
+    let baseView = Components.createBaseContainerView()
+    let textEntryStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
     let nameStack = Components.createStackView(axis: .horizontal, alignment: .center)
     let targetStack = Components.createStackView()
+    let nameTextField = Components.createTextField("Name")
     let divider = Components.createDivider()
-    let contentStack = Components.createStackView(axis: .vertical, spacing: space5, distribution: .fill, alignment: .fill)
-    let textEntryStack = Components.createStackView(axis: .vertical, distribution: .fill, alignment: .leading)
+    let targetTextField = Components.createTextField("Target Amount")
     let doneButton = Components.borderButton("Done", action: #selector(doneButtonTapped))
     let indicator = Components.indicator()
-    let baseView = Components.createBaseContainerView()
     
+    //    MARK: - Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
         targetTextField.addTarget(self, action: #selector(myTextFieldDidChange), for: .editingChanged)
@@ -35,63 +39,15 @@ public class CreateSavingsGoalViewController: UIViewController {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         setUpView()
-        setUpSubscribers(context: self)
+        bindViewModel(context: self)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUpView() {
-        self.view.backgroundColor = ColorSystem.background
-        self.navigationItem.title = "Create Savings Goal"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        
-        nameStack.isLayoutMarginsRelativeArrangement = true
-        nameStack.directionalLayoutMargins = .init(top: space4, leading: space4, bottom: space4, trailing: space4)
-        targetStack.isLayoutMarginsRelativeArrangement = true
-        targetStack.directionalLayoutMargins = .init(top: space4, leading: space4, bottom: space4, trailing: space4)
-        
-        nameStack.addArrangedSubview(nameTextField)
-        targetStack.addArrangedSubview(targetTextField)
-        
-        textEntryStack.addArrangedSubview(nameStack)
-        textEntryStack.addArrangedSubview(divider)
-        textEntryStack.addArrangedSubview(targetStack)
-        
-        
-        baseView.addSubview(textEntryStack)
-        contentStack.addArrangedSubview(baseView)
-        contentStack.addArrangedSubview(doneButton)
-        
-        view.addSubview(indicator)
-        view.addSubview(contentStack)
-        
-        targetTextField.delegate = self
-        
-        NSLayoutConstraint.activate([
-            
-//            baseView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: space3),
-//            baseView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space3),
-//            baseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
-            
-            divider.heightAnchor.constraint(equalToConstant: 1),
-            divider.widthAnchor.constraint(equalTo: textEntryStack.widthAnchor),
-
-            textEntryStack.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 0),
-            textEntryStack.topAnchor.constraint(equalTo: baseView.topAnchor, constant: space3),
-            textEntryStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 0),
-            textEntryStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -space3),
-            
-            contentStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space4),
-            contentStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
-            contentStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
-            
-            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-
-        ])
-    }
+    
+    //    MARK: - User Input
     
     @objc func doneButtonTapped() {
         viewModel.doneButtonTapped()
@@ -103,21 +59,13 @@ public class CreateSavingsGoalViewController: UIViewController {
         }
     }
     
-    func convertTargetTextToMinorUnits(text: String) -> Int? {
-        let formatter = NumberFormatter.currencyFormatter(for: self.viewModel.account.currency)
-        guard let majorUnit = formatter.number(from: text) as? Double else {
-            return nil
-        }
-        let minorUnit = majorUnit * pow(10, Double(formatter.maximumFractionDigits))
+    //    MARK: - Subscribers
 
-        return Int(minorUnit)
-    }
-    
-    @MainActor
-    func setUpSubscribers(context: UIViewController) {
+    func bindViewModel(context: UIViewController) {
         
         var presentedViewController: UIViewController?
         
+        //    MARK: - Navigation
         viewModel.route
             .observe(on: MainScheduler.instance)
             .subscribe { route in
@@ -134,10 +82,11 @@ public class CreateSavingsGoalViewController: UIViewController {
                     
                 case .none:
                     presentedViewController = nil
+                    presentedViewController?.dismiss(animated: true)
                 }
             }.disposed(by: disposeBag)
         
-        
+        //    MARK: - UIBindings
         nameTextField.rx
             .text
             .orEmpty
@@ -148,10 +97,8 @@ public class CreateSavingsGoalViewController: UIViewController {
         targetTextField.rx
             .text
             .orEmpty
-            .skip(1)
             .compactMap { [weak self] in
                 guard let self else { return nil }
-                print(self.convertTargetTextToMinorUnits(text: $0) ?? 0)
                 return self.convertTargetTextToMinorUnits(text: $0)
             }
             .bind(to: viewModel.target)
@@ -171,6 +118,7 @@ public class CreateSavingsGoalViewController: UIViewController {
     }
 }
 
+//    MARK: - Text Field Formatting
 extension CreateSavingsGoalViewController: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let maxLength = viewModel.maxGoalAmountDigits
@@ -179,5 +127,61 @@ extension CreateSavingsGoalViewController: UITextFieldDelegate {
 
         return newString.length <= maxLength
     }
+    
+    func convertTargetTextToMinorUnits(text: String) -> Int? {
+        let formatter = NumberFormatter.currencyFormatter(for: self.viewModel.account.currency)
+        guard let majorUnit = formatter.number(from: text) as? Double else { return nil }
+        let minorUnit = majorUnit * pow(10, Double(formatter.maximumFractionDigits))
+        return Int(minorUnit)
+    }
 }
 
+//    MARK: - setUpView
+extension CreateSavingsGoalViewController {
+
+    func setUpView() {
+        self.view.backgroundColor = ColorSystem.background
+        self.navigationItem.title = "Create Savings Goal"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        
+        nameStack.isLayoutMarginsRelativeArrangement = true
+        nameStack.directionalLayoutMargins = .init(top: space4, leading: space4, bottom: space4, trailing: space4)
+        targetStack.isLayoutMarginsRelativeArrangement = true
+        targetStack.directionalLayoutMargins = .init(top: space4, leading: space4, bottom: space4, trailing: space4)
+        
+        nameStack.addArrangedSubview(nameTextField)
+        targetStack.addArrangedSubview(targetTextField)
+        
+        textEntryStack.addArrangedSubview(nameStack)
+        textEntryStack.addArrangedSubview(divider)
+        textEntryStack.addArrangedSubview(targetStack)
+        
+        baseView.addSubview(textEntryStack)
+        contentStack.addArrangedSubview(baseView)
+        contentStack.addArrangedSubview(doneButton)
+        
+        view.addSubview(indicator)
+        view.addSubview(contentStack)
+        
+        targetTextField.delegate = self
+        
+        
+        NSLayoutConstraint.activate([
+            divider.heightAnchor.constraint(equalToConstant: 1),
+            divider.widthAnchor.constraint(equalTo: textEntryStack.widthAnchor),
+
+            textEntryStack.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 0),
+            textEntryStack.topAnchor.constraint(equalTo: baseView.topAnchor, constant: space3),
+            textEntryStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 0),
+            textEntryStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -space3),
+            
+            contentStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: space4),
+            contentStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: space3),
+            contentStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -space3),
+            
+            indicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+
+        ])
+    }
+}

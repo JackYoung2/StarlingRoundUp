@@ -9,61 +9,53 @@ import UIKit
 import SharedModel
 import RxSwift
 import RxRelay
+import RxCocoa
 import RxDataSources
 import SavingsGoalFeature
 import CreateSavingsGoalFeature
 import APIClient
 import Common
 
+//    MARK: - Abstractions
 public protocol SavingsGoalListViewModelProtocol {
     var savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> { get }
-    //    var dataSource: SavingsGoalDataSource { get }
     var route: BehaviorRelay<SavingsGoalListViewModel.Route?> { get }
-    
     init(route: SavingsGoalListViewModel.Route?)
-}
-
-public struct SavingsGoalWrapper {
-    var goalId: String
-    var result: AddToGoalsResult
 }
 
 public typealias AddToGoalsResult = Result<SavingsGoalTransferResponse, APIError>
 public typealias GetSavingsGoalsListResult = Result<SavingsGoalListResponse, APIError>
 
+//    MARK: - Concretion
 public class SavingsGoalListViewModel {
     
+    //    MARK: - Navigation
     public indirect enum Route {
         case createSavingsGoal(CreateSavingsGoalViewModel)
         case alert(AlertType)
     }
+    public var route: BehaviorRelay<Route?>
     
+    //    MARK: - Dependencies
     let disposeBag = DisposeBag()
+    var apiClient: APIClientProtocol
     
-    public let roundUpAmount: Amount
-    
-    public var roundUpDisplayString: String {
-        NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) ?? ""
+    public struct SavingsGoalWrapper {
+        var goalId: String
+        var result: AddToGoalsResult
     }
     
+    //    MARK: - Constants
+    public let roundUpAmount: Amount
+    public let account: Account
+    
+    //    MARK: - Drivers + relays
     var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
     let savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: [])
-    
     public let getSavingsGoalsListResultPublisher = PublishRelay<GetSavingsGoalsListResult>()
     public let addToGoalResultPublisher = PublishRelay<SavingsGoalWrapper>()
-    
-    
-    var apiClient: APIClientProtocol
-    var account: Account
-    
-    var titleString: String { "Add\(" " + roundUpDisplayString) to Savings Goal" }
-    
-    
-    
     public var isNetworking: PublishRelay<Bool> = .init()
-    
-    
-    //    lazy var dataSource = SavingsGoalDataSource(viewModel: self)
+    public var networkingDriver: Driver<Bool> { isNetworking.asDriver(onErrorJustReturn: false) }
     
     lazy var dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, SavingsGoalViewModel>>(
         configureCell: { [weak self] (_, tableView, indexPath, element) in
@@ -81,22 +73,40 @@ public class SavingsGoalListViewModel {
         }
     )
     
-    public var route: BehaviorRelay<Route?>
+
+    //    MARK: - Text formatting
+    var titleString: String { "Add\(" " + roundUpDisplayString) to Savings Goal" }
     
+    public var roundUpDisplayString: String {
+        NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) ?? ""
+    }
+    
+//    MARK: - Init
     public init(
         route: Route? = nil,
         apiClient: APIClientProtocol,
         account: Account,
         roundUpAmount: Amount
-        
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.apiClient = apiClient
         self.account = account
         self.roundUpAmount = roundUpAmount
-        setUpSubs()
+        setUpSubscribers()
     }
     
+    //    MARK: - User input
+    func confirmAddTapped(goalId: String) async throws {
+       try await addToGoal(goalId: goalId)
+    }
+    
+    func didTapItem(at indexPath: IndexPath) {
+        guard let amountString = NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) else { return }
+        let tappedGoal = self.savingsGoals.value[indexPath.row]
+        route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.savingsGoal)))
+    }
+    
+    //    MARK: - Dependency Integration
     func getSavingsGoals() async throws {
         isNetworking.accept(true)
         var endpoint = Endpoint<SavingsGoalListResponse>.getSavingsGoals(for: account.accountUid)
@@ -105,7 +115,7 @@ public class SavingsGoalListViewModel {
         isNetworking.accept(false)
     }
     
-    func confirmAddTapped(goalId: String) async throws {
+    func addToGoal(goalId: String) async throws {
         isNetworking.accept(true)
         
         guard let amountData = try? JSONEncoder().encode(TopUpRequest(amount: roundUpAmount)) else {
@@ -126,7 +136,9 @@ public class SavingsGoalListViewModel {
         isNetworking.accept(false)
     }
     
-    func setUpSubs() {
+    
+    //    MARK: - State management
+    func setUpSubscribers() {
         savingsGoals.subscribe {
             self.tableViewSections.accept(
                 [SectionModel(model: UUID().uuidString, items: $0)]
@@ -187,55 +199,4 @@ public class SavingsGoalListViewModel {
             }
             .disposed(by: disposeBag)
     }
-
-    func didTapItem(at indexPath: IndexPath) {
-        guard let amountString = NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) else { return }
-        let tappedGoal = self.savingsGoals.value[indexPath.row]
-        route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.savingsGoal)))
-    }
 }
-
-
-//let testSavingsGoals: [SavingsGoal] = []
-//    SavingsGoal(
-//        savingsGoalUid: "c0efc8ad-1a48-4bf3-b0c8-d2f23b370774",
-//        name: "Trip to Paris",
-//        target: Amount(currency: "GBP", minorUnits: 123456),
-//        totalSaved: Amount(currency: "GBP", minorUnits: 0),
-//        savedPercentage: 0,
-//        state: "ACTIVE"
-//    ),
-//    SavingsGoal(
-//        savingsGoalUid: "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
-//        name: "New Laptop",
-//        target: Amount(currency: "USD", minorUnits: 150000),
-//        totalSaved: Amount(currency: "USD", minorUnits: 50000),
-//        savedPercentage: 33,
-//        state: "ACTIVE"
-//    ),
-//    SavingsGoal(
-//        savingsGoalUid: "x1y2z3w4-5v6-6u7-7t8-8s9r0q1p2o3n",
-//        name: "Emergency Fund",
-//        target: Amount(currency: "CAD", minorUnits: 100000),
-//        totalSaved: Amount(currency: "CAD", minorUnits: 25000),
-//        savedPercentage: 25,
-//        state: "ACTIVE"
-//    ),
-//    SavingsGoal(
-//        savingsGoalUid: "f1e2d3c4-b5a6-f7e8-d9c0-b1a2f3e4d5c6",
-//        name: "Dream Vacation",
-//        target: Amount(currency: "EUR", minorUnits: 80000),
-//        totalSaved: Amount(currency: "EUR", minorUnits: 20000),
-//        savedPercentage: 25,
-//        state: "ACTIVE"
-//    ),
-//    SavingsGoal(
-//        savingsGoalUid: "1a2b3c4d-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
-//        name: "Home Renovation",
-//        target: Amount(currency: "AUD", minorUnits: 200000),
-//        totalSaved: Amount(currency: "AUD", minorUnits: 200000),
-//        savedPercentage: 100,
-//        state: "ACTIVE"
-//    )
-//]
-//

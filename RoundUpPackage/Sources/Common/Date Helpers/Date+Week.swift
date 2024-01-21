@@ -9,15 +9,6 @@ import Foundation
 
 
 public extension Date {
-    static var now = Date()
-    static var yesterday: Date {
-        Date.now.addingTimeInterval(-86400)
-    }
-    
-    static var distantPast: Date {
-        Date.now.addingTimeInterval(-186400)
-    }
-    
     static var oneWeekAgo: Self {
         let today = Date()
         guard let cal = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian),
