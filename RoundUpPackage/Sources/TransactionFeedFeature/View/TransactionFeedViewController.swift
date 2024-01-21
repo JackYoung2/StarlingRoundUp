@@ -72,11 +72,7 @@ public class TransactionFeedViewController: UIViewController {
                 case .none:
                     presentedViewController = nil
                     break
-                    
-                case let .createSavingsGoal(viewModel):
-                    let vc = CreateSavingsGoalViewController(viewModel)
-                    context.show(vc, sender: nil)
-                    
+                                      
                 case let .alert(alertType):
                     let alert = Components.alert(state: alertType.alertState)
                     alert.addAction(
@@ -84,7 +80,6 @@ public class TransactionFeedViewController: UIViewController {
                             self.viewModel.route.accept(nil)
                         }))
                     
-//                    context.
                     context.present(alert, animated: false)
                 }
             }.disposed(by: disposeBag)

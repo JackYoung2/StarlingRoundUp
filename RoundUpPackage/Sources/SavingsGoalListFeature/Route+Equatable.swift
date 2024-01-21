@@ -23,6 +23,4 @@ extension SavingsGoalListViewModel.Route: Equatable {
             return false
         }
     }
-    
-    
 }

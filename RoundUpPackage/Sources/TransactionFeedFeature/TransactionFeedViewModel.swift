@@ -24,8 +24,11 @@ protocol TransactionFeedViewModelProtocol {
     var route: BehaviorRelay<TransactionFeedViewModel.Route?> { get }
     var apiClient: APIClientProtocol { get }
     var transactions: BehaviorRelay<[Transaction]> { get }
-//    var accountRelay: BehaviorRelay<Account> { get }
+    var accountRelay: BehaviorRelay<Account?> { get }
+    
     func roundButtonTapped()
+    func fetchTransactions() async throws
+    func fetchAccount() async throws
 }
 
 public typealias GetTransactionFeedResult = Result<TransactionFeedItemResponse, APIError>
@@ -37,7 +40,6 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
     //    MARK: - Navigation
     enum Route {
         case savingsGoal(SavingsGoalListViewModel)
-        case createSavingsGoal(CreateSavingsGoalViewModel)
         case alert(AlertType)
     }
     

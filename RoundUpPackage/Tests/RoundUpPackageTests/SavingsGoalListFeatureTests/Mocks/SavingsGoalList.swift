@@ -13,7 +13,7 @@ public extension SavingsGoalListResponse {
 }
 
 public extension SavingsGoalTransferResponse {
-    static let mockSucess = Self.init(transferUid: UUID().uuidString, success: true)
+    static let mockSuccess = Self.init(transferUid: UUID().uuidString, success: true)
 }
 
 let firstSavingsGoal = SavingsGoal(

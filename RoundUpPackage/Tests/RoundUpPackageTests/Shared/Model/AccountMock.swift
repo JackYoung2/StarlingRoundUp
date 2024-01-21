@@ -10,9 +10,9 @@ import Foundation
 
 extension Account {
     static func mock(
-        accountUid: UUID = UUID(),
+        accountUid: UUID = UUID.mock,
         accountType: String = "PRIMARY",
-        defaultCategory: UUID = UUID(),
+        defaultCategory: UUID = UUID.mock,
         currency: String = "GBP",
         createdAt: String = "2024-01-18T13:09:36.054Z",
         name: String = "Personal"
@@ -20,7 +20,7 @@ extension Account {
             Account(
                 accountUid: accountUid.uuidString,
                 accountType: "PRIMARY",
-                defaultCategory: accountUid.uuidString,
+                defaultCategory: defaultCategory.uuidString,
                 currency: "GBP",
                 createdAt: "2024-01-18T13:09:36.054Z",
                 name: "Personal"
@@ -30,16 +30,9 @@ extension Account {
 
 
 extension AccountResponse {
-    static var mock: AccountResponse {
+    static func mock(accountId: UUID? = nil) -> AccountResponse {
         return AccountResponse(accounts: [
-            Account(
-                accountUid: "c0957db4-4587-4c91-96ec-787f45e3c5cd",
-                accountType: "PRIMARY",
-                defaultCategory: "c0957180-0474-43f7-a5c4-17dd6fc9dd77",
-                currency: "GBP",
-                createdAt: "2024-01-18T13:09:36.054Z",
-                name: "Personal"
-            )
+            Account.mock(accountUid: accountId ?? UUID())
         ])
     }
 }

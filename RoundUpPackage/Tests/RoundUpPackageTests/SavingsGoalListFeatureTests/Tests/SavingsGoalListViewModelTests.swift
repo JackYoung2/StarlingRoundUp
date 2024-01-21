@@ -127,7 +127,7 @@ class SavingsGoalListViewModelTests: XCTestCase {
     func test_SuccesfulAddToGoal_showsAlertAndFetchesSavingsGoals() async throws {
         let fetchesSavingsGoalsExpectation = XCTestExpectation(description: "After adding to goal, updated savings goals should be fetched")
         
-        setUpApiHappyPath(returnValue: SavingsGoalTransferResponse.mockSucess)
+        setUpApiHappyPath(returnValue: SavingsGoalTransferResponse.mockSuccess)
         
         viewModel = SuccessfulGoalUpdate(apiClient: apiClient) {
             fetchesSavingsGoalsExpectation.fulfill()
@@ -173,7 +173,7 @@ class SavingsGoalListViewModelTests: XCTestCase {
     
     func test_addToGoal_CallsApi() async throws {
         let apiExpectation = XCTestExpectation(description: "Should attempt api call to add to savings goal")
-        setUpApiHappyPath(callEndpointExpectation: apiExpectation, returnValue: SavingsGoalTransferResponse.mockSucess)
+        setUpApiHappyPath(callEndpointExpectation: apiExpectation, returnValue: SavingsGoalTransferResponse.mockSuccess)
         viewModel = AddToEndpointPartialMock(apiClient: apiClient, account: .mock(), roundUpAmount: .mock)
         try await viewModel.addToGoal(goalId: firstSavingsGoal.savingsGoalUid)
         await fulfillment(of: [apiExpectation], timeout: 1)

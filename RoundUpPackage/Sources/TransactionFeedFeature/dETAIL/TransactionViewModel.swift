@@ -22,7 +22,7 @@ public struct TransactionViewModel {
         return amount.isEmpty ? "" : "+\(computeRoundUpDisplay())"
     }
     
-    func computeRoundUpDisplay() -> String {
+    public func computeRoundUpDisplay() -> String {
         let differenceInMinorUnits = roundUpClient.roundUpSpend(code: transaction.amount.currency, transaction.amount.minorUnits)
         guard differenceInMinorUnits != 0 else { return "" }
         let amount = Amount(currency: transaction.amount.currency, minorUnits: differenceInMinorUnits)

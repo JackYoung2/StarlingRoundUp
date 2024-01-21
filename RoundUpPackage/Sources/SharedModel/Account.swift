@@ -11,7 +11,7 @@ public struct AccountResponse: Codable {
     public let accounts: [Account]
 }
 
-public struct Account: Codable {
+public struct Account: Codable, Equatable {
     public let accountUid: String
     public let accountType: String
     public let defaultCategory: String

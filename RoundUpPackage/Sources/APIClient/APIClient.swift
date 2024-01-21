@@ -14,7 +14,6 @@ public enum APIError: Error {
 }
 
 public protocol APIClientProtocol {
-//    var decoder: JSONDecoder { get set }
     var loadData: (URLRequest) async throws -> (Data, URLResponse) { get set }
     func call<Value: Decodable>(_ endpoint: inout Endpoint<Value>) async throws -> Result<Value, APIError>
 }
@@ -31,11 +30,9 @@ public struct APIClient: APIClientProtocol  {
     var dataTask: (URLRequest) async throws -> (Data, URLResponse) = { request in
         try await URLSession.shared.data(for: request)
     }
-    
-    
+
     public init(
-        decoder: JSONDecoder? = nil,
-        loadData: ((URLRequest) -> (Data, URLResponse))? = nil
+        loadData: ((URLRequest) async throws -> (Data, URLResponse))? = nil
     ) {
         self.loadData = loadData ?? dataTask
     }

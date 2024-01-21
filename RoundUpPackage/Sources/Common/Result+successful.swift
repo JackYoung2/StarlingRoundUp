@@ -20,4 +20,12 @@ public extension Result {
     var failure: Bool {
         !success
     }
+    
+    var error: Error? {
+        if case let .failure(failure) = self {
+            return failure
+        }
+        
+        return nil
+    }
 }
