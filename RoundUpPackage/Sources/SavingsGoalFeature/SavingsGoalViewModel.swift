@@ -18,7 +18,11 @@ public protocol SavingsGoalViewModelProtocol {
 }
 
 @dynamicMemberLookup
-public class SavingsGoalViewModel: SavingsGoalViewModelProtocol {
+public class SavingsGoalViewModel: SavingsGoalViewModelProtocol, Equatable {
+    public static func == (lhs: SavingsGoalViewModel, rhs: SavingsGoalViewModel) -> Bool {
+        lhs.savingsGoal == rhs.savingsGoal
+    }
+    
     public var savingsGoal: SavingsGoal
     
     public init(savingsGoal: SavingsGoal) {

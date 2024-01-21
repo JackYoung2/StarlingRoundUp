@@ -17,17 +17,32 @@ import APIClient
 import Common
 
 //    MARK: - Abstractions
-public protocol SavingsGoalListViewModelProtocol {
-    var savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> { get }
+
+protocol SavingsGoalListViewModelProtocol: AnyObject {
     var route: BehaviorRelay<SavingsGoalListViewModel.Route?> { get }
-    init(route: SavingsGoalListViewModel.Route?)
+    var apiClient: APIClientProtocol { get }
+    var roundUpAmount: Amount { get }
+    var account: Account { get }
+    var savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> { get }
+    var getSavingsGoalsListResultPublisher: PublishRelay<GetSavingsGoalsListResult> { get }
+    var addToGoalResultPublisher: PublishRelay<SavingsGoalListViewModel.SavingsGoalWrapper> { get }
+    var isNetworking: PublishRelay<Bool> { get }
+    var networkingDriver: Driver<Bool> { get }
+    var titleString: String { get }
+    var roundUpDisplayString: String { get }
+    func confirmAddTapped(goalId: String) async throws
+    func didTapItem(at indexPath: IndexPath)
+    func getSavingsGoals() async throws
+    func addToGoal(goalId: String) async throws
+//    func setUpSubscribers()
 }
+
 
 public typealias AddToGoalsResult = Result<SavingsGoalTransferResponse, APIError>
 public typealias GetSavingsGoalsListResult = Result<SavingsGoalListResponse, APIError>
 
 //    MARK: - Concretion
-public class SavingsGoalListViewModel {
+public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
     
     //    MARK: - Navigation
     public indirect enum Route {
@@ -38,7 +53,7 @@ public class SavingsGoalListViewModel {
     
     //    MARK: - Dependencies
     let disposeBag = DisposeBag()
-    var apiClient: APIClientProtocol
+    public var apiClient: APIClientProtocol
     
     public struct SavingsGoalWrapper {
         var goalId: String
@@ -51,7 +66,7 @@ public class SavingsGoalListViewModel {
     
     //    MARK: - Drivers + relays
     var tableViewSections = BehaviorRelay<[SectionModel<String, SavingsGoalViewModel>]>(value: [])
-    let savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: [])
+    public let savingsGoals: BehaviorRelay<[SavingsGoalViewModel]> = .init(value: [])
     public let getSavingsGoalsListResultPublisher = PublishRelay<GetSavingsGoalsListResult>()
     public let addToGoalResultPublisher = PublishRelay<SavingsGoalWrapper>()
     public var isNetworking: PublishRelay<Bool> = .init()
@@ -75,7 +90,7 @@ public class SavingsGoalListViewModel {
     
 
     //    MARK: - Text formatting
-    var titleString: String { "Add\(" " + roundUpDisplayString) to Savings Goal" }
+    public var titleString: String { "Add\(" " + roundUpDisplayString) to Savings Goal" }
     
     public var roundUpDisplayString: String {
         NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) ?? ""
@@ -96,18 +111,18 @@ public class SavingsGoalListViewModel {
     }
     
     //    MARK: - User input
-    func confirmAddTapped(goalId: String) async throws {
+    public func confirmAddTapped(goalId: String) async throws {
        try await addToGoal(goalId: goalId)
     }
     
-    func didTapItem(at indexPath: IndexPath) {
+    public func didTapItem(at indexPath: IndexPath) {
         guard let amountString = NumberFormatter.formattedCurrencyFrom(amount: roundUpAmount) else { return }
         let tappedGoal = self.savingsGoals.value[indexPath.row]
         route.accept(.alert(.confirmAddToGoal(amountString, tappedGoal.savingsGoal)))
     }
     
     //    MARK: - Dependency Integration
-    func getSavingsGoals() async throws {
+    public func getSavingsGoals() async throws {
         isNetworking.accept(true)
         var endpoint = Endpoint<SavingsGoalListResponse>.getSavingsGoals(for: account.accountUid)
         let result = try await apiClient.call(&endpoint)

@@ -13,32 +13,15 @@
 		F28063B72B4DCF02009A532C /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = F28063B62B4DCF02009A532C /* AppFeature */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		F28063982B4DC8FE009A532C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F28063762B4DC8F4009A532C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F280637D2B4DC8F4009A532C;
-			remoteInfo = StarlingRoundUp;
-		};
-		F28063A22B4DC8FE009A532C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F28063762B4DC8F4009A532C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F280637D2B4DC8F4009A532C;
-			remoteInfo = StarlingRoundUp;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		F280637E2B4DC8F4009A532C /* StarlingRoundUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarlingRoundUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F280638B2B4DC8F5009A532C /* StarlingRoundUp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StarlingRoundUp.xcdatamodel; sourceTree = "<group>"; };
 		F280638D2B4DC8FE009A532C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F28063902B4DC8FE009A532C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F28063922B4DC8FE009A532C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F28063972B4DC8FE009A532C /* StarlingRoundUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StarlingRoundUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F28063A12B4DC8FE009A532C /* StarlingRoundUpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StarlingRoundUpUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F28063B82B4DE300009A532C /* RoundUpPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RoundUpPackage; sourceTree = "<group>"; };
+		F2DF94A52B5D9DC80087AA51 /* StarlingRoundUp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = StarlingRoundUp.xctestplan; path = ../StarlingRoundUp.xctestplan; sourceTree = "<group>"; };
+		F2DF94AC2B5D9DE90087AA51 /* StarlingRoundUpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarlingRoundUpTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,28 +33,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F28063942B4DC8FE009A532C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F280639E2B4DC8FE009A532C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		F28063752B4DC8F4009A532C = {
 			isa = PBXGroup;
 			children = (
+				F2DF94A52B5D9DC80087AA51 /* StarlingRoundUp.xctestplan */,
 				F28063B82B4DE300009A532C /* RoundUpPackage */,
 				F28063802B4DC8F4009A532C /* StarlingRoundUp */,
+				F2DF94AB2B5D9DE90087AA51 /* StarlingRoundUpTests */,
 				F280637F2B4DC8F4009A532C /* Products */,
 				F28063B52B4DCF02009A532C /* Frameworks */,
 			);
@@ -81,8 +52,6 @@
 			isa = PBXGroup;
 			children = (
 				F280637E2B4DC8F4009A532C /* StarlingRoundUp.app */,
-				F28063972B4DC8FE009A532C /* StarlingRoundUpTests.xctest */,
-				F28063A12B4DC8FE009A532C /* StarlingRoundUpUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -103,6 +72,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F2DF94AB2B5D9DE90087AA51 /* StarlingRoundUpTests */ = {
+			isa = PBXGroup;
+			children = (
+				F2DF94AC2B5D9DE90087AA51 /* StarlingRoundUpTests.swift */,
+			);
+			path = StarlingRoundUpTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,42 +105,6 @@
 			productReference = F280637E2B4DC8F4009A532C /* StarlingRoundUp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F28063962B4DC8FE009A532C /* StarlingRoundUpTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F28063AE2B4DC8FE009A532C /* Build configuration list for PBXNativeTarget "StarlingRoundUpTests" */;
-			buildPhases = (
-				F28063932B4DC8FE009A532C /* Sources */,
-				F28063942B4DC8FE009A532C /* Frameworks */,
-				F28063952B4DC8FE009A532C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F28063992B4DC8FE009A532C /* PBXTargetDependency */,
-			);
-			name = StarlingRoundUpTests;
-			productName = StarlingRoundUpTests;
-			productReference = F28063972B4DC8FE009A532C /* StarlingRoundUpTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		F28063A02B4DC8FE009A532C /* StarlingRoundUpUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F28063B12B4DC8FE009A532C /* Build configuration list for PBXNativeTarget "StarlingRoundUpUITests" */;
-			buildPhases = (
-				F280639D2B4DC8FE009A532C /* Sources */,
-				F280639E2B4DC8FE009A532C /* Frameworks */,
-				F280639F2B4DC8FE009A532C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F28063A32B4DC8FE009A532C /* PBXTargetDependency */,
-			);
-			name = StarlingRoundUpUITests;
-			productName = StarlingRoundUpUITests;
-			productReference = F28063A12B4DC8FE009A532C /* StarlingRoundUpUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -176,13 +117,6 @@
 				TargetAttributes = {
 					F280637D2B4DC8F4009A532C = {
 						CreatedOnToolsVersion = 15.1;
-					};
-					F28063962B4DC8FE009A532C = {
-						CreatedOnToolsVersion = 15.1;
-					};
-					F28063A02B4DC8FE009A532C = {
-						CreatedOnToolsVersion = 15.1;
-						TestTargetID = F280637D2B4DC8F4009A532C;
 					};
 				};
 			};
@@ -200,8 +134,6 @@
 			projectRoot = "";
 			targets = (
 				F280637D2B4DC8F4009A532C /* StarlingRoundUp */,
-				F28063962B4DC8FE009A532C /* StarlingRoundUpTests */,
-				F28063A02B4DC8FE009A532C /* StarlingRoundUpUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -216,20 +148,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F28063952B4DC8FE009A532C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F280639F2B4DC8FE009A532C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -241,34 +159,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F28063932B4DC8FE009A532C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F280639D2B4DC8FE009A532C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F28063992B4DC8FE009A532C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F280637D2B4DC8F4009A532C /* StarlingRoundUp */;
-			targetProxy = F28063982B4DC8FE009A532C /* PBXContainerItemProxy */;
-		};
-		F28063A32B4DC8FE009A532C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F280637D2B4DC8F4009A532C /* StarlingRoundUp */;
-			targetProxy = F28063A22B4DC8FE009A532C /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F280638F2B4DC8FE009A532C /* LaunchScreen.storyboard */ = {
@@ -463,74 +354,6 @@
 			};
 			name = Release;
 		};
-		F28063AF2B4DC8FE009A532C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7T3V73LMKG;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JackYoung.StarlingRoundUpTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		F28063B02B4DC8FE009A532C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7T3V73LMKG;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JackYoung.StarlingRoundUpTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		F28063B22B4DC8FE009A532C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7T3V73LMKG;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JackYoung.StarlingRoundUpUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = StarlingRoundUp;
-			};
-			name = Debug;
-		};
-		F28063B32B4DC8FE009A532C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7T3V73LMKG;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JackYoung.StarlingRoundUpUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = StarlingRoundUp;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -548,24 +371,6 @@
 			buildConfigurations = (
 				F28063AC2B4DC8FE009A532C /* Debug */,
 				F28063AD2B4DC8FE009A532C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F28063AE2B4DC8FE009A532C /* Build configuration list for PBXNativeTarget "StarlingRoundUpTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F28063AF2B4DC8FE009A532C /* Debug */,
-				F28063B02B4DC8FE009A532C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F28063B12B4DC8FE009A532C /* Build configuration list for PBXNativeTarget "StarlingRoundUpUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F28063B22B4DC8FE009A532C /* Debug */,
-				F28063B32B4DC8FE009A532C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

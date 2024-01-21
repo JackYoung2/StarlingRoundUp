@@ -12,7 +12,7 @@ public struct SavingsGoalListResponse: Codable {
 }
 
 
-public struct CreateSavingsGoalResponse: Codable {
+public struct CreateSavingsGoalResponse: Codable, Equatable {
     public let savingsGoalUid: String
     public let success: Bool
     
@@ -57,7 +57,7 @@ public struct SavingsGoal: Codable, Equatable {
     }
 }
 
-public struct SavingsGoalRequestBody: Codable {
+public struct SavingsGoalRequestBody: Codable, Equatable {
     public let name: String
     public let currency: String
     public let target: Amount

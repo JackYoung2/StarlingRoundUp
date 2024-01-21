@@ -9,7 +9,7 @@ import Foundation
 
 public extension String {
     static let validName: String = "Valid Name"
-    static let validCurrency: String = "GP"
+    static let validCurrency: String = "GBP"
 }
 
 public extension Int {

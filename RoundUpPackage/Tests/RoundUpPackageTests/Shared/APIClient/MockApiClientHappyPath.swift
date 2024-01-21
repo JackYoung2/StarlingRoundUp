@@ -21,22 +21,25 @@ public struct MockApiClientHappyPath: APIClientProtocol {
     
     public func call<Value>(_ endpoint: inout Endpoint<Value>) async throws -> Result<Value, APIError> where Value : Decodable {
         callEndpointExpectation?.fulfill()
-        return .success(returnValue as! Value)
+        
+        if let val = returnValue as? Value {
+            return .success(val)
+        } else {
+            throw APIError.networkError
+        }
+        
     }
     
     public init(
-        loadDataExpectation: XCTestExpectation? = nil,
         callEndpointExpectation: XCTestExpectation? = nil,
         response: URLResponse? = nil,
         data: Data? = nil,
         returnValue: Any
     ) {
         self.loadData = { _ in
-            loadDataExpectation?.fulfill()
             return (data ?? Data(), response ?? URLResponse.init())
         }
         
-        self.loadDataExpectation = loadDataExpectation
         self.response = response
         self.data = data
         self.callEndpointExpectation = callEndpointExpectation

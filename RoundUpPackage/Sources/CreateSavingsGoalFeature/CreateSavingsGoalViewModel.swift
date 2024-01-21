@@ -15,7 +15,7 @@ import RxCocoa
 
 //    MARK: - Abstraction
 
-public protocol CreateSavingsGoalViewModelProtocol: AnyObject {
+public protocol CreateSavingsGoalViewModelProtocol {
     var apiClient: APIClientProtocol { get set }
     
     var route: BehaviorRelay<CreateSavingsGoalViewModel.Route?> { get }
@@ -27,6 +27,7 @@ public protocol CreateSavingsGoalViewModelProtocol: AnyObject {
     func doneButtonTapped()
     func cancelButtonTapped()
     func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws
+    func convertTargetTextToMinorUnits(text: String) -> Int?
 }
 
 
@@ -51,7 +52,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     
     //    MARK: - Drivers + relays
     public var networkingDriver: Driver<Bool> { isNetworking.asDriver(onErrorJustReturn: false) }
-    private let isNetworking: PublishRelay<Bool> = .init()
+    var isNetworking: PublishRelay<Bool> = .init()
     public let createGoalResultPublisher = PublishRelay<CreateSavingsGoalResult>()
     public let name: BehaviorRelay<String> = .init(value: "")
     public let target: BehaviorRelay<Int> = .init(value: 0)
@@ -79,7 +80,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
             .disposed(by: disposeBag)
     }
     
-    func convertTargetTextToMinorUnits(text: String) -> Int? {
+    public func convertTargetTextToMinorUnits(text: String) -> Int? {
         let formatter = NumberFormatter.currencyFormatter(for: account.currency)
         guard let majorUnit = formatter.number(from: text) as? Double else { return nil }
         let minorUnit = majorUnit * pow(10, Double(formatter.maximumFractionDigits))
