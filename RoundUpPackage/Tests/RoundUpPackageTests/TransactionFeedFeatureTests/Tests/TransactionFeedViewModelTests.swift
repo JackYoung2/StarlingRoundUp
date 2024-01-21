@@ -52,8 +52,23 @@ class TransactionFeedViewModelTests: XCTestCase {
         disposeBag = nil
     }
     
-    func test_() {
-
+    func test_roundButtonTapped_navigatesToSavingsGoalListVC() {
+        setUpApiHappyPath()
+        setUpViewModel()
+        
+        viewModel.roundButtonTapped()
+        
+        XCTAssertEqual(
+            viewModel.route.value,
+            TransactionFeedViewModel.Route.savingsGoal(
+                .init(
+                    apiClient: apiClient,
+                    account: .mock(),
+                    roundUpAmount: .init(currency: .validCurrency, minorUnits: 152)
+                )
+            )
+        )
+    
     }
     
 //    func test_() {
