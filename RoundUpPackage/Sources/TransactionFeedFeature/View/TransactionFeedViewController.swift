@@ -70,7 +70,6 @@ public class TransactionFeedViewController: UIViewController {
                     context.show(vc, sender: nil)
                     
                 case .none:
-                    presentedViewController?.dismiss(animated: true)
                     presentedViewController = nil
                     break
                     
@@ -84,7 +83,9 @@ public class TransactionFeedViewController: UIViewController {
                         .init(title: "OK", style: .default, handler: { _ in
                             self.viewModel.route.accept(nil)
                         }))
-                    context.show(alert, sender: nil)
+                    
+//                    context.
+                    context.present(alert, animated: false)
                 }
             }.disposed(by: disposeBag)
     

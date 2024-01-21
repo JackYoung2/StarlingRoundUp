@@ -91,6 +91,8 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
         guard !name.value.isEmpty else { self.route.accept(.alert(.emptyName)); return }
         guard target.value > 0 else { self.route.accept(.alert(.targetTooLow)); return }
         
+//        TODO: - Add functionality to prevent copy and paste
+        
         let savingsGoal = SavingsGoalRequestBody(
             name: name.value,
             currency: account.currency,

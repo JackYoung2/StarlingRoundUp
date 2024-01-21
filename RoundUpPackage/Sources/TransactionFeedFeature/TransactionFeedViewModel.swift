@@ -133,6 +133,7 @@ public class TransactionFeedViewModel {
     }
     
     func fetchAccount() async throws {
+        // TODO: - Networking response failure causes broken state
         var endpoint = Endpoint<AccountResponse>.getAccount()
         let result = try await apiClient.call(&endpoint)
         getAccountResultPublisher.accept(result)

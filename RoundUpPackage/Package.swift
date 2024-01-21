@@ -94,7 +94,12 @@ let package = Package(
             dependencies: ["APIClient", "SharedModel"]
         ),
         
-        .testTarget(name: "RoundUpPackageTests", dependencies: ["AppFeature"])
+        .testTarget(
+            name: "RoundUpPackageTests",
+            dependencies: [
+                "AppFeature",
+                .product(name: "RxTest", package: "RxSwift")
+            ])
     ]
       
 )
