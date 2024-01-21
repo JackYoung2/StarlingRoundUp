@@ -18,9 +18,6 @@ public protocol APIClientProtocol {
     var loadData: (URLRequest) async throws -> (Data, URLResponse) { get set }
     func call<Value: Decodable>(_ endpoint: inout Endpoint<Value>) async throws -> Result<Value, APIError>
 }
-
-//func data(for request: URLRequest) async throws -> (Data, URLResponse)
-
 public struct APIClient: APIClientProtocol  {
     
     public var decoder: JSONDecoder {
@@ -38,7 +35,7 @@ public struct APIClient: APIClientProtocol  {
     
     public init(
         decoder: JSONDecoder? = nil,
-        loadData: ( (URLRequest) -> (Data, URLResponse))? = nil
+        loadData: ((URLRequest) -> (Data, URLResponse))? = nil
     ) {
         self.loadData = loadData ?? dataTask
     }

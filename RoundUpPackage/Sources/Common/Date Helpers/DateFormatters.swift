@@ -7,14 +7,6 @@
 
 import Foundation
 
-
-//public func getTodayWeekDay(_ date: Date) -> String {
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.dateFormat = "EEEE"
-//    let weekDay = dateFormatter.string(from: date).lowercased()
-//    return weekDay
-//}
-
 public extension DateFormatter {
     static let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -31,7 +23,6 @@ public extension DateFormatter {
     static let isoDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat =  "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-//        formatter.timeZone = TimeZone(identifier: "UTC")
         return formatter
     }()
 
@@ -45,8 +36,6 @@ public extension DateFormatter {
         return relativeDateFormatter
     }()
 }
-
-
 
 public extension Date {
     var asTimeString: String? {

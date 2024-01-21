@@ -99,7 +99,7 @@ public class CreateSavingsGoalViewController: UIViewController {
             .orEmpty
             .compactMap { [weak self] in
                 guard let self else { return nil }
-                return self.convertTargetTextToMinorUnits(text: $0)
+                return self.viewModel.convertTargetTextToMinorUnits(text: $0)
             }
             .bind(to: viewModel.target)
             .disposed(by: disposeBag)
@@ -126,13 +126,6 @@ extension CreateSavingsGoalViewController: UITextFieldDelegate {
         let newString: NSString =  currentString.replacingCharacters(in: range, with: string) as NSString
 
         return newString.length <= maxLength
-    }
-    
-    func convertTargetTextToMinorUnits(text: String) -> Int? {
-        let formatter = NumberFormatter.currencyFormatter(for: self.viewModel.account.currency)
-        guard let majorUnit = formatter.number(from: text) as? Double else { return nil }
-        let minorUnit = majorUnit * pow(10, Double(formatter.maximumFractionDigits))
-        return Int(minorUnit)
     }
 }
 

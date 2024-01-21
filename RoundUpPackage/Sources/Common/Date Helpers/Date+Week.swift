@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 public extension Date {
     static var oneWeekAgo: Self {
         let today = Date()

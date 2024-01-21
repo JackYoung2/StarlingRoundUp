@@ -32,7 +32,7 @@ public struct SavingsGoalTransferResponse: Codable {
     }
 }
 
-public struct SavingsGoal: Codable {
+public struct SavingsGoal: Codable, Equatable {
     public let savingsGoalUid: String
     public let name: String
     public let target: Amount

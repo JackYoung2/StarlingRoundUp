@@ -8,7 +8,7 @@
 import UIKit
 import SharedModel
 
-public struct AlertState {
+public struct AlertState: Equatable {
     public var title: String
     public var message: String
 
@@ -18,7 +18,7 @@ public struct AlertState {
     }
 }
 
-public enum AlertType {
+public enum AlertType: Equatable {
     case emptyName,
          noAccount,
          targetTooLow,

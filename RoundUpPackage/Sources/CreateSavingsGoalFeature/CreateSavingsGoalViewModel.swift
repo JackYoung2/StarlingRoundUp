@@ -14,10 +14,21 @@ import APIClient
 import RxCocoa
 
 //    MARK: - Abstraction
-public protocol CreateSavingsGoalViewModelProtocol {
-    //    var apiClient: APIClient
-    //    var uuid: () -> UUID
+
+public protocol CreateSavingsGoalViewModelProtocol: AnyObject {
+    var apiClient: APIClientProtocol { get set }
+    
+    var route: BehaviorRelay<CreateSavingsGoalViewModel.Route?> { get }
+    var networkingDriver: Driver<Bool> { get }
+    var createGoalResultPublisher: PublishRelay<CreateSavingsGoalResult> { get }
+    var name: BehaviorRelay<String> { get }
+    var target: BehaviorRelay<Int> { get }
+    
+    func doneButtonTapped()
+    func cancelButtonTapped()
+    func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws
 }
+
 
 public typealias CreateSavingsGoalResult = Result<CreateSavingsGoalResponse, APIError>
 
@@ -68,8 +79,15 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
             .disposed(by: disposeBag)
     }
     
+    func convertTargetTextToMinorUnits(text: String) -> Int? {
+        let formatter = NumberFormatter.currencyFormatter(for: account.currency)
+        guard let majorUnit = formatter.number(from: text) as? Double else { return nil }
+        let minorUnit = majorUnit * pow(10, Double(formatter.maximumFractionDigits))
+        return Int(minorUnit)
+    }
+    
     //    MARK: - User input
-    func doneButtonTapped() {
+    public func doneButtonTapped() {
         guard !name.value.isEmpty else { self.route.accept(.alert(.emptyName)); return }
         guard target.value > 0 else { self.route.accept(.alert(.targetTooLow)); return }
         
@@ -82,12 +100,12 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
         Task { try await postSavingsGoal(savingsGoal) }
     }
     
-    func cancelButtonTapped() {
+    public func cancelButtonTapped() {
         self.route.accept(nil)
     }
     
     //    MARK: - Dependency Integration
-    func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
+    public func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
         isNetworking.accept(true)
         var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
         let result = try await apiClient.call(&endpoint)

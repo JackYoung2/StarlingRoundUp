@@ -92,6 +92,9 @@ let package = Package(
         .target(
             name: "AccountsFeature",
             dependencies: ["APIClient", "SharedModel"]
-        )
+        ),
+        
+        .testTarget(name: "RoundUpPackageTests", dependencies: ["AppFeature"])
     ]
+      
 )

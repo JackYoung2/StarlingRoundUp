@@ -179,7 +179,6 @@
 					};
 					F28063962B4DC8FE009A532C = {
 						CreatedOnToolsVersion = 15.1;
-						TestTargetID = F280637D2B4DC8F4009A532C;
 					};
 					F28063A02B4DC8FE009A532C = {
 						CreatedOnToolsVersion = 15.1;
@@ -467,7 +466,6 @@
 		F28063AF2B4DC8FE009A532C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7T3V73LMKG;
@@ -479,14 +477,12 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StarlingRoundUp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StarlingRoundUp";
 			};
 			name = Debug;
 		};
 		F28063B02B4DC8FE009A532C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7T3V73LMKG;
@@ -498,7 +494,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StarlingRoundUp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StarlingRoundUp";
 			};
 			name = Release;
 		};
