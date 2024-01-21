@@ -18,7 +18,7 @@ class CreateSavingsGoalViewModelTests: XCTestCase {
     var scheduler: TestScheduler!
     var viewModel: CreateSavingsGoalViewModelProtocol!
     var apiClient: APIClientProtocol!
-        var disposeBag: DisposeBag!
+    var disposeBag: DisposeBag!
     
     func setUpApiHappyPath(
         callEndpointExpectation: XCTestExpectation? = nil,

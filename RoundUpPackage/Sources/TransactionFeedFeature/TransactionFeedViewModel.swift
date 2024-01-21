@@ -22,10 +22,9 @@ import Common
 //    MARK: - Abstraction
 protocol TransactionFeedViewModelProtocol {
     var route: BehaviorRelay<TransactionFeedViewModel.Route?> { get }
-    var apiClient: APIClientProtocol { get set }
+    var apiClient: APIClientProtocol { get }
     var transactions: BehaviorRelay<[Transaction]> { get }
-    var accountRelay: BehaviorRelay<Account> { get }
-    init(route: TransactionFeedViewModel.Route?)
+//    var accountRelay: BehaviorRelay<Account> { get }
     func roundButtonTapped()
 }
 
@@ -33,7 +32,7 @@ public typealias GetTransactionFeedResult = Result<TransactionFeedItemResponse, 
 public typealias GetAccountResult = Result<AccountResponse, APIError>
 
 //    MARK: - Concretion
-public class TransactionFeedViewModel {
+public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
 
     //    MARK: - Navigation
     enum Route {
@@ -45,7 +44,7 @@ public class TransactionFeedViewModel {
     var route: BehaviorRelay<Route?>
     
     //    MARK: - Dependencies
-    var apiClient: APIClient
+    var apiClient: APIClientProtocol
     let disposeBag = DisposeBag()
     let roundUpClient: RoundUpClientProtocol
     
@@ -87,7 +86,7 @@ public class TransactionFeedViewModel {
     
     //    MARK: - Init
     init(
-        apiClient: APIClient = APIClient(),
+        apiClient: APIClientProtocol = APIClient(),
         route: Route? = nil,
         roundUpClient: RoundUpClientProtocol = RoundUpClient()
     ) {
