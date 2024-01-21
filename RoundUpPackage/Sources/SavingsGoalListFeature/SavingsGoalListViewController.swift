@@ -24,6 +24,7 @@ public class SavingsGoalListViewController: UIViewController {
     let tableView = Components.baseTableView(cells: [SavingsGoalTableViewCell.self])
     let indicator = Components.indicator()
     let emptyStateView = Components.emptyStateView(text: "Hit the + button to create your first savings goal")
+    let refreshControl = UIRefreshControl()
  
     //    MARK: - Life Cycle
     public override func viewDidLoad() {
@@ -57,6 +58,13 @@ public class SavingsGoalListViewController: UIViewController {
     
     func cancelAddTapped() {
         self.viewModel.route.accept(nil)
+    }
+    
+    @objc func didPullToRefresh() {
+        Task {
+            try await viewModel.getSavingsGoals()
+            self.refreshControl.endRefreshing()
+        }
     }
     
     //    MARK: - Subscribers
@@ -194,8 +202,10 @@ extension SavingsGoalListViewController {
         navigationItem.title = "Add \(viewModel.roundUpDisplayString) to savings goal"
         
         setUpEmptyStateView()
-        
         tableView.delegate = self
+        refreshControl.attributedTitle = NSAttributedString(string: "Fetch Savings Goals")
+        refreshControl.addTarget(self, action: #selector(self.didPullToRefresh), for: .valueChanged)
+        tableView.addSubview(refreshControl)
         
         view.addSubview(tableView)
         view.addSubview(indicator)
