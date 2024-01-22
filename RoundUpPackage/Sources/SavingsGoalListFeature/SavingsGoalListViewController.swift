@@ -35,7 +35,8 @@ public class SavingsGoalListViewController: UIViewController {
         }
     }
     
-    public init(_ viewModel: SavingsGoalListViewModel) {
+    public init(
+        _ viewModel: SavingsGoalListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = ColorSystem.background
@@ -49,7 +50,7 @@ public class SavingsGoalListViewController: UIViewController {
     
     //    MARK: - User Input
     @objc func addButtonTapped() {
-        viewModel.route.accept(.createSavingsGoal(.init(account: viewModel.account, apiClient: viewModel.apiClient)))
+        viewModel.route.accept(.createSavingsGoal(.init(account: viewModel.account, apiClient: viewModel.apiClient, sessionManager: viewModel.sessionManager)))
     }
     
     func confirmAddTapped(goalId: String) async throws {

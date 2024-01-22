@@ -15,6 +15,7 @@ import SavingsGoalFeature
 import CreateSavingsGoalFeature
 import APIClient
 import Common
+import SessionManager
 
 //    MARK: - Abstractions
 
@@ -54,6 +55,7 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
     //    MARK: - Dependencies
     let disposeBag = DisposeBag()
     public var apiClient: APIClientProtocol
+    public let sessionManager: SessionManager
     
     public struct SavingsGoalWrapper {
         var goalId: String
@@ -101,12 +103,14 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
         route: Route? = nil,
         apiClient: APIClientProtocol,
         account: Account,
-        roundUpAmount: Amount
+        roundUpAmount: Amount,
+        sessionManager: SessionManager
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.apiClient = apiClient
         self.account = account
         self.roundUpAmount = roundUpAmount
+        self.sessionManager = sessionManager
         setUpSubscribers()
     }
     
@@ -125,7 +129,8 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
     public func getSavingsGoals() async throws {
         isNetworking.accept(true)
         var endpoint = Endpoint<SavingsGoalListResponse>.getSavingsGoals(for: account.accountUid)
-        let result = try await apiClient.call(&endpoint)
+        guard let session = try? sessionManager.getSession() else { throw APIError.noToken }
+        let result = try await apiClient.call(&endpoint, token: session.token, userAgent: session.userAgent)
         getSavingsGoalsListResultPublisher.accept(result)
         isNetworking.accept(false)
     }
@@ -145,7 +150,8 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
             with: UUID().uuidString
         )
         
-        let result = try await apiClient.call(&endpoint)
+        guard let session = try? sessionManager.getSession() else { throw APIError.noToken }
+        let result = try await apiClient.call(&endpoint, token: session.token, userAgent: session.userAgent)
         let wrapper = SavingsGoalWrapper(goalId: goalId, result: result)
         addToGoalResultPublisher.accept(wrapper)
         isNetworking.accept(false)
@@ -170,7 +176,7 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
                     switch error {
                     case .networkError:
                         self?.route.accept(.alert(.network))
-                    case .parsingError:
+                    default:
                         self?.route.accept(.alert(.genericError))
                     }
                     
@@ -206,7 +212,7 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
                     switch error {
                     case .networkError:
                         self.route.accept(.alert(.network))
-                    case .parsingError:
+                    default:
                         self.route.accept(.alert(.genericError))
                     }
                     

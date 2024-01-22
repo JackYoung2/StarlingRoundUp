@@ -21,7 +21,7 @@ class APIClientTests: XCTestCase {
         }
         
         var endpoint: Endpoint<AccountResponse> = .getAccount()
-        let result = try await apiClient.call(&endpoint)
+        let result = try await apiClient.call(&endpoint, token: sessionManager.token, userAgent: sessionManager.userAgent)
         XCTAssertEqual(result.error as? APIError, APIError.networkError)
     }
     
@@ -31,7 +31,7 @@ class APIClientTests: XCTestCase {
         }
         
         var endpoint: Endpoint<AccountResponse> = .getAccount()
-        let result = try await apiClient.call(&endpoint)
+        let result = try await apiClient.call(&endpoint, token: sessionManager.token, userAgent: sessionManager.userAgent)
         XCTAssertEqual(result.error as? APIError, APIError.parsingError)
     }
 }

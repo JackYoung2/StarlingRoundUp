@@ -11,11 +11,20 @@ import Common
 public enum APIError: Error {
     case networkError
     case parsingError
+    case noToken
+    case tokenExpired
+    case badRequest
+    case serverError
+    case genericError(Int)
 }
 
 public protocol APIClientProtocol {
     var loadData: (URLRequest) async throws -> (Data, URLResponse) { get set }
-    func call<Value: Decodable>(_ endpoint: inout Endpoint<Value>) async throws -> Result<Value, APIError>
+    func call<Value: Decodable>(
+        _ endpoint: inout Endpoint<Value>,
+        token: String,
+        userAgent: String
+    ) async throws -> Result<Value, APIError>
 }
 public struct APIClient: APIClientProtocol  {
     
@@ -37,22 +46,46 @@ public struct APIClient: APIClientProtocol  {
         self.loadData = loadData ?? dataTask
     }
     
-    public func call<Value: Decodable>(_ endpoint: inout Endpoint<Value>) async throws -> Result<Value, APIError> {
-        endpoint.headers["Authorization"] = "Bearer \(authToken)"
+    public func call<Value: Decodable>(
+        _ endpoint: inout Endpoint<Value>,
+        token: String,
+        userAgent: String
+    ) async throws -> Result<Value, APIError> {
+        endpoint.headers["Authorization"] = "Bearer \(token)"
         endpoint.headers["User-Agent"] = userAgent
         
-        guard let (data, _) = try? await loadData(endpoint.urlRequest()) else {
+        guard let (data, response) = try? await loadData(endpoint.urlRequest()) else {
             return .failure(.networkError)
         }
         
         // TODO: - More precise Error Handling with response codes
-        
-        do {
-            let result = try decoder.decode(Value.self, from: data)
-            return .success(result)
-        } catch {
-            print(error)
-            return .failure(.parsingError)
+        if let httpResponse = response as? HTTPURLResponse {
+            switch httpResponse.statusCode {
+            case 200...209:
+                do {
+                    let result = try decoder.decode(Value.self, from: data)
+                    return .success(result)
+                } catch {
+                    print(error)
+                    return .failure(.parsingError)
+                }
+                
+            case 401, 403:
+                if let error = try? decoder.decode(ErrorResponse.self, from: data) {
+                    if error.error == .invalidToken {
+                        return .failure(APIError.tokenExpired)
+                    }
+                } else {
+                    fallthrough
+                }
+                
+            case 400...409:
+                return .failure(.badRequest)
+            default:
+                return .failure(.genericError(httpResponse.statusCode))
+            }
         }
+        
+        return .failure(.networkError)
     }
 }

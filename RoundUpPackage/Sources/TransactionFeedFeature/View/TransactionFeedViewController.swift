@@ -16,7 +16,7 @@ import CreateSavingsGoalFeature
 public class TransactionFeedViewController: UIViewController {
     //    MARK: - Dependencies
     let disposeBag = DisposeBag()
-    let viewModel = TransactionFeedViewModel()
+    let viewModel: TransactionFeedViewModel
     
     //    MARK: - View Components
     lazy var tableView = Components.baseTableView()
@@ -41,6 +41,15 @@ public class TransactionFeedViewController: UIViewController {
             try await viewModel.fetchAccount()
             try await viewModel.fetchTransactions()
         }
+    }
+    
+    public init(viewModel: TransactionFeedViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     //    MARK: - User Input
@@ -145,9 +154,10 @@ public class TransactionFeedViewController: UIViewController {
             .asDriver(onErrorJustReturn: false)
         
       
-        loading
-          .drive(indicator.rx.isAnimating)
-          .disposed(by: disposeBag)
+        viewModel
+            .networkingDriver
+            .drive(indicator.rx.isAnimating)
+            .disposed(by: disposeBag)
         
         loading
           .drive(tableView.rx.isHidden)

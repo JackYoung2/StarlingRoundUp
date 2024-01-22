@@ -18,6 +18,7 @@ import RxDataSources
 import UIKit
 import RoundUpClient
 import Common
+import SessionManager
 
 //    MARK: - Abstraction
 protocol TransactionFeedViewModelProtocol {
@@ -25,6 +26,7 @@ protocol TransactionFeedViewModelProtocol {
     var apiClient: APIClientProtocol { get }
     var transactions: BehaviorRelay<[Transaction]> { get }
     var accountRelay: BehaviorRelay<Account?> { get }
+    
     
     func roundButtonTapped()
     func fetchTransactions() async throws
@@ -38,7 +40,7 @@ public typealias GetAccountResult = Result<AccountResponse, APIError>
 public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
 
     //    MARK: - Navigation
-    enum Route {
+    public enum Route {
         case savingsGoal(SavingsGoalListViewModel)
         case alert(AlertType)
     }
@@ -49,6 +51,7 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
     var apiClient: APIClientProtocol
     let disposeBag = DisposeBag()
     let roundUpClient: RoundUpClientProtocol
+    let sessionManager: SessionManager
     
     //    MARK: - Relays
     //    TODO: - Add selection period
@@ -59,6 +62,9 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
     let tableViewSections = BehaviorRelay<[SectionModel<Date, Transaction>]>(value: [])
     public let getTransactionFeedResultPublisher = PublishRelay<GetTransactionFeedResult>()
     public let getAccountResultPublisher = PublishRelay<GetAccountResult>()
+    
+    var isNetworking: PublishRelay<Bool> = .init()
+    public var networkingDriver: Driver<Bool> { isNetworking.asDriver(onErrorJustReturn: false) }
     
     lazy var dataSource = RxTableViewSectionedReloadDataSource<SectionModel<Date, Transaction>>(
         configureCell: { [weak self] (_, tableView, indexPath, element) in
@@ -87,14 +93,16 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
     var currencyCode: String { accountRelay.value?.currency ?? "" }
     
     //    MARK: - Init
-    init(
+    public init(
         apiClient: APIClientProtocol = APIClient(),
         route: Route? = nil,
-        roundUpClient: RoundUpClientProtocol = RoundUpClient()
+        roundUpClient: RoundUpClientProtocol = RoundUpClient(),
+        sessionManager: SessionManager
     ) {
         self.apiClient = apiClient
         self.route = BehaviorRelay<Route?>(value: nil)
         self.roundUpClient = roundUpClient
+        self.sessionManager = sessionManager
         setUpSubscribers()
     }
 
@@ -107,7 +115,7 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
                 .init(
                     apiClient: apiClient, 
                     account: account,
-                    roundUpAmount: .init(currency: account.currency, minorUnits: roundUpValue.value)
+                    roundUpAmount: .init(currency: account.currency, minorUnits: roundUpValue.value), sessionManager: sessionManager
                 )
             )
         )
@@ -129,14 +137,19 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
             since: date
         )
         
-        let result = try await apiClient.call(&endpoint)
+//        Warnings are because of test value
+        guard let session = try? sessionManager.getSession() else { throw APIError.noToken }
+        let result = try await apiClient.call(&endpoint, token: session.token, userAgent: session.userAgent)
         getTransactionFeedResultPublisher.accept(result)
+        isNetworking.accept(false)
     }
     
     func fetchAccount() async throws {
+        isNetworking.accept(true)
         // TODO: - Networking response failure causes broken state
         var endpoint = Endpoint<AccountResponse>.getAccount()
-        let result = try await apiClient.call(&endpoint)
+        guard let session = try? sessionManager.getSession() else { throw APIError.noToken }
+        let result = try await apiClient.call(&endpoint, token: session.token, userAgent: session.userAgent)
         getAccountResultPublisher.accept(result)
     }
     
@@ -181,10 +194,13 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
                     self?.accountRelay.accept(response.accounts.first)
                     
                 case let .failure(error):
+                    
+                    self?.isNetworking.accept(false)
+                    
                     switch error {
                     case .networkError:
                         self?.route.accept(.alert(.network))
-                    case .parsingError:
+                     default:
                         self?.route.accept(.alert(.genericError))
                     }
                     
@@ -203,7 +219,7 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
                     switch error {
                     case .networkError:
                         self?.route.accept(.alert(.network))
-                    case .parsingError:
+                    default:
                         self?.route.accept(.alert(.genericError))
                     }
                     

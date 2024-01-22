@@ -12,6 +12,7 @@ import RxRelay
 import Common
 import APIClient
 import RxCocoa
+import SessionManager
 
 //    MARK: - Abstraction
 
@@ -56,16 +57,19 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     public let createGoalResultPublisher = PublishRelay<CreateSavingsGoalResult>()
     public let name: BehaviorRelay<String> = .init(value: "")
     public let target: BehaviorRelay<Int> = .init(value: 0)
+    public let sessionManager: SessionManager
 
     //    MARK: - Init
     public init(
         account: Account,
         route: Route? = nil,
-        apiClient: APIClientProtocol
+        apiClient: APIClientProtocol,
+        sessionManager: SessionManager
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.account = account
         self.apiClient = apiClient
+        self.sessionManager = sessionManager
         setUpSubscribers()
     }
     
@@ -111,7 +115,8 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     public func postSavingsGoal(_ savingsGoal: SavingsGoalRequestBody) async throws {
         isNetworking.accept(true)
         var endpoint = Endpoint<CreateSavingsGoalResponse>.createSavingsGoal(for: account.accountUid, goal: savingsGoal)
-        let result = try await apiClient.call(&endpoint)
+        guard let session = try? sessionManager.getSession() else { throw APIError.noToken }
+        let result = try await apiClient.call(&endpoint, token: session.token, userAgent: session.userAgent)
         self.createGoalResultPublisher.accept(result)
         isNetworking.accept(false)
     }
