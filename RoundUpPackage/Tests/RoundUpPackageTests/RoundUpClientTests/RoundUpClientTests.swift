@@ -25,8 +25,6 @@ class RoundUpClientTests: XCTestCase {
         
         XCTAssertEqual(values.count, expected.count)
         XCTAssertEqual(rounded, expected)
-        
-//        print(rounded)
     }
     
 }

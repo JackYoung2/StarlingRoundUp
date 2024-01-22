@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let feedViewModel = TransactionFeedViewModel(
             apiClient: APIClient(),
+            route: .alert(.emptyName),
             roundUpClient: RoundUpClient(),
             sessionManager: sessionManager
         )

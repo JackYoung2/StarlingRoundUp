@@ -109,7 +109,7 @@ public class SavingsGoalListViewController: UIViewController {
                     
                     switch alertType {
                     case let .confirmAddToGoal(_, goal):
-//                    TODO: - Tidy up
+//                    TODO: - Consider moving these into seperate file
                         alert.addAction(
                             .init(title: "OK", style: .default, handler: { _ in
                                 presentedViewController = nil

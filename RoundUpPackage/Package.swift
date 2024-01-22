@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RoundUpPackage",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v15)],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "APIClient", targets: ["APIClient"]),

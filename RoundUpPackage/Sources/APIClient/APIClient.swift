@@ -58,7 +58,6 @@ public struct APIClient: APIClientProtocol  {
             return .failure(.networkError)
         }
         
-        // TODO: - More precise Error Handling with response codes
         if let httpResponse = response as? HTTPURLResponse {
             switch httpResponse.statusCode {
             case 200...209:

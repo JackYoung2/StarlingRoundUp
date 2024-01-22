@@ -11,7 +11,7 @@ import RoundUpClient
 
 public struct TransactionViewModel {
     
-//    TODO: - Abstract
+//    TODO: - Abstract behind protocol
     var roundUpClient: RoundUpClient = .init()
     var transaction: Transaction
     var transactionDisplay: String { NumberFormatter.formattedCurrencyFrom(amount: transaction.amount) ?? "" }
