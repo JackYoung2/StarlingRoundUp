@@ -35,7 +35,7 @@ public class TransactionTableViewCell: UITableViewCell {
     //  MARK: - setUpView
     func setUpView() {
         self.selectionStyle = .none
-        roundLabel.textColor = .green
+        roundLabel.textColor = ColorSystem.tint
         rightStack.addArrangedSubview(priceLabel)
         rightStack.addArrangedSubview(roundLabel)
         rightStack.alignment = .trailing
