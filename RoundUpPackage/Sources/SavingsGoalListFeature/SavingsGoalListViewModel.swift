@@ -176,6 +176,8 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
                     switch error {
                     case .networkError:
                         self?.route.accept(.alert(.network))
+                    case .tokenExpired:
+                        self?.sessionManager.removeSession()
                     default:
                         self?.route.accept(.alert(.genericError))
                     }
@@ -212,6 +214,8 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
                     switch error {
                     case .networkError:
                         self.route.accept(.alert(.network))
+                    case .tokenExpired:
+                        self.sessionManager.removeSession()
                     default:
                         self.route.accept(.alert(.genericError))
                     }

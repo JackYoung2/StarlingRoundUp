@@ -10,6 +10,7 @@ import TransactionFeedFeature
 import RxRelay
 import LoginFeature
 import RxSwift
+import SessionManager
 
 class AppViewModel: ObservableObject {
     
@@ -22,15 +23,18 @@ class AppViewModel: ObservableObject {
     var feedViewModel: BehaviorRelay<TransactionFeedViewModel>
     var route: BehaviorRelay<AppViewModel.Route?>
     let disposeBag = DisposeBag()
+    let sessionManager: SessionManager
     
     init(
         loginViewModel: LoginViewModel,
         feedViewModel: TransactionFeedViewModel,
-        route: AppViewModel.Route? = nil
+        route: AppViewModel.Route? = nil,
+        sessionManager: SessionManager
     ) {
         self.loginViewModel = loginViewModel
         self.feedViewModel = BehaviorRelay(value: feedViewModel)
         self.route = BehaviorRelay(value: route)
+        self.sessionManager = sessionManager
         subscribe()
     }
     

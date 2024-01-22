@@ -6,15 +6,22 @@
 //
 
 import KeychainClient
+import RxSwift
+import RxRelay
+
+public struct Session {
+    public var userAgent: String
+    public var token: String
+}
 
 public class SessionManager {
     
     let keychainClient = KeychainClient.test
     
-    public struct Session {
-        public var userAgent: String
-        public var token: String
-    }
+    public let sessionSubject: BehaviorRelay<Session?> = .init(value: nil)
+    let bag = DisposeBag()
+    
+    
     
     public func getSession() throws -> Session {
         let authToken = try keychainClient.get(.authToken)
@@ -22,7 +29,22 @@ public class SessionManager {
         return Session(userAgent: userAgent, token: authToken)
     }
     
-    public init() {}
+    public func removeSession() {
+        sessionSubject.accept(nil)
+    }
+    
+    public init() {
+        sessionSubject.subscribe { [weak self] _ in
+            do {
+                try self?.keychainClient.remove(.authToken)
+                try self?.keychainClient.remove(.userAgent)
+            } catch {
+                print("Warning, expired session was not removed")
+            }
+            
+        }.disposed(by: bag)
+
+    }
     
     var userAgentHolder = "Jack-Young"
     

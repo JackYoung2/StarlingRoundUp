@@ -58,7 +58,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     public let name: BehaviorRelay<String> = .init(value: "")
     public let target: BehaviorRelay<Int> = .init(value: 0)
     public let sessionManager: SessionManager
-
+    
     //    MARK: - Init
     public init(
         account: Account,
@@ -77,9 +77,18 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     func setUpSubscribers() {
         self
             .createGoalResultPublisher
-            .filter { $0.failure }
-            .subscribe { result in
-                self.route.accept(.alert(.genericError))
+            .subscribe { [weak self] result in
+                switch result {
+                case let .failure(error):
+                    switch error {
+                    case .tokenExpired:
+                        self?.sessionManager.removeSession()
+                    default:
+                        self?.route.accept(.alert(.genericError))
+                    }
+                    
+                default: break
+                }
             }
             .disposed(by: disposeBag)
     }
@@ -96,7 +105,7 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
         guard !name.value.isEmpty else { self.route.accept(.alert(.emptyName)); return }
         guard target.value > 0 else { self.route.accept(.alert(.targetTooLow)); return }
         
-//        TODO: - Add functionality to prevent copy and paste
+        //        TODO: - Add functionality to prevent copy and paste
         
         let savingsGoal = SavingsGoalRequestBody(
             name: name.value,

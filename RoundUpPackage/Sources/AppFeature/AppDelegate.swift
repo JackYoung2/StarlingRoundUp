@@ -12,6 +12,8 @@ import KeychainClient
 import APIClient
 import RoundUpClient
 import RxSwift
+import RxCocoa
+import RxRelay
 import LoginFeature
 import SessionManager
 
@@ -20,40 +22,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     var keyChainClient: KeychainClient = .live
-    
-//    let feedViewModel = TransactionFeedViewModel(
-//        apiClient: APIClient(),
-//        roundUpClient: RoundUpClient()
-//    )
-    
-//    lazy var loginViewModel = LoginViewModel()
-//    
-//    lazy var appViewModel: AppViewModel = .init(
-//        loginViewModel: loginViewModel,
-//        feedViewModel: TransactionFeedViewModel(
-//        apiClient: APIClient(),
-//        roundUpClient: RoundUpClient(), 
-//        sessionManager: .init()
-//    ),
-//        route: .login)
-////    enum Route
-////    
-//    public var route: BehaviorRelay<Route?>
+    let bag = DisposeBag()
+
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         window = UIWindow(frame: UIScreen.main.bounds)
         
+        let session = SessionManager()
+        
         let feedViewModel = TransactionFeedViewModel(
             apiClient: APIClient(),
             roundUpClient: RoundUpClient(),
-            sessionManager: SessionManager()
+            sessionManager: session
         )
         
         let viewController = TransactionFeedViewController(viewModel: feedViewModel)
         let navigationController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navigationController
         
+        
+        
+        session
+            .sessionSubject
+            .subscribe {
+                print($0)
+                
+                
+            }
+            .disposed(by: bag)
+            
         
         window?.makeKeyAndVisible()
         

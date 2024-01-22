@@ -20,4 +20,13 @@ public extension Result {
     var failure: Bool {
         !success
     }
+    
+    var error: Error? {
+        switch self {
+        case .success:
+            return nil
+        case let .failure(error):
+            return error
+        }
+    }
 }

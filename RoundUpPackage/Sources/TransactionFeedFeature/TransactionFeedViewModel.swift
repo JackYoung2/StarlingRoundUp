@@ -196,11 +196,13 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
                 case let .failure(error):
                     
                     self?.isNetworking.accept(false)
-                    
+
                     switch error {
                     case .networkError:
                         self?.route.accept(.alert(.network))
-                     default:
+                    case .tokenExpired:
+                        self?.sessionManager.removeSession()
+                    default:
                         self?.route.accept(.alert(.genericError))
                     }
                     
@@ -219,6 +221,8 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
                     switch error {
                     case .networkError:
                         self?.route.accept(.alert(.network))
+                    case .tokenExpired:
+                        self?.sessionManager.removeSession()
                     default:
                         self?.route.accept(.alert(.genericError))
                     }
