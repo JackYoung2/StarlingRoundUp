@@ -116,6 +116,7 @@ let package = Package(
                 "APIClient",
                 "Common",
                 "KeychainClient",
+                "SessionManager",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "RxCocoa", package: "RxSwift")

@@ -10,25 +10,24 @@ import RxSwift
 import RxRelay
 import RxCocoa
 import APIClient
-
-public typealias LoginResponse = String
-
-public typealias LoginResult = Result<LoginResponse, APIError>
+import SessionManager
 
 public class LoginViewModel {
     
     public var networkingDriver: Driver<Bool> { isNetworking.asDriver(onErrorJustReturn: false) }
     var isNetworking: PublishRelay<Bool> = .init()
-    public let loginResultPublisher = PublishRelay<LoginResult>()
+    let sessionManager: SessionManager
     
-    public func doneButtonTapped() async throws {
+    public func loginButtonTapped() async throws {
         isNetworking.accept(true)
         try await Task.sleep(nanoseconds: 1000000000)
-        loginResultPublisher.accept(.success(""))
+        
+        let session = Session.test
+        self.sessionManager.sessionSubject.accept(session)
         isNetworking.accept(false)
     }
     
-    public init() {
-
+    public init(sessionManager: SessionManager) {
+        self.sessionManager = sessionManager
     }
 }

@@ -122,7 +122,7 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
     }
     
     //    MARK: - Dependency Integration
-    func fetchTransactions() async throws {
+    public func fetchTransactions() async throws {
         guard let accountId = accountRelay.value?.accountUid,
         let category = accountRelay.value?.defaultCategory,
               let date = transactionCutOffDate.value.asISO8601Format
@@ -144,7 +144,7 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
         isNetworking.accept(false)
     }
     
-    func fetchAccount() async throws {
+    public func fetchAccount() async throws {
         isNetworking.accept(true)
         // TODO: - Networking response failure causes broken state
         var endpoint = Endpoint<AccountResponse>.getAccount()

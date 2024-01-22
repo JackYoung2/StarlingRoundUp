@@ -16,7 +16,7 @@ import CreateSavingsGoalFeature
 public class TransactionFeedViewController: UIViewController {
     //    MARK: - Dependencies
     let disposeBag = DisposeBag()
-    let viewModel: TransactionFeedViewModel
+    public let viewModel: TransactionFeedViewModel
     
     //    MARK: - View Components
     lazy var tableView = Components.baseTableView()

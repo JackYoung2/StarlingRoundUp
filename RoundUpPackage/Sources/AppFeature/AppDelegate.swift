@@ -20,61 +20,54 @@ import SessionManager
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-
-    var keyChainClient: KeychainClient = .live
     let bag = DisposeBag()
-
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
+        
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let session = SessionManager()
+        //        MARK: - Set Up Dependencies
+        let sessionManager = SessionManager()
         
         let feedViewModel = TransactionFeedViewModel(
             apiClient: APIClient(),
             roundUpClient: RoundUpClient(),
-            sessionManager: session
+            sessionManager: sessionManager
         )
         
+        //        MARK: - Prepare View
         let viewController = TransactionFeedViewController(viewModel: feedViewModel)
         let navigationController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navigationController
         
+        var loginViewController: LoginViewController?
         
+//    MARK: - Handle Auth
         
-        session
+        sessionManager
             .sessionSubject
-            .subscribe {
-                print($0)
-                
-                
+            .observe(on: MainScheduler.instance)
+            .skip(1)
+            .subscribe(onNext: { session in
+                if session == nil {
+                    loginViewController = LoginViewController(.init(sessionManager: sessionManager))
+                    loginViewController?.modalPresentationStyle = .fullScreen
+                    navigationController.modalPresentationStyle = .fullScreen
+                    navigationController.present(loginViewController!, animated: true)
+                } else {
+                    navigationController.dismiss(animated: true)
+                    Task {
+                        try await viewController.viewModel.fetchAccount()
+                        try await viewController.viewModel.fetchTransactions()
+                    }
+                }
             }
+            )
+        
             .disposed(by: bag)
-            
         
         window?.makeKeyAndVisible()
-        
-//        appViewModel
-//            .route
-//            .subscribe { route in
-//            switch route {
-//            case .feed:
-//                let viewController = TransactionFeedViewController(viewModel: self.appViewModel.feedViewModel.value)
-//                let navigationController = viewController
-//                self.window?.rootViewController = navigationController
-//            case .login:
-//                self.window?.rootViewController = LoginViewController(.init())
-////                navigationController.modalPresentationStyle = .overCurrentContext
-////                navigationController.present(LoginViewController(), animated: true)
-//            default:break
-//            }
-//        }
-//        .disposed(by: disposeBag)
-//        
-        
-        
-        
         
         return true
     }
