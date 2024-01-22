@@ -67,7 +67,6 @@ public class TransactionFeedViewController: UIViewController {
     //    MARK: - Subscribers
     func bindViewModel(context: UIViewController) {
 //        MARK: - Navigation
-        var presentedViewController: UIViewController?
         
         viewModel.route
             .observe(on: MainScheduler.instance)
@@ -79,7 +78,6 @@ public class TransactionFeedViewController: UIViewController {
                     context.show(vc, sender: nil)
                     
                 case .none:
-                    presentedViewController = nil
                     break
                                       
                 case let .alert(alertType):

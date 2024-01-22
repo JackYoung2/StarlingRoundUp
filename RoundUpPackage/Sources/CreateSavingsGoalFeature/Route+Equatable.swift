@@ -17,6 +17,4 @@ extension CreateSavingsGoalViewModel.Route: Equatable {
             return lhs == rhs
         }
     }
-    
-    
 }

@@ -38,7 +38,8 @@ class CreateSavingsGoalViewModelTests: XCTestCase {
         viewModel = CreateSavingsGoalViewModel(
             account: .mock(),
             route: nil,
-            apiClient: apiClient
+            apiClient: apiClient,
+            sessionManager: MockSessionManager()
         )
     }
     

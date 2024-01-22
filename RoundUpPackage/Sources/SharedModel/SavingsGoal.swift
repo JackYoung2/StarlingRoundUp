@@ -11,7 +11,6 @@ public struct SavingsGoalListResponse: Codable {
     public let savingsGoalList: [SavingsGoal]
 }
 
-
 public struct CreateSavingsGoalResponse: Codable, Equatable {
     public let savingsGoalUid: String
     public let success: Bool
@@ -78,6 +77,3 @@ public struct TopUpRequest: Codable {
         self.amount = amount
     }
 }
-
-
-//base64EncodedPhoto: String = ""

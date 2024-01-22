@@ -9,8 +9,6 @@ import Foundation
 import UIKit
 import Common
 
-
-
 public extension Components {
     static func createBaseContainerView(
         _ corners: Double? = nil

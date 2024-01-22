@@ -51,7 +51,7 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
     var apiClient: APIClientProtocol
     let disposeBag = DisposeBag()
     let roundUpClient: RoundUpClientProtocol
-    let sessionManager: SessionManager
+    let sessionManager: SessionManagerProtocol
     
     //    MARK: - Relays
     //    TODO: - Add selection period
@@ -83,7 +83,6 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
         }
     )
 
-    
     //    MARK: - Drivers
     public var accountDriver: Driver<Account?> { accountRelay.asDriver(onErrorJustReturn: nil) }
     public var transactionsDriver: Driver<[Transaction]> { transactions.asDriver(onErrorJustReturn: []) }
@@ -97,7 +96,7 @@ public class TransactionFeedViewModel:TransactionFeedViewModelProtocol {
         apiClient: APIClientProtocol = APIClient(),
         route: Route? = nil,
         roundUpClient: RoundUpClientProtocol = RoundUpClient(),
-        sessionManager: SessionManager
+        sessionManager: SessionManagerProtocol
     ) {
         self.apiClient = apiClient
         self.route = BehaviorRelay<Route?>(value: nil)

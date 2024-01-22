@@ -57,14 +57,14 @@ public class CreateSavingsGoalViewModel: CreateSavingsGoalViewModelProtocol {
     public let createGoalResultPublisher = PublishRelay<CreateSavingsGoalResult>()
     public let name: BehaviorRelay<String> = .init(value: "")
     public let target: BehaviorRelay<Int> = .init(value: 0)
-    public let sessionManager: SessionManager
+    public let sessionManager: SessionManagerProtocol
     
     //    MARK: - Init
     public init(
         account: Account,
         route: Route? = nil,
         apiClient: APIClientProtocol,
-        sessionManager: SessionManager
+        sessionManager: SessionManagerProtocol
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.account = account

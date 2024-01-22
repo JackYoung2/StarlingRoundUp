@@ -24,7 +24,6 @@ public extension Components {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(ColorSystem.tint, for: .normal)
         button.layer.cornerRadius = corners ?? .zero
-  
         
         return button
     }
@@ -38,7 +37,6 @@ public extension Components {
         button.layer.borderWidth = space1
         button.layer.borderColor = ColorSystem.tint.cgColor
 
-        
         return button
     }
     

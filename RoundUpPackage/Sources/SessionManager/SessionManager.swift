@@ -14,18 +14,17 @@ public struct Session {
     public var token: String
 }
 
-public extension Session {
-    static var test = Self.init(userAgent: userAgentHolder, token: authTokenHolderValid)
+public protocol SessionManagerProtocol {
+    func getSession() throws -> Session
+    func storeSession(token: String, agent: String) throws -> Void
+    func removeSession()
 }
 
-public class SessionManager {
+public class SessionManager: SessionManagerProtocol {
     
     let keychainClient = KeychainClient.test
-    
     public let sessionSubject: BehaviorRelay<Session?> = .init(value: nil)
     let bag = DisposeBag()
-    
-    
     
     public func getSession() throws -> Session {
         let authToken = try keychainClient.get(.authToken)

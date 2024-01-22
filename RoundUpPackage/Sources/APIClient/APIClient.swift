@@ -8,7 +8,7 @@
 import Foundation
 import Common
 
-public enum APIError: Error {
+public enum APIError: Error, Equatable {
     case networkError
     case parsingError
     case noToken

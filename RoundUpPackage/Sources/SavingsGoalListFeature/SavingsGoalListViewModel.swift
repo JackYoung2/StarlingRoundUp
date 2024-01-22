@@ -55,7 +55,7 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
     //    MARK: - Dependencies
     let disposeBag = DisposeBag()
     public var apiClient: APIClientProtocol
-    public let sessionManager: SessionManager
+    public let sessionManager: SessionManagerProtocol
     
     public struct SavingsGoalWrapper {
         var goalId: String
@@ -104,7 +104,7 @@ public class SavingsGoalListViewModel: SavingsGoalListViewModelProtocol {
         apiClient: APIClientProtocol,
         account: Account,
         roundUpAmount: Amount,
-        sessionManager: SessionManager
+        sessionManager: SessionManagerProtocol
     ) {
         self.route = BehaviorRelay<Route?>(value: nil)
         self.apiClient = apiClient

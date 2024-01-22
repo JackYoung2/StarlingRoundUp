@@ -27,7 +27,7 @@ public class CreateSavingsRequestBodyPartialGoalMockViewModel: CreateSavingsGoal
     ) {
         self.savingsGoalMock = savingsGoalMock
         self.assertEqual = assertEqual
-        super.init(account: account, apiClient: apiClient)
+        super.init(account: account, apiClient: apiClient, sessionManager: MockSessionManager())
     }
     
     // MARK: - Methods

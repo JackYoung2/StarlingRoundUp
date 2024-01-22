@@ -46,7 +46,6 @@ public class CreateSavingsGoalViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     //    MARK: - User Input
     
     @objc func doneButtonTapped() {

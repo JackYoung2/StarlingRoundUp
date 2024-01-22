@@ -31,6 +31,6 @@ public class SuccessfulGoalUpdate: SavingsGoalListViewModel {
         onGetSavingsGoals: @escaping () -> Void
     ) {
         self.onGetSavingsGoals = onGetSavingsGoals
-        super.init(apiClient: apiClient, account: .mock(), roundUpAmount: .mock)
+        super.init(apiClient: apiClient, account: .mock(), roundUpAmount: .mock, sessionManager: MockSessionManager())
     }
 }

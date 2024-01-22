@@ -15,18 +15,6 @@ public protocol RoundUpClientProtocol {
 public struct RoundUpClient: RoundUpClientProtocol {
     public init() {}
     
-//    public func roundUpSpend(code: String, _ transactionAmount: Int) -> Int {
-//        
-//        let formatter = NumberFormatter.currencyFormatter(for: code)
-//        let divisor = pow(10.0, Double(formatter.maximumFractionDigits))
-//        let decimalValue = Double(transactionAmount) / divisor
-//        let rounded = decimalValue.rounded(.up)
-//        let difference = abs(Decimal(decimalValue) - Decimal(rounded))
-//        let differeceAsMinorUnits = difference * Decimal(divisor)
-//        let cast = NSDecimalNumber(decimal: differeceAsMinorUnits)
-//        return Int(truncating: cast)
-//    }
-    
     public func roundUpSpend(code: String, _ transactionAmount: Int) -> Int {
         let decimalPlaces = NumberFormatter.currencyFormatter(for: code).maximumFractionDigits
         let digits = transactionAmount.digits
@@ -48,29 +36,4 @@ public struct RoundUpClient: RoundUpClientProtocol {
             return Int(difference)
         }
     }  
-}
-
-extension Int {
-  
-  var digits: Int {
-    var count = 0
-    var num = self
-    while num != 0 {
-      count += 1
-      num /= 10
-    }
-    return count
-  }
-  
-  func digit(atPosition position: Int) -> Int? {
-    guard position < digits else {
-      return nil
-    }
-    var num = self
-    let correctedPosition = Double(position + 1)
-    while num / Int(pow(10.0, correctedPosition)) != 0 {
-      num /= 10
-    }
-    return num % 10
-  }
 }

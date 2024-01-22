@@ -19,7 +19,7 @@ public struct MockApiClientHappyPath: APIClientProtocol {
     
     public var loadData: (URLRequest) async throws -> (Data, URLResponse)
     
-    public func call<Value>(_ endpoint: inout Endpoint<Value>) async throws -> Result<Value, APIError> where Value : Decodable {
+    public func call<Value>(_ endpoint: inout Endpoint<Value>, token: String, userAgent: String) async throws -> Result<Value, APIError> where Value : Decodable {
         callEndpointExpectation?.fulfill()
         
         if let val = returnValue as? Value {
@@ -27,7 +27,6 @@ public struct MockApiClientHappyPath: APIClientProtocol {
         } else {
             throw APIError.networkError
         }
-        
     }
     
     public init(

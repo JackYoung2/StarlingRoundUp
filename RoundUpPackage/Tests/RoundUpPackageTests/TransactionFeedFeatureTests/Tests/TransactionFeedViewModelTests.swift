@@ -38,7 +38,8 @@ class TransactionFeedViewModelTests: XCTestCase {
         viewModel = TransactionFeedViewModel(
             apiClient: apiClient,
             route: nil,
-            roundUpClient: RoundUpClient()
+            roundUpClient: RoundUpClient(),
+            sessionManager: MockSessionManager()
         )
     }
     
@@ -66,7 +67,7 @@ class TransactionFeedViewModelTests: XCTestCase {
                 .init(
                     apiClient: apiClient,
                     account: .mock(),
-                    roundUpAmount: .init(currency: .validCurrency, minorUnits: 152)
+                    roundUpAmount: .init(currency: .validCurrency, minorUnits: 152), sessionManager: MockSessionManager()
                 )
             )
         )

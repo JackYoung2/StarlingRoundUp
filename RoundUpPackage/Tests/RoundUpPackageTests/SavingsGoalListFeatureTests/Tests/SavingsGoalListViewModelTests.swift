@@ -39,7 +39,8 @@ class SavingsGoalListViewModelTests: XCTestCase {
             route: nil,
             apiClient: apiClient,
             account: .mock(), 
-            roundUpAmount: .init(currency: .validCurrency, minorUnits: 257)
+            roundUpAmount: .init(currency: .validCurrency, minorUnits: 257),
+            sessionManager: MockSessionManager()
         )
     }
     
@@ -174,7 +175,7 @@ class SavingsGoalListViewModelTests: XCTestCase {
     func test_addToGoal_CallsApi() async throws {
         let apiExpectation = XCTestExpectation(description: "Should attempt api call to add to savings goal")
         setUpApiHappyPath(callEndpointExpectation: apiExpectation, returnValue: SavingsGoalTransferResponse.mockSuccess)
-        viewModel = AddToEndpointPartialMock(apiClient: apiClient, account: .mock(), roundUpAmount: .mock)
+        viewModel = AddToEndpointPartialMock(apiClient: apiClient, account: .mock(), roundUpAmount: .mock, sessionManager: MockSessionManager())
         try await viewModel.addToGoal(goalId: firstSavingsGoal.savingsGoalUid)
         await fulfillment(of: [apiExpectation], timeout: 1)
     }

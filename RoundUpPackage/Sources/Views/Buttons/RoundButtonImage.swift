@@ -17,16 +17,10 @@ public extension Components {
         poundImageView.translatesAutoresizingMaskIntoConstraints = false
         
         poundImageView.addSubview(upImageView)
-       //        self.addSubview(upImageView)
         
         NSLayoutConstraint.activate([
             upImageView.leadingAnchor.constraint(equalTo: poundImageView.trailingAnchor, constant: -space2),
             upImageView.bottomAnchor.constraint(equalTo: poundImageView.centerYAnchor, constant: 0)
-//            upImageView.topAnchor.constraint(equalTo: self.topAnchor),
-//            upImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -space3),
-//
-//            poundImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: space2),
-//            poundImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -space3),
         ])
         
         return poundImageView
